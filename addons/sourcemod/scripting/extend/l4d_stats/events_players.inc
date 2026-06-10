@@ -135,7 +135,7 @@ public Action:event_PlayerDeath(Handle:event, const String:name[], bool:dontBroa
 
 		decl String:UpdatePoints[32];
 
-		switch (CurrentGamemodeID)
+		switch (Stats_GetCurrentStatsGamemodeID())
 		{
 			case GAMEMODE_VERSUS:
 			{
@@ -236,7 +236,7 @@ public Action:event_PlayerDeath(Handle:event, const String:name[], bool:dontBroa
 
 		decl String:UpdatePoints[32];
 
-		switch (CurrentGamemodeID)
+		switch (Stats_GetCurrentStatsGamemodeID())
 		{
 			case GAMEMODE_VERSUS:
 			{
@@ -630,7 +630,7 @@ public Action:event_TankKilled(Handle:event, const String:name[], bool:dontBroad
 
 	decl String:UpdatePoints[32];
 
-	switch (CurrentGamemodeID)
+	switch (Stats_GetCurrentStatsGamemodeID())
 	{
 		case GAMEMODE_VERSUS:
 		{
@@ -1174,7 +1174,7 @@ GiveAdrenaline(Giver, Recipient, AdrenalineID = -1)
 	new Score = ModifyScoreDifficulty(GetConVarInt(cvar_Adrenaline), 2, 4, TEAM_SURVIVORS);
 	decl String:UpdatePoints[32];
 
-	switch (CurrentGamemodeID)
+	switch (Stats_GetCurrentStatsGamemodeID())
 	{
 		case GAMEMODE_VERSUS:
 		{
@@ -1291,7 +1291,7 @@ GivePills(Giver, Recipient, PillsID = -1)
 	new Score = ModifyScoreDifficulty(GetConVarInt(cvar_Pills), 2, 4, TEAM_SURVIVORS);
 	decl String:UpdatePoints[32];
 
-	switch (CurrentGamemodeID)
+	switch (Stats_GetCurrentStatsGamemodeID())
 	{
 		case GAMEMODE_VERSUS:
 		{
@@ -1397,7 +1397,7 @@ public Action:event_DefibPlayer(Handle:event, const String:name[], bool:dontBroa
 
 	decl String:UpdatePoints[32];
 
-	switch (CurrentGamemodeID)
+	switch (Stats_GetCurrentStatsGamemodeID())
 	{
 		case GAMEMODE_VERSUS:
 		{
@@ -1511,7 +1511,7 @@ public Action:event_HealPlayer(Handle:event, const String:name[], bool:dontBroad
 
 	decl String:UpdatePoints[32];
 
-	switch (CurrentGamemodeID)
+	switch (Stats_GetCurrentStatsGamemodeID())
 	{
 		case GAMEMODE_VERSUS:
 		{

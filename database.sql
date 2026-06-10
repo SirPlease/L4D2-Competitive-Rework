@@ -251,13 +251,17 @@ CREATE TABLE `l4d_peak_state` (
 
 DROP TABLE IF EXISTS `l4d_server_status`;
 CREATE TABLE `l4d_server_status` (
+  `address_key` varchar(160) NOT NULL,
   `server_id` varchar(128) NOT NULL,
   `hostname` varchar(128) NOT NULL DEFAULT '',
+  `ip` varchar(64) NOT NULL DEFAULT '',
+  `port` int(11) NOT NULL DEFAULT '0',
   `players` int(11) NOT NULL DEFAULT '0',
   `updated_at` int(11) NOT NULL DEFAULT '0',
   `enabled` tinyint(4) NOT NULL DEFAULT '1',
   `is_good_server` tinyint(4) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`server_id`),
+  PRIMARY KEY (`address_key`),
+  KEY `server_id` (`server_id`),
   KEY `updated_at` (`updated_at`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -742,4 +746,3 @@ CREATE TABLE `timedmap_runs` (
   KEY `idx_timedmap_runs_filter_time` (`map`,`mode`,`difficulty`,`sinum`,`sitime`,`usebuy`,`anneversion`,`time`),
   KEY `idx_timedmap_runs_steamid` (`steamid`,`modified`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-

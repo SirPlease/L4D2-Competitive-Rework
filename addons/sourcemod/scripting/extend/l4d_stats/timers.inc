@@ -53,22 +53,9 @@ public Action:timer_EndCharge(Handle:timer, any:data)
 	{
 		Score = ModifyScoreDifficultyFloat(GetConVarInt(cvar_ChargerRamSuccess), 0.9, 0.8, TEAM_INFECTED);
 
-		if (CurrentGamemodeID == GAMEMODE_VERSUS)
-		{
-			Format(ScoreSet, sizeof(ScoreSet), "points_infected = points_infected + %i", Score);
-		}
-		else if (CurrentGamemodeID == GAMEMODE_REALISMVERSUS)
-		{
-			Format(ScoreSet, sizeof(ScoreSet), "points_realism_infected = points_realism_infected + %i", Score);
-		}
-		else if (CurrentGamemodeID == GAMEMODE_SCAVENGE)
-		{
-			Format(ScoreSet, sizeof(ScoreSet), "points_scavenge_infected = points_scavenge_infected + %i", Score);
-		}
-		else
-		{
-			Format(ScoreSet, sizeof(ScoreSet), "points_mutations = points_mutations + %i", Score);
-		}
+		decl String:UpdatePoints[32];
+		Stats_GetPointsColumnForTeam(TEAM_INFECTED, UpdatePoints, sizeof(UpdatePoints));
+		Format(ScoreSet, sizeof(ScoreSet), "%s = %s + %i", UpdatePoints, UpdatePoints, Score);
 
 		StrCat(ScoreSet, sizeof(ScoreSet), ", award_scatteringram = award_scatteringram + 1, ");
 
@@ -85,7 +72,11 @@ public Action:timer_EndCharge(Handle:timer, any:data)
 	SendSQLUpdate(query);
 
 	if (Score > 0)
-		UpdateMapStat("points_infected", Score);
+	{
+		decl String:MapPoints[32];
+		Stats_GetMapPointsFieldForTeam(TEAM_INFECTED, MapPoints, sizeof(MapPoints));
+		UpdateMapStat(MapPoints, Score);
+	}
 
 	if (Counter > 0)
 		UpdateMapStat("charger_impacts", Counter);
@@ -164,7 +155,7 @@ public Action:timer_FriendlyFireDamageEnd(Handle:timer, any:dp)
 			}
 		}
         char UpdatePoints[32];
-        switch (CurrentGamemodeID)
+        switch (Stats_GetCurrentStatsGamemodeID())
 		{
 			case GAMEMODE_VERSUS:
 			{
@@ -324,7 +315,10 @@ public Action:timer_UpdatePlayers(Handle:timer, Handle:hndl)
 
 	if (StatsDisabled())
 		return;
-	UpdateMapStat("playtime", 1);
+
+	if (Stats_HasPlaytimeStarted())
+		UpdateMapStat("playtime", 1);
+
 	QuarterRank_QueryTop100Scores();
 
 	new maxplayers = MaxClients;
@@ -480,7 +474,7 @@ InterstitialPlayerUpdateEx(client, bool:ApplyNewPlayerMultiplier)
 
 	decl String:UpdatePoints[32];
 
-	switch (CurrentGamemodeID)
+	switch (Stats_GetCurrentStatsGamemodeID())
 	{
 		case GAMEMODE_VERSUS:
 		{

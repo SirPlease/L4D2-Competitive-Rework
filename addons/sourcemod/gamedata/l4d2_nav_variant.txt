@@ -1,0 +1,57 @@
+"Games"
+{
+	"left4dead2"
+	{
+		"Addresses"
+		{
+			"fileSystem"
+			{
+				"linux"
+				{
+					"signature"	"filesystem"
+				}
+
+				"read"	"0"
+			}
+
+			"TerrorNavMesh"
+			{
+				"linux"
+				{
+					"signature"	"TheNavMesh"
+				}
+
+				"read"	"0"
+			}
+		}
+
+		"Offsets"
+		{
+			"IBaseFileSystem::ReadFile"
+			{
+				"linux"	"14"
+			}
+		}
+
+		"Signatures"
+		{
+			"filesystem"
+			{
+				"library"	"server"
+				"linux"		"@filesystem"
+			}
+
+			"TheNavMesh"
+			{
+				"library"	"server"
+				"linux"		"@TheNavMesh"
+			}
+
+			"CNavMesh::ReleaseCachedNavData"
+			{
+				"library"	"server"
+				"linux"		"@_ZN8CNavMesh20ReleaseCachedNavDataEv"
+			}
+		}
+	}
+}

@@ -97,37 +97,7 @@ public Action:timer_ProtectedFriendly(Handle:timer, any:data)
 	decl String:UserName[MAX_LINE_WIDTH];
 	GetClientName(client, UserName, sizeof(UserName));
 
-	switch (CurrentGamemodeID)
-	{
-		case GAMEMODE_VERSUS:
-		{
-			Format(UpdatePoints, sizeof(UpdatePoints), "points_survivors");
-		}
-		case GAMEMODE_REALISM:
-		{
-			Format(UpdatePoints, sizeof(UpdatePoints), "points_realism");
-		}
-		case GAMEMODE_SURVIVAL:
-		{
-			Format(UpdatePoints, sizeof(UpdatePoints), "points_survival");
-		}
-		case GAMEMODE_SCAVENGE:
-		{
-			Format(UpdatePoints, sizeof(UpdatePoints), "points_scavenge_survivors");
-		}
-		case GAMEMODE_REALISMVERSUS:
-		{
-			Format(UpdatePoints, sizeof(UpdatePoints), "points_realism_survivors");
-		}
-		case GAMEMODE_OTHERMUTATIONS:
-		{
-			Format(UpdatePoints, sizeof(UpdatePoints), "points_mutations");
-		}
-		default:
-		{
-			Format(UpdatePoints, sizeof(UpdatePoints), "points");
-		}
-	}
+	Stats_GetPointsColumnForTeam(TEAM_SURVIVORS, UpdatePoints, sizeof(UpdatePoints));
 
 	decl String:query[1024];
 	Format(query, sizeof(query), "UPDATE %splayers SET %s = %s + %i, award_protect = award_protect + %i WHERE steamid = '%s'", DbPrefix, UpdatePoints, UpdatePoints, Score, ProtectedFriendlies, UserID);
@@ -188,29 +158,17 @@ public Action:timer_InfectedDamageCheck(Handle:timer, any:data)
 
 		decl String:query[1024];
 		decl String:iID[MAX_LINE_WIDTH];
+		decl String:UpdatePoints[32];
 
 		GetClientRankAuthString(data, iID, sizeof(iID));
-
-		if (CurrentGamemodeID == GAMEMODE_VERSUS)
-		{
-			Format(query, sizeof(query), "UPDATE %splayers SET points_infected = points_infected + %i WHERE steamid = '%s'", DbPrefix, Score, iID);
-		}
-		else if (CurrentGamemodeID == GAMEMODE_REALISMVERSUS)
-		{
-			Format(query, sizeof(query), "UPDATE %splayers SET points_realism_infected = points_realism_infected + %i WHERE steamid = '%s'", DbPrefix, Score, iID);
-		}
-		else if (CurrentGamemodeID == GAMEMODE_SCAVENGE)
-		{
-			Format(query, sizeof(query), "UPDATE %splayers SET points_scavenge_infected = points_scavenge_infected + %i WHERE steamid = '%s'", DbPrefix, Score, iID);
-		}
-		else
-		{
-			Format(query, sizeof(query), "UPDATE %splayers SET points_mutations = points_mutations + %i WHERE steamid = '%s'", DbPrefix, Score, iID);
-		}
+		Stats_GetPointsColumnForTeam(TEAM_INFECTED, UpdatePoints, sizeof(UpdatePoints));
+		Format(query, sizeof(query), "UPDATE %splayers SET %s = %s + %i WHERE steamid = '%s'", DbPrefix, UpdatePoints, UpdatePoints, Score, iID);
 
 		SendSQLUpdate(query);
 
-		UpdateMapStat("points_infected", Score);
+		decl String:MapPoints[32];
+		Stats_GetMapPointsFieldForTeam(TEAM_INFECTED, MapPoints, sizeof(MapPoints));
+		UpdateMapStat(MapPoints, Score);
 
 		if (Mode == 1 || Mode == 2)
 		{
@@ -269,16 +227,11 @@ public Action:timer_BoomerBlindnessCheck(Handle:timer, any:data)
 
 		decl String:query[1024];
 		decl String:iID[MAX_LINE_WIDTH];
+		decl String:UpdatePoints[32];
 		GetClientRankAuthString(data, iID, sizeof(iID));
 
-		if (CurrentGamemodeID == GAMEMODE_VERSUS)
-			Format(query, sizeof(query), "UPDATE %splayers SET points_infected = points_infected + %i, award_perfect_blindness = award_perfect_blindness + %i, infected_boomer_blinded = infected_boomer_blinded + %i, infected_boomer_vomits = infected_boomer_vomits + %i WHERE steamid = '%s'", DbPrefix, Score, AwardCounter, OriginalHitCounter, (BoomerVomitUpdated[data] ? 0 : 1), iID);
-		else if (CurrentGamemodeID == GAMEMODE_REALISMVERSUS)
-			Format(query, sizeof(query), "UPDATE %splayers SET points_realism_infected = points_realism_infected + %i, award_perfect_blindness = award_perfect_blindness + %i, infected_boomer_blinded = infected_boomer_blinded + %i, infected_boomer_vomits = infected_boomer_vomits + %i WHERE steamid = '%s'", DbPrefix, Score, AwardCounter, OriginalHitCounter, (BoomerVomitUpdated[data] ? 0 : 1), iID);
-		else if (CurrentGamemodeID == GAMEMODE_SCAVENGE)
-			Format(query, sizeof(query), "UPDATE %splayers SET points_scavenge_infected = points_scavenge_infected + %i, award_perfect_blindness = award_perfect_blindness + %i, infected_boomer_blinded = infected_boomer_blinded + %i, infected_boomer_vomits = infected_boomer_vomits + %i WHERE steamid = '%s'", DbPrefix, Score, AwardCounter, OriginalHitCounter, (BoomerVomitUpdated[data] ? 0 : 1), iID);
-		else
-			Format(query, sizeof(query), "UPDATE %splayers SET points_mutations = points_mutations + %i, award_perfect_blindness = award_perfect_blindness + %i, infected_boomer_blinded = infected_boomer_blinded + %i, infected_boomer_vomits = infected_boomer_vomits + %i WHERE steamid = '%s'", DbPrefix, Score, AwardCounter, OriginalHitCounter, (BoomerVomitUpdated[data] ? 0 : 1), iID);
+		Stats_GetPointsColumnForTeam(TEAM_INFECTED, UpdatePoints, sizeof(UpdatePoints));
+		Format(query, sizeof(query), "UPDATE %splayers SET %s = %s + %i, award_perfect_blindness = award_perfect_blindness + %i, infected_boomer_blinded = infected_boomer_blinded + %i, infected_boomer_vomits = infected_boomer_vomits + %i WHERE steamid = '%s'", DbPrefix, UpdatePoints, UpdatePoints, Score, AwardCounter, OriginalHitCounter, (BoomerVomitUpdated[data] ? 0 : 1), iID);
 
 		SendSQLUpdate(query);
 
@@ -290,7 +243,9 @@ public Action:timer_BoomerBlindnessCheck(Handle:timer, any:data)
 
 		if (Score > 0)
 		{
-			UpdateMapStat("points_infected", Score);
+			decl String:MapPoints[32];
+			Stats_GetMapPointsFieldForTeam(TEAM_INFECTED, MapPoints, sizeof(MapPoints));
+			UpdateMapStat(MapPoints, Score);
 
 			new Mode = GetConVarInt(cvar_AnnounceMode);
 
@@ -415,7 +370,7 @@ QueryClientGameModeRankDP(Handle:dp, SQLTCallback:callback)
 
 		new Client = ReadPackCell(dp);
 
-		switch (CurrentGamemodeID)
+		switch (Stats_GetCurrentStatsGamemodeID())
 		{
 			case GAMEMODE_VERSUS:
 			{
@@ -510,7 +465,7 @@ QueryRank_2(Handle:dp=INVALID_HANDLE, SQLTCallback:callback=INVALID_FUNCTION)
 
 	decl String:query[1024];
 
-	switch (CurrentGamemodeID)
+	switch (Stats_GetCurrentStatsGamemodeID())
 	{
 		case GAMEMODE_VERSUS:
 		{
@@ -577,7 +532,7 @@ stock Stats_BuildRankDisplayGameModeSQL(String:ModeRankSQL[], ModeRankMax, Strin
 	}
 
 	decl String:OuterPoints[128], String:RankPoints[128], String:RankTimeWhere[64], String:TotalTimeWhere[64];
-	switch (CurrentGamemodeID)
+	switch (Stats_GetCurrentStatsGamemodeID())
 	{
 		case GAMEMODE_VERSUS:
 		{
@@ -908,7 +863,7 @@ CheckCurrentMapDB()
 	GetCurrentMap(MapName, sizeof(MapName));
 
 	decl String:query[512];
-	Format(query, sizeof(query), "SELECT name FROM %smaps WHERE name = LOWER('%s') AND gamemode = %i AND mutation = '%s'", DbPrefix, MapName, GetCurrentGamemodeID(), CurrentMutation);
+	Format(query, sizeof(query), "SELECT name FROM %smaps WHERE name = LOWER('%s') AND gamemode = %i AND mutation = '%s'", DbPrefix, MapName, Stats_GetCurrentStatsGamemodeID(), CurrentMutation);
 
 	SQL_TQuery(db, InsertMapDB, query);
 }
@@ -935,7 +890,7 @@ public InsertMapDB(Handle:owner, Handle:hndl, const String:error[], any:data)
 		GetCurrentMap(MapName, sizeof(MapName));
 
 		decl String:query[512];
-		Format(query, sizeof(query), "INSERT IGNORE INTO %smaps SET name = LOWER('%s'), custom = 1, gamemode = %i", DbPrefix, MapName, GetCurrentGamemodeID());
+		Format(query, sizeof(query), "INSERT IGNORE INTO %smaps SET name = LOWER('%s'), custom = 1, gamemode = %i", DbPrefix, MapName, Stats_GetCurrentStatsGamemodeID());
 
 		SQL_TQuery(db, SQLErrorCheckCallback, query);
 	}
@@ -1185,38 +1140,7 @@ public UpdatePlayerFull(Client, const String:SteamID[], const String:Name[])
 	// Client can be ZERO! Look at UpdatePlayerCallback.
 
 	decl String:Playtime[32];
-
-	switch (CurrentGamemodeID)
-	{
-		case GAMEMODE_VERSUS:
-		{
-			Format(Playtime, sizeof(Playtime), "playtime_versus");
-		}
-		case GAMEMODE_REALISM:
-		{
-			Format(Playtime, sizeof(Playtime), "playtime_realism");
-		}
-		case GAMEMODE_SURVIVAL:
-		{
-			Format(Playtime, sizeof(Playtime), "playtime_survival");
-		}
-		case GAMEMODE_SCAVENGE:
-		{
-			Format(Playtime, sizeof(Playtime), "playtime_scavenge");
-		}
-		case GAMEMODE_REALISMVERSUS:
-		{
-			Format(Playtime, sizeof(Playtime), "playtime_realismversus");
-		}
-		case GAMEMODE_OTHERMUTATIONS:
-		{
-			Format(Playtime, sizeof(Playtime), "playtime_mutations");
-		}
-		default:
-		{
-			Format(Playtime, sizeof(Playtime), "playtime");
-		}
-	}
+	Stats_GetPlaytimeColumnForMode(Stats_GetCurrentStatsGamemodeID(), Playtime, sizeof(Playtime));
 
 	decl String:IP[16];
 	GetClientIP(Client, IP, sizeof(IP));
@@ -1246,15 +1170,20 @@ public UpdatePlayerFull(Client, const String:SteamID[], const String:Name[])
 	{
 		mode = 6;
 	}
+
+	new bool:CountPlaytime = Stats_ShouldCountClientPlaytime(Client);
 	//旁观者更新时间戳，但是不增加游戏时间，这样来方便统计在线人数
-	if(!IsPlayer(Client) || !ModeStats_IsRankedMode())
+	if(!CountPlaytime || !ModeStats_IsRankedMode())
 		Format(query, sizeof(query), "UPDATE %splayers SET lastontime = UNIX_TIMESTAMP(), lastannemode = %i, lastgamemode = %i, name = '%s', ip = '%s' WHERE steamid = '%s'", DbPrefix, mode, CurrentGamemodeID, Name, IP, SteamID);
 	else
 		Format(query, sizeof(query), "UPDATE %splayers SET lastontime = UNIX_TIMESTAMP(), %s = %s + 1, lastannemode = %i, lastgamemode = %i, name = '%s', ip = '%s' WHERE steamid = '%s'", DbPrefix, Playtime, Playtime, mode, CurrentGamemodeID, Name, IP, SteamID);
-	
+
 	SQL_TQuery(db, UpdatePlayerCallback, query, Client);
-	ModeStats_RecordPlaytime(Client, 1);
-	QuarterRank_RecordPlaytime(Client, 1);
+	if (CountPlaytime)
+	{
+		ModeStats_RecordPlaytime(Client, 1);
+		QuarterRank_RecordPlaytime(Client, 1);
+	}
 }
 
 // Report error on sql query;
@@ -1306,7 +1235,7 @@ public UpdateMapStat(const String:Field[], Score)
 	Format(FieldSQL, sizeof(FieldSQL), "%s_%s", Field, DiffSQL);
 
 	decl String:query[512];
-	Format(query, sizeof(query), "UPDATE %smaps SET %s = %s + %i WHERE name = LOWER('%s') and gamemode = %i", DbPrefix, FieldSQL, FieldSQL, Score, MapName, GetCurrentGamemodeID());
+	Format(query, sizeof(query), "UPDATE %smaps SET %s = %s + %i WHERE name = LOWER('%s') and gamemode = %i", DbPrefix, FieldSQL, FieldSQL, Score, MapName, Stats_GetCurrentStatsGamemodeID());
 	SendSQLUpdate(query);
 }
 
@@ -1334,6 +1263,6 @@ public UpdateMapStatFloat(const String:Field[], Float:Value)
 	Format(FieldSQL, sizeof(FieldSQL), "%s_%s", Field, DiffSQL);
 
 	decl String:query[512];
-	Format(query, sizeof(query), "UPDATE %smaps SET %s = %s + %f WHERE name = LOWER('%s') and gamemode = %i", DbPrefix, FieldSQL, FieldSQL, Value, MapName, GetCurrentGamemodeID());
+	Format(query, sizeof(query), "UPDATE %smaps SET %s = %s + %f WHERE name = LOWER('%s') and gamemode = %i", DbPrefix, FieldSQL, FieldSQL, Value, MapName, Stats_GetCurrentStatsGamemodeID());
 	SendSQLUpdate(query);
 }

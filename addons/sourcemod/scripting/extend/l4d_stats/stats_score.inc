@@ -3,11 +3,40 @@
 #endif
 #define _l4d_stats_score_included
 
-// 根据当前游戏模式和玩家队伍选择 players 表里的积分列。
-// 新增奖励时优先走这个函数，避免每个事件都复制一份 switch。
-stock Stats_GetPointsColumnForTeam(ClientTeam, String:UpdatePoints[], MaxLength)
+stock bool:Stats_IsAnneStatsMode()
 {
-	switch (CurrentGamemodeID)
+	decl String:plugin_name[MAX_LINE_WIDTH];
+	if (cvar_mode == null && FindConVar("l4d_ready_cfg_name"))
+	{
+		cvar_mode = FindConVar("l4d_ready_cfg_name");
+	}
+
+	if (cvar_mode == null)
+		return false;
+
+	GetConVarString(cvar_mode, plugin_name, sizeof(plugin_name));
+	return StrContains(plugin_name, "AnneHappy", false) != -1
+		|| StrContains(plugin_name, "WitchParty", false) != -1
+		|| StrContains(plugin_name, "AllCharger", false) != -1
+		|| StrContains(plugin_name, "Alone", false) != -1
+		|| StrContains(plugin_name, "1vHunters", false) != -1;
+}
+
+// Anne 系可以运行在 versus 底座上，但积分和记录仍归入战役桶。
+stock Stats_GetCurrentStatsGamemodeID()
+{
+	if (Stats_IsAnneStatsMode() &&
+			(CurrentGamemodeID == GAMEMODE_VERSUS || CurrentGamemodeID == GAMEMODE_REALISMVERSUS))
+	{
+		return GAMEMODE_COOP;
+	}
+
+	return CurrentGamemodeID;
+}
+
+stock Stats_GetPointsColumnForModeAndTeam(Mode, ClientTeam, String:UpdatePoints[], MaxLength)
+{
+	switch (Mode)
 	{
 		case GAMEMODE_VERSUS:
 		{
@@ -45,6 +74,61 @@ stock Stats_GetPointsColumnForTeam(ClientTeam, String:UpdatePoints[], MaxLength)
 		default:
 		{
 			Format(UpdatePoints, MaxLength, "points");
+		}
+	}
+}
+
+// 根据当前统计模式和玩家队伍选择 players 表里的积分列。
+// 新增奖励时优先走这个函数，避免每个事件都复制一份 switch。
+stock Stats_GetPointsColumnForTeam(ClientTeam, String:UpdatePoints[], MaxLength)
+{
+	Stats_GetPointsColumnForModeAndTeam(Stats_GetCurrentStatsGamemodeID(), ClientTeam, UpdatePoints, MaxLength);
+}
+
+stock Stats_GetMapPointsFieldForTeam(ClientTeam, String:Field[], MaxLength)
+{
+	new Mode = Stats_GetCurrentStatsGamemodeID();
+	if (ClientTeam == TEAM_INFECTED &&
+			(Mode == GAMEMODE_VERSUS || Mode == GAMEMODE_SCAVENGE || Mode == GAMEMODE_REALISMVERSUS))
+	{
+		Format(Field, MaxLength, "points_infected");
+		return;
+	}
+
+	Format(Field, MaxLength, "points");
+}
+
+stock Stats_GetPlaytimeColumnForMode(Mode, String:Playtime[], MaxLength)
+{
+	switch (Mode)
+	{
+		case GAMEMODE_VERSUS:
+		{
+			Format(Playtime, MaxLength, "playtime_versus");
+		}
+		case GAMEMODE_REALISM:
+		{
+			Format(Playtime, MaxLength, "playtime_realism");
+		}
+		case GAMEMODE_SURVIVAL:
+		{
+			Format(Playtime, MaxLength, "playtime_survival");
+		}
+		case GAMEMODE_SCAVENGE:
+		{
+			Format(Playtime, MaxLength, "playtime_scavenge");
+		}
+		case GAMEMODE_REALISMVERSUS:
+		{
+			Format(Playtime, MaxLength, "playtime_realismversus");
+		}
+		case GAMEMODE_OTHERMUTATIONS:
+		{
+			Format(Playtime, MaxLength, "playtime_mutations");
+		}
+		default:
+		{
+			Format(Playtime, MaxLength, "playtime");
 		}
 	}
 }

@@ -31,6 +31,7 @@ methodmap SourceKeyValues
 	public native float GetFloat(const char[] key, float defvalue = 0.0);
 	public native void SetFloat(const char[] key, float value);
 	public native Address GetPtr(const char[] key, Address defvalue = Address_Null);
+	public native void SetPtr(const char[] key, Address value);
 	public native SourceKeyValues FindKey(const char[] key, bool bCreate = false);
 	public native SourceKeyValues GetFirstSubKey();
 	public native SourceKeyValues GetNextKey();
@@ -67,6 +68,7 @@ public void __pl_l4d2_source_keyvalues_SetNTVOptional()
 	MarkNativeAsOptional("SourceKeyValues.GetFloat");
 	MarkNativeAsOptional("SourceKeyValues.SetFloat");
 	MarkNativeAsOptional("SourceKeyValues.GetPtr");
+	MarkNativeAsOptional("SourceKeyValues.SetPtr");
 	MarkNativeAsOptional("SourceKeyValues.FindKey");
 	MarkNativeAsOptional("SourceKeyValues.GetFirstSubKey");
 	MarkNativeAsOptional("SourceKeyValues.GetNextKey");

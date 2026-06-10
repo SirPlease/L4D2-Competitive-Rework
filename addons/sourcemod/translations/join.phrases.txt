@@ -14,7 +14,7 @@
 	}
 	"Join_FinishRemindsAdministratorVerify"
 	{
-		"en"		"{olive}!finish{default} reminds the administrator to verify."
+		"en"		"{green}[AnneDonate]{default} After payment, enter {olive}!wc email{default} / {olive}!wanchen email{default} / {olive}!finish email{default} to remind the administrator to verify."
 	}
 	"Join_AnneDonateSponsorshipConfirmedNot"
 	{

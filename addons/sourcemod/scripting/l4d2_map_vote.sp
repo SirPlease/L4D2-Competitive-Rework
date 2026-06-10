@@ -4,7 +4,7 @@
 #define PLUGIN_NAME             "L4D2 Map vote"
 #define PLUGIN_AUTHOR           "fdxx, sorallll"
 #define PLUGIN_DESCRIPTION      "Map vote with mission-only for players; chapters for admins"
-#define PLUGIN_VERSION          "0.9.1-custom" // MOD: bumped
+#define PLUGIN_VERSION          "0.9.2-custom" // MOD: bumped
 #define PLUGIN_URL              ""
 
 #define TRANSLATION_MISSIONS    "missions.phrases.txt"
@@ -49,14 +49,19 @@ ConVar
     g_cvMPGameMode,
     g_cvNotifyMapNext,
     g_cvAutoReloadMode,          // 0=关闭；1=仅管理员触发；2=所有人触发
-    g_cvAutoReloadCooldown;  
+    g_cvAutoReloadCooldown,
+    g_cvVersusFromCoop;
 
 char
     g_sMode[128];
 
 bool
     g_bOnce,
-    g_bMapChanger;
+    g_bMapChanger,
+    g_bMissionKVInjected;
+
+Address
+    g_pLastMissionRoot;
 
 int
     g_iNotifyMapNext,
@@ -101,9 +106,6 @@ public void OnPluginStart() {
     Init();
     g_smFirstMap = new StringMap();
 
-    loc = new Localizer();
-    loc.Delegate_InitCompleted(OnPhrasesReady);
-
     CreateConVar("l4d2_map_vote_version", PLUGIN_VERSION, "L4D2 Map vote plugin version.", FCVAR_NOTIFY|FCVAR_DONTRECORD);
     g_cvNotifyMapNext =  CreateConVar("notify_map_next", "1", "终局开始后提示投票下一张地图的方式. \n0=不提示, 1=聊天栏, 2=屏幕中央, 4=弹出菜单.", FCVAR_NOTIFY);
     g_cvAutoReloadMode = CreateConVar(
@@ -115,7 +117,15 @@ public void OnPluginStart() {
         "l4d2_mapvote_reload_cd", "10.0",
         "自动刷新冷却（秒），避免被频繁触发导致卡顿。",
         FCVAR_NOTIFY);
+	g_cvVersusFromCoop = CreateConVar(
+		"l4d2_mapvote_versus_from_coop", "1",
+		"给缺少 versus 的战役临时注入 modes/versus：0=关，1=仅 Anne 派生 cfg，2=所有 cfg。",
+		FCVAR_NOTIFY);
     g_cvNotifyMapNext.AddChangeHook(CvarChanged);
+    g_cvVersusFromCoop.AddChangeHook(CvarChanged_MissionKV);
+
+    loc = new Localizer();
+    loc.Delegate_InitCompleted(OnPhrasesReady);
 
     //AutoExecConfig(true);
 
@@ -154,6 +164,8 @@ public void OnPhrasesReady() {
     g_profiler.Start();
     #endif
 
+    InjectMissionKV();
+
     esPhrase esp;
     ArrayList al_missions = new ArrayList(sizeof esPhrase);
     ArrayList al_chapters = new ArrayList(sizeof esPhrase);
@@ -184,8 +196,8 @@ public void OnPhrasesReady() {
 
         for (kvModes = kvModes.GetFirstTrueSubKey(); !kvModes.IsNull(); kvModes = kvModes.GetNextTrueSubKey()) {
             for (kvChapters = kvModes.GetFirstTrueSubKey(); !kvChapters.IsNull(); kvChapters = kvChapters.GetNextTrueSubKey()) {
-                kvChapters.GetString("Map", phrase, sizeof phrase, "N/A");
-                if (!strcmp(phrase, "N/A") || FindCharInString(phrase, '/') != -1)
+                GetKVStringEither(kvChapters, "map", "Map", phrase, sizeof phrase);
+                if (!phrase[0] || FindCharInString(phrase, '/') != -1)
                     continue;
 
                 if (al_chapters.FindString(phrase) == -1) {
@@ -388,17 +400,18 @@ void CvarChanged(ConVar convar, const char[] oldValue, const char[] newValue) {
 
 void CvarChanged_Mode(ConVar convar, const char[] oldValue, const char[] newValue) {
     GetCvars_Mode();
+    MarkMissionKVDirty();
+    SetFirstMapString();
+}
+
+void CvarChanged_MissionKV(ConVar convar, const char[] oldValue, const char[] newValue) {
+    MarkMissionKVDirty();
 }
 
 public void OnConfigsExecuted() {
     GetCvars();
     GetCvars_Mode();
-
-    static bool val;
-    if (val)
-        return;
-
-    val = true;
+    InjectMissionKV();
     SetFirstMapString();
 }
 
@@ -411,25 +424,268 @@ void GetCvars_Mode() {
 }
 
 void SetFirstMapString() {
+    InjectMissionKV();
+
     g_smFirstMap.Clear();
-    char key[64], mission[64], map[64];
+    char mission[64], map[64];
     SourceKeyValues kvMissions = SDKCall(g_hSDK_GetAllMissions, g_pMatchExtL4D);
     for (SourceKeyValues kvSub = kvMissions.GetFirstTrueSubKey(); !kvSub.IsNull(); kvSub = kvSub.GetNextTrueSubKey()) {
-        FormatEx(key, sizeof key, "modes/%s/1/Map", g_sMode);
-        SourceKeyValues kvFirstMap = kvSub.FindKey(key);
+        SourceKeyValues kvMode = FindVisibleMissionMode(kvSub, g_sMode);
+        if (kvMode.IsNull())
+            continue;
+
+        SourceKeyValues kvFirstMap = kvMode.FindKey("1");
         if (kvFirstMap.IsNull())
             continue;
 
         kvSub.GetName(mission, sizeof mission);
-        kvFirstMap.GetString(NULL_STRING, map, sizeof map);
+        GetKVStringEither(kvFirstMap, "map", "Map", map, sizeof map);
+        if (!map[0])
+            continue;
+
         g_smFirstMap.SetString(map, mission);
     }
 }
+
+void MarkMissionKVDirty() {
+    g_bMissionKVInjected = false;
+    g_pLastMissionRoot = Address_Null;
+}
+
+SourceKeyValues GetMissionManagerRoot() {
+    if (g_pMatchExtL4D == Address_Null)
+        return view_as<SourceKeyValues>(Address_Null);
+
+    Address root = view_as<Address>(LoadFromAddress(g_pMatchExtL4D + view_as<Address>(4), NumberType_Int32));
+    return view_as<SourceKeyValues>(root);
+}
+
+void InjectMissionKV(bool force = false) {
+    if (!ShouldUseVersusMissionInjection())
+        return;
+
+    SourceKeyValues kvRoot = GetMissionManagerRoot();
+    if (kvRoot.IsNull())
+        return;
+
+    Address root = view_as<Address>(kvRoot);
+    if (!force && g_bMissionKVInjected && g_pLastMissionRoot == root)
+        return;
+
+    g_pLastMissionRoot = root;
+
+    SourceKeyValues kvMissions = kvRoot.FindKey("Missions");
+    if (kvMissions.IsNull()) {
+        kvMissions = SDKCall(g_hSDK_GetAllMissions, g_pMatchExtL4D);
+        if (kvMissions.IsNull())
+            return;
+    }
+
+    int injected;
+    int indexed;
+    char mission[64];
+    for (SourceKeyValues kvMission = kvMissions.GetFirstTrueSubKey(); !kvMission.IsNull(); kvMission = kvMission.GetNextTrueSubKey()) {
+        kvMission.GetName(mission, sizeof mission);
+        if (g_smExclude.ContainsKey(mission))
+            continue;
+
+        SourceKeyValues kvVersus = kvMission.FindKey("modes/versus");
+        if (kvVersus.IsNull()) {
+            SourceKeyValues kvSource = FindMissionModeSource(kvMission);
+            if (kvSource.IsNull())
+                continue;
+
+            kvVersus = kvMission.FindKey("modes/versus", true);
+            if (kvVersus.IsNull())
+                continue;
+
+            if (CopyMissionModeChapters(kvSource, kvVersus, mission)) {
+                kvVersus.SetInt("AnneHappyInjected", 1);
+                injected++;
+            }
+            else {
+                continue;
+            }
+        }
+
+        if (RegisterMissionModePointer(kvRoot, "versus", mission, kvMission))
+            indexed++;
+    }
+
+    g_bMissionKVInjected = true;
+
+    if (injected || indexed)
+        LogMessage("Injected mission KV for versus: modes=%d, indexes=%d", injected, indexed);
+}
+
+bool ShouldUseVersusMissionInjection() {
+    if (g_cvVersusFromCoop == null)
+        return false;
+
+    int mode = g_cvVersusFromCoop.IntValue;
+    if (mode <= 0)
+        return false;
+
+    if (mode >= 2)
+        return true;
+
+    ConVar cfgName = FindConVar("l4d_ready_cfg_name");
+    if (cfgName == null)
+        return false;
+
+	char cfg[128];
+	cfgName.GetString(cfg, sizeof cfg);
+	return StrContains(cfg, "AnneHappy", false) != -1
+		|| StrContains(cfg, "WitchParty", false) != -1
+		|| StrContains(cfg, "AllCharger", false) != -1
+		|| StrContains(cfg, "Alone", false) != -1
+		|| StrContains(cfg, "1vHunters", false) != -1;
+}
+
+SourceKeyValues FindVisibleMissionMode(SourceKeyValues kvMission, const char[] mode) {
+    char key[64];
+    FormatEx(key, sizeof key, "modes/%s", mode);
+    SourceKeyValues kvMode = kvMission.FindKey(key);
+    if (kvMode.IsNull())
+        return kvMode;
+
+    if (StrEqual(mode, "versus", false) && kvMode.GetInt("AnneHappyInjected", 0) && !ShouldUseVersusMissionInjection())
+        return view_as<SourceKeyValues>(Address_Null);
+
+    return kvMode;
+}
+
+SourceKeyValues FindMissionModeSource(SourceKeyValues kvMission) {
+    static char modes[][] = {
+        "coop",
+        "realism"
+    };
+
+    for (int i; i < sizeof modes; i++) {
+        char key[32];
+        FormatEx(key, sizeof key, "modes/%s", modes[i]);
+        SourceKeyValues kvMode = kvMission.FindKey(key);
+        if (!kvMode.IsNull())
+            return kvMode;
+    }
+
+    return view_as<SourceKeyValues>(Address_Null);
+}
+
+bool CopyMissionModeChapters(SourceKeyValues kvSource, SourceKeyValues kvDest, const char[] mission) {
+    int chapters = GetMissionChapterCount(kvSource);
+    if (chapters <= 0)
+        return false;
+
+    int copied;
+    char key[16];
+    for (int i = 1; i <= chapters; i++) {
+        IntToString(i, key, sizeof key);
+        SourceKeyValues kvSourceChapter = kvSource.FindKey(key);
+        if (kvSourceChapter.IsNull())
+            continue;
+
+        SourceKeyValues kvDestChapter = kvDest.FindKey(key, true);
+        if (kvDestChapter.IsNull())
+            continue;
+
+        CopyMissionChapterValues(kvSourceChapter, kvDestChapter, mission, i);
+        copied++;
+    }
+
+    if (!copied)
+        return false;
+
+    kvDest.SetInt("chapters", chapters);
+    return true;
+}
+
+int GetMissionChapterCount(SourceKeyValues kvMode) {
+    int chapters = kvMode.GetInt("chapters", 0);
+    if (chapters > 0)
+        return chapters;
+
+    char name[16], map[64];
+    for (SourceKeyValues kvChapter = kvMode.GetFirstTrueSubKey(); !kvChapter.IsNull(); kvChapter = kvChapter.GetNextTrueSubKey()) {
+        kvChapter.GetName(name, sizeof name);
+        GetKVStringEither(kvChapter, "map", "Map", map, sizeof map);
+        if (map[0]) {
+            int chapter = StringToInt(name);
+            if (chapter > chapters)
+                chapters = chapter;
+        }
+    }
+
+    return chapters;
+}
+
+void CopyMissionChapterValues(SourceKeyValues kvSource, SourceKeyValues kvDest, const char[] mission, int chapter) {
+    char key[64];
+    char value[256];
+    for (SourceKeyValues kvValue = kvSource.GetFirstValue(); !kvValue.IsNull(); kvValue = kvValue.GetNextValue()) {
+        kvValue.GetName(key, sizeof key);
+        switch (kvValue.GetDataType(NULL_STRING)) {
+            case TYPE_STRING: {
+                kvValue.GetString(NULL_STRING, value, sizeof value, "");
+                kvDest.SetString(key, value);
+            }
+            case TYPE_INT: {
+                kvDest.SetInt(key, kvValue.GetInt(NULL_STRING, 0));
+            }
+            case TYPE_FLOAT: {
+                kvDest.SetFloat(key, kvValue.GetFloat(NULL_STRING, 0.0));
+            }
+        }
+    }
+
+    if (GetKVStringEither(kvSource, "map", "Map", value, sizeof value)) {
+        kvDest.SetString("map", value);
+        kvDest.SetString("Map", value);
+    }
+
+    if (GetKVStringEither(kvDest, "DisplayName", "displayname", value, sizeof value)) {
+        kvDest.SetString("DisplayName", value);
+    }
+    else {
+        FormatEx(value, sizeof value, "%s-%d", mission, chapter);
+        kvDest.SetString("DisplayName", value);
+    }
+
+    if (GetKVStringEither(kvDest, "image", "Image", value, sizeof value))
+        kvDest.SetString("image", value);
+    else
+        kvDest.SetString("image", "maps/unknown");
+
+    kvDest.SetInt("chapter", chapter);
+}
+
+bool GetKVStringEither(SourceKeyValues kv, const char[] first, const char[] second, char[] value, int maxlength) {
+    kv.GetString(first, value, maxlength, "");
+    if (!value[0])
+        kv.GetString(second, value, maxlength, "");
+
+    return value[0] != '\0';
+}
+
+bool RegisterMissionModePointer(SourceKeyValues kvRoot, const char[] mode, const char[] mission, SourceKeyValues kvMission) {
+    char path[128];
+    FormatEx(path, sizeof path, "GameModes/%s/missions/%s", mode, mission);
+
+    Address missionPtr = view_as<Address>(kvMission);
+    if (kvRoot.GetPtr(path, Address_Null) == missionPtr)
+        return false;
+
+    kvRoot.SetPtr(path, missionPtr);
+    return true;
+}
+
 // 统一的刷新逻辑：刷新 VPK 路径 + mission_reload + 重新生成短语和首章映射
 void DoReloadVPKAndMissions()
 {
     ServerCommand("update_addon_paths; mission_reload");
     ServerExecute();
+    MarkMissionKVDirty();
+    InjectMissionKV(true);
 
     // 你的原逻辑：重导翻译短语、重建首章映射
     OnPhrasesReady();
@@ -478,6 +734,8 @@ Action cmdRxport(int client, int args) {
         ReplyToCommand(client, "sm_missions_export <file>");
         return Plugin_Handled;
     }
+
+    InjectMissionKV();
 
     char file[PLATFORM_MAX_PATH];
     GetCmdArg(1, file, sizeof file);
@@ -537,6 +795,8 @@ int MapNext_MenuHandler(Menu menu, MenuAction action, int client, int param2) {
 }
 
 void ShowNextMap(int client) {
+    InjectMissionKV();
+
     char title[64];
     char buffer[64];
     Menu menu = new Menu(ShowNextMap_MenuHandler);
@@ -548,8 +808,7 @@ void ShowNextMap(int client) {
         if (g_smExclude.ContainsKey(title))
             continue;
 
-        FormatEx(buffer, sizeof buffer, "modes/%s", g_sMode);
-        if (kvSub.FindKey(buffer).IsNull())
+        if (FindVisibleMissionMode(kvSub, g_sMode).IsNull())
             continue;
 
         int val;
@@ -596,10 +855,11 @@ void VoteNextMap(int client, const char[] item) {
         return;
     }
 
-    char buffer[128];
-    FormatEx(buffer, sizeof buffer, "%s/modes/%s", item, g_sMode);
+    InjectMissionKV();
+
     SourceKeyValues kvMissions = SDKCall(g_hSDK_GetAllMissions, g_pMatchExtL4D);
-    SourceKeyValues kvChapters = kvMissions.FindKey(buffer);
+    SourceKeyValues kvMission = kvMissions.FindKey(item);
+    SourceKeyValues kvChapters = kvMission.IsNull() ? view_as<SourceKeyValues>(Address_Null) : FindVisibleMissionMode(kvMission, g_sMode);
     if (kvChapters.IsNull()) {
         CPrintToChat(client, "%t", "L4D2MapVote_NoValidChapterMapExists");
         return;
@@ -609,7 +869,7 @@ void VoteNextMap(int client, const char[] item) {
     char info[2][64];
     SourceKeyValues kvMap;
     for (kvMap = kvChapters.GetFirstTrueSubKey(); !kvMap.IsNull(); kvMap = kvMap.GetNextTrueSubKey()) {
-        kvMap.GetString("Map", info[1], sizeof info[], "N/A");
+        GetKVStringEither(kvMap, "map", "Map", info[1], sizeof info[]);
         if (IsMapValidEx(info[1])) {
             find = true;
             break;
@@ -622,6 +882,7 @@ void VoteNextMap(int client, const char[] item) {
     }
 
     strcopy(info[0], sizeof info[], item);
+    char buffer[128];
     ImplodeStrings(info, sizeof info, "//", buffer, sizeof buffer);
 
     L4D2NativeVote vote = L4D2NativeVote(NextMap_Handler);
@@ -729,6 +990,8 @@ int MapVote_MenuHandler(Menu menu, MenuAction action, int client, int param2) {
 }
 
 void ShowVoteMap(int client) {
+    InjectMissionKV();
+
     char title[64];
     char buffer[64];
     Menu menu = new Menu(ShowVoteMap_MenuHandler);
@@ -741,8 +1004,7 @@ void ShowVoteMap(int client) {
         if (g_smExclude.ContainsKey(title))
             continue;
 
-        FormatEx(buffer, sizeof buffer, "modes/%s", g_sMode);
-        if (kvSub.FindKey(buffer).IsNull())
+        if (FindVisibleMissionMode(kvSub, g_sMode).IsNull())
             continue;
         
         int val;
@@ -804,6 +1066,8 @@ void VoteChangeMission(int client, const char[] mission) {
         return;
     }
 
+    InjectMissionKV();
+
     // mission 即 kvMissions 的 key
     L4D2NativeVote vote = L4D2NativeVote(ChangeMission_Handler);
     vote.Initiator = client;
@@ -851,6 +1115,8 @@ void ChangeMission_Handler(L4D2NativeVote vote, VoteAction action, int param1, i
                 char mission[64];
                 vote.GetInfo(mission, sizeof mission);
 
+                InjectMissionKV();
+
                 // 直接按战役切换（CDirector::OnChangeMissionVote 会按当前 mp_gamemode 进入该战役的第一章）
                 SDKCall(g_hSDK_OnChangeMissionVote, g_pDirector, mission);
             }
@@ -865,11 +1131,13 @@ void ChangeMission_Handler(L4D2NativeVote vote, VoteAction action, int param1, i
 // ==============================
 
 void ShowChaptersMenu(int client, const char[] item) {
+    InjectMissionKV();
+
     char buffer[128];
     char info[2][64];
-    FormatEx(buffer, sizeof buffer, "%s/modes/%s", item, g_sMode);
     SourceKeyValues kvMissions = SDKCall(g_hSDK_GetAllMissions, g_pMatchExtL4D);
-    SourceKeyValues kvChapters = kvMissions.FindKey(buffer);
+    SourceKeyValues kvMission = kvMissions.FindKey(item);
+    SourceKeyValues kvChapters = kvMission.IsNull() ? view_as<SourceKeyValues>(Address_Null) : FindVisibleMissionMode(kvMission, g_sMode);
     if (kvChapters.IsNull()) {
         CPrintToChat(client, "%t", "L4D2MapVote_NoValidChapterMapExists");
         return;
@@ -881,7 +1149,7 @@ void ShowChaptersMenu(int client, const char[] item) {
     bool valid_map;
     strcopy(info[0], sizeof info[], item);
     for (SourceKeyValues kvSub = kvChapters.GetFirstTrueSubKey(); !kvSub.IsNull(); kvSub = kvSub.GetNextTrueSubKey()) {
-        kvSub.GetString("Map", info[1], sizeof info[], "N/A");
+        GetKVStringEither(kvSub, "map", "Map", info[1], sizeof info[]);
         if (!IsMapValidEx(info[1]))
             continue;
 

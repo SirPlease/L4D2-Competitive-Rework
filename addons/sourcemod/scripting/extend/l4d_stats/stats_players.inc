@@ -74,3 +74,23 @@ stock Stats_CountPlayingHumans()
 
 	return humans;
 }
+
+stock bool:Stats_HasPlaytimeStarted()
+{
+	if (CurrentGamemodeID == GAMEMODE_SURVIVAL)
+		return SurvivalStarted;
+
+	if (CurrentGamemodeID == GAMEMODE_SCAVENGE)
+		return g_bStatsPlaytimeStarted;
+
+	return g_bStatsPlaytimeStarted || L4D_HasAnySurvivorLeftSafeArea();
+}
+
+stock bool:Stats_ShouldCountClientPlaytime(Client)
+{
+	if (!Stats_HasPlaytimeStarted() || !Stats_IsValidHumanClient(Client))
+		return false;
+
+	new team = GetClientTeam(Client);
+	return team == TEAM_SURVIVORS || team == TEAM_INFECTED;
+}

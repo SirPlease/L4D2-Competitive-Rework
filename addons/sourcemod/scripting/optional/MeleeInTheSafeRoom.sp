@@ -4,6 +4,7 @@
 #include <sdktools>
 
 #define VERSION "2.0.7"
+#define MAX_MELEE_CLASSES 16
 
 new Handle:g_hEnabled;
 new Handle:g_hWeaponRandom;
@@ -27,7 +28,24 @@ new g_iMeleeClassCount = 0;
 new g_iMeleeRandomSpawn[20];
 new g_iRound = 2;
 
-new String:g_sMeleeClass[16][32];
+new String:g_sMeleeClass[MAX_MELEE_CLASSES][32];
+
+static const String:g_sDefaultMeleeClass[][] =
+{
+    "fireaxe",
+    "frying_pan",
+    "machete",
+    "baseball_bat",
+    "crowbar",
+    "cricket_bat",
+    "tonfa",
+    "katana",
+    "electric_guitar",
+    "knife",
+    "golfclub",
+    "pitchfork",
+    "shovel"
+};
 
 public Plugin:myinfo =
 {
@@ -86,6 +104,10 @@ public OnMapStart()
     PrecacheModel( "models/weapons/melee/v_katana.mdl", true );
     PrecacheModel( "models/weapons/melee/v_machete.mdl", true );
     PrecacheModel( "models/weapons/melee/v_tonfa.mdl", true );
+    PrecacheModel( "models/v_models/v_knife_t.mdl", true );
+    PrecacheModel( "models/weapons/melee/v_pitchfork.mdl", true );
+    PrecacheModel( "models/weapons/melee/v_shovel.mdl", true );
+    PrecacheModel( "models/weapons/melee/v_riotshield.mdl", true );
     
     PrecacheModel( "models/weapons/melee/w_bat.mdl", true );
     PrecacheModel( "models/weapons/melee/w_cricket_bat.mdl", true );
@@ -97,6 +119,10 @@ public OnMapStart()
     PrecacheModel( "models/weapons/melee/w_katana.mdl", true );
     PrecacheModel( "models/weapons/melee/w_machete.mdl", true );
     PrecacheModel( "models/weapons/melee/w_tonfa.mdl", true );
+    PrecacheModel( "models/w_models/weapons/w_knife_t.mdl", true );
+    PrecacheModel( "models/weapons/melee/w_pitchfork.mdl", true );
+    PrecacheModel( "models/weapons/melee/w_shovel.mdl", true );
+    PrecacheModel( "models/weapons/melee/w_riotshield.mdl", true );
     PrecacheModel( "models/w_models/weapons/w_sniper_scout.mdl");
     PrecacheModel( "models/v_models/v_snip_scout.mdl");
     
@@ -110,6 +136,10 @@ public OnMapStart()
     PrecacheGeneric( "scripts/melee/katana.txt", true );
     PrecacheGeneric( "scripts/melee/machete.txt", true );
     PrecacheGeneric( "scripts/melee/tonfa.txt", true );
+    PrecacheGeneric( "scripts/melee/knife.txt", true );
+    PrecacheGeneric( "scripts/melee/pitchfork.txt", true );
+    PrecacheGeneric( "scripts/melee/shovel.txt", true );
+    PrecacheGeneric( "scripts/melee/riotshield.txt", true );
 
     new index = CreateEntityByName("weapon_sniper_scout");
     DispatchSpawn(index);
@@ -137,6 +167,12 @@ Action:Timer_SpawnMelee( Handle:timer )
 
     if( client != 0 && !g_bSpawnedMelee )
     {
+        if( g_iMeleeClassCount <= 0 )
+        {
+            LogError( "No melee classes are available for saferoom melee spawning." );
+            return Plugin_Stop;
+        }
+
         decl Float:SpawnPosition[3], Float:SpawnAngle[3];
         GetClientAbsOrigin( client, SpawnPosition );
         SpawnPosition[2] += 20; SpawnAngle[0] = 90.0;
@@ -144,7 +180,11 @@ Action:Timer_SpawnMelee( Handle:timer )
         if( GetConVarBool( g_hWeaponRandom ) )
         {
             new i = 0;
-            while( i < GetConVarInt( g_hWeaponRandomAmount ) )
+            new amount = GetConVarInt( g_hWeaponRandomAmount );
+            if( amount < 0 ) amount = 0;
+            if( amount > sizeof( g_iMeleeRandomSpawn ) ) amount = sizeof( g_iMeleeRandomSpawn );
+
+            while( i < amount )
             {
                 new RandomMelee = GetRandomInt( 0, g_iMeleeClassCount-1 );
                 if( IsVersus() && g_iRound == 2 ) RandomMelee = g_iMeleeRandomSpawn[i]; 
@@ -164,6 +204,8 @@ Action:Timer_SpawnMelee( Handle:timer )
     {
         if( !g_bSpawnedMelee ) CreateTimer( 1.0, Timer_SpawnMelee );
     }
+
+    return Plugin_Stop;
 }
 
 stock SpawnCustomList( Float:Position[3], Float:Angle[3] )
@@ -303,8 +345,20 @@ stock SpawnMelee( const String:Class[32], Float:Position[3], Float:Angle[3] )
     SpawnAngle[1] = GetRandomFloat( 0.0, 360.0 );
 
     new MeleeSpawn = CreateEntityByName( "weapon_melee" );
+    if( MeleeSpawn == -1 )
+    {
+        LogError( "Failed to create weapon_melee for script \"%s\".", Class );
+        return;
+    }
+
     DispatchKeyValue( MeleeSpawn, "melee_script_name", Class );
-    DispatchSpawn( MeleeSpawn );
+    if( !DispatchSpawn( MeleeSpawn ) )
+    {
+        LogError( "Failed to spawn weapon_melee for script \"%s\".", Class );
+        RemoveEdict( MeleeSpawn );
+        return;
+    }
+
     TeleportEntity(MeleeSpawn, SpawnPosition, SpawnAngle, NULL_VECTOR );
 }
 
@@ -326,13 +380,73 @@ stock SpawnScout(Float:Position[3], Float:Angle[3])
 
 stock GetMeleeClasses()
 {
-    new MeleeStringTable = FindStringTable( "MeleeWeapons" );
-    g_iMeleeClassCount = GetStringTableNumStrings( MeleeStringTable );
+    g_iMeleeClassCount = 0;
     
+    new MeleeStringTable = FindStringTable( "MeleeWeapons" );
+    if( MeleeStringTable != INVALID_STRING_TABLE )
+    {
+        new tableCount = GetStringTableNumStrings( MeleeStringTable );
+        decl String:MeleeClass[32];
+
+        for( new i = 0; i < tableCount && g_iMeleeClassCount < MAX_MELEE_CLASSES; i++ )
+        {
+            ReadStringTable( MeleeStringTable, i, MeleeClass, sizeof( MeleeClass ) );
+            AddMeleeClass( MeleeClass );
+        }
+    }
+
+    if( g_iMeleeClassCount == 0 )
+    {
+        LoadConfiguredMeleeClasses();
+    }
+
+    if( g_iMeleeClassCount == 0 )
+    {
+        LoadDefaultMeleeClasses();
+    }
+}
+
+stock LoadConfiguredMeleeClasses()
+{
+    new Handle:cvarMeleeSpawn = FindConVar( "l4d2_melee_spawn" );
+    if( cvarMeleeSpawn == INVALID_HANDLE ) return;
+
+    decl String:MeleeList[512];
+    GetConVarString( cvarMeleeSpawn, MeleeList, sizeof( MeleeList ) );
+    ReplaceString( MeleeList, sizeof( MeleeList ), " ", "" );
+    if( !MeleeList[0] ) return;
+
+    decl String:MeleeClasses[MAX_MELEE_CLASSES][32];
+    new count = ExplodeString( MeleeList, ",", MeleeClasses, sizeof( MeleeClasses ), sizeof( MeleeClasses[] ) );
+
+    for( new i = 0; i < count && g_iMeleeClassCount < MAX_MELEE_CLASSES; i++ )
+    {
+        AddMeleeClass( MeleeClasses[i] );
+    }
+}
+
+stock LoadDefaultMeleeClasses()
+{
+    for( new i = 0; i < sizeof( g_sDefaultMeleeClass ) && g_iMeleeClassCount < MAX_MELEE_CLASSES; i++ )
+    {
+        AddMeleeClass( g_sDefaultMeleeClass[i] );
+    }
+}
+
+stock AddMeleeClass( const String:MeleeClass[] )
+{
+    if( !MeleeClass[0] ) return;
+
     for( new i = 0; i < g_iMeleeClassCount; i++ )
     {
-        ReadStringTable( MeleeStringTable, i, g_sMeleeClass[i], 32 );
-    }   
+        if( StrEqual( g_sMeleeClass[i], MeleeClass, false ) )
+        {
+            return;
+        }
+    }
+
+    strcopy( g_sMeleeClass[g_iMeleeClassCount], sizeof( g_sMeleeClass[] ), MeleeClass );
+    g_iMeleeClassCount++;
 }
 
 stock GetScriptName( const String:Class[32], String:ScriptName[32] )
@@ -350,7 +464,7 @@ stock GetScriptName( const String:Class[32], String:ScriptName[32] )
 
 stock GetInGameClient()
 {
-    for( new x = 1; x <= GetClientCount( true ); x++ )
+    for( new x = 1; x <= MaxClients; x++ )
     {
         if( IsClientInGame( x ) && GetClientTeam( x ) == 2 )
         {

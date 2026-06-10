@@ -1,7 +1,7 @@
 #pragma semicolon 1
 #pragma newdecls required
 
-#define VERSION "0.1"
+#define VERSION "0.2"
 
 #include <sourcemod>
 #include <sdktools>
@@ -18,6 +18,7 @@ Handle
 	g_hSDKGetFloat,
 	g_hSDKSetFloat,
 	g_hSDKGetPtr,
+	g_hSDKSetPtr,
 	g_hSDKFindKey,
 	g_hSDKGetFirstSubKey,
 	g_hSDKGetNextKey,
@@ -47,6 +48,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	CreateNative("SourceKeyValues.GetFloat", Native_GetFloat);
 	CreateNative("SourceKeyValues.SetFloat", Native_SetFloat);
 	CreateNative("SourceKeyValues.GetPtr", Native_GetPtr);
+	CreateNative("SourceKeyValues.SetPtr", Native_SetPtr);
 	CreateNative("SourceKeyValues.FindKey", Native_FindKey);
 	CreateNative("SourceKeyValues.GetFirstSubKey", Native_GetFirstSubKey);
 	CreateNative("SourceKeyValues.GetNextKey", Native_GetNextKey);
@@ -242,6 +244,19 @@ any Native_GetPtr(Handle plugin, int numParams)
 		return SDKCall(g_hSDKGetPtr, GetNativeCell(1), key, GetNativeCell(3));
 	}
 	return SDKCall(g_hSDKGetPtr, GetNativeCell(1), NULL_STRING, GetNativeCell(3));
+}
+
+// public native void SetPtr(const char[] key, Address value);
+any Native_SetPtr(Handle plugin, int numParams)
+{
+	int keyLength;
+	GetNativeStringLength(2, keyLength);
+	keyLength += 1;
+	char[] key = new char[keyLength];
+	GetNativeString(2, key, keyLength);
+
+	SDKCall(g_hSDKSetPtr, GetNativeCell(1), key, GetNativeCell(3));
+	return 0;
 }
 
 // public native SourceKeyValues FindKey(const char[] key, bool bCreate = false);
@@ -447,6 +462,16 @@ void Init()
 	if (g_hSDKGetPtr == null)
 		SetFailState("Failed to create SDKCall: \"%s\"", sBuffer);
 
+	strcopy(sBuffer, sizeof sBuffer, "KeyValues::SetPtr");
+	StartPrepSDKCall(SDKCall_Raw);
+	if (!PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, sBuffer))
+		SetFailState("Failed to find signature: \"%s\"", sBuffer);
+	PrepSDKCall_AddParameter(SDKType_String, SDKPass_Pointer);
+	PrepSDKCall_AddParameter(SDKType_PlainOldData, SDKPass_Plain);
+	g_hSDKSetPtr = EndPrepSDKCall();
+	if (g_hSDKSetPtr == null)
+		SetFailState("Failed to create SDKCall: \"%s\"", sBuffer);
+
 	strcopy(sBuffer, sizeof sBuffer, "KeyValues::FindKey");
 	StartPrepSDKCall(SDKCall_Raw);
 	if (!PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, sBuffer))
@@ -526,5 +551,4 @@ void Init()
 
 	delete hGameData;
 }
-
 

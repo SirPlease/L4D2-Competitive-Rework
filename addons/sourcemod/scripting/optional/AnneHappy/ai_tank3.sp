@@ -61,9 +61,6 @@ ConVar
     g_cvAirVecModifyDegree,
     g_cvAirVecModifyMaxDegree,
     g_cvAirVecModifyInterval,
-    g_cvClimbAnimRate,       // 高翻越播放速率
-    g_cvLowClimbAnimRate,    // 低翻越播放速率
-    g_cvLadderClimbAnimRate, // NEW: 梯子攀爬播放速率（新增）
     g_cvRockTargetAdjust,
     g_cvBackFist,
     g_cvBackFistRange,
@@ -85,10 +82,7 @@ ConVar g_cvBhopNoVisionMaxAng;
 ConVar cvTankSwingRange;
 
 // ===== 运行时对象 =====
-StringMap
-    g_hThrowAnimMap,
-    g_hClimbAnimMap,
-    g_hLowClimbAnimMap;
+StringMap g_hThrowAnimMap;
 
 Handle g_hSdkTankClawSweepFist;
 Handle g_hSdkNextBotGetCombatCharacter;
@@ -100,7 +94,6 @@ Handle g_hPathFollowerDetour;
 bool  g_bLateLoad;
 float g_fTankSwingRange;
 float g_fHeadBlockIgnoreUntil[MAXPLAYERS + 1];
-bool  g_bWasOnLadder[MAXPLAYERS + 1];
 
 // ===== 结构体 =====
 enum struct PathSegment
@@ -178,8 +171,7 @@ Logger log;
 // ===== Tank 动画类型（按逻辑分类）=====
 enum TankSequenceType
 {
-    tankSequence_Throw,
-    tankSequence_Climb
+    tankSequence_Throw
 }
 
 // ===== 插件信息 =====
@@ -230,13 +222,6 @@ public void OnPluginStart()
     // 投石/距离
     g_cvThrowMinDist = CreateConVar("ai_tank3_throw_min_dist", "0",   "允许扔石头的最小距离", CVAR_FLAGS, true, 0.0);
     g_cvThrowMaxDist = CreateConVar("ai_tank3_throw_max_dist", "800", "允许扔石头的最大距离", CVAR_FLAGS, true, 0.0);
-
-    // 攀爬动画倍速（翻越）
-    g_cvClimbAnimRate    = CreateConVar("ai_tank3_climb_anim_rate", "3.5", "Tank 高翻越动画播放倍速（1.0=原速）", CVAR_FLAGS, true, 0.0);
-    g_cvLowClimbAnimRate = CreateConVar("ai_tank3_low_climb_anim_rate", "2.5", "Tank 低翻越动画播放倍速（1.0=原速）", CVAR_FLAGS, true, 0.0);
-
-    // NEW: 梯子攀爬独立倍速
-    g_cvLadderClimbAnimRate = CreateConVar("ai_tank3_ladder_climb_rate", "5.0", "Tank 梯子攀爬动画播放倍速（1.0=原速）", CVAR_FLAGS, true, 0.0);
 
     // 投石目标调整 / 通背拳 / 锁视角 / 跳砖
     g_cvRockTargetAdjust  = CreateConVar("ai_tank3_rock_target_adjust", "1", "扔石头时若原目标不可见，允许切换至最近可视目标", CVAR_FLAGS, true, 0.0, true, 1.0);
@@ -413,8 +398,6 @@ public void OnPluginEnd()
 {
     delete log;
     delete g_hThrowAnimMap;
-    delete g_hClimbAnimMap;
-    delete g_hLowClimbAnimMap;
     delete g_hPathFollowerDetour;
     delete g_hSdkNextBotGetCombatCharacter;
     delete g_hSdkPathGetCurGoal;
@@ -438,7 +421,6 @@ void evtRoundStart(Event event, const char[] name, bool dontBroadcast)
         g_AiTanks[i].airCorrGoal = NULL_VECTOR;
         g_AiTanks[i].bhopType = TankBhopType_None;
         g_fHeadBlockIgnoreUntil[i] = 0.0;
-        g_bWasOnLadder[i] = false;
     }
 }
 
@@ -457,33 +439,18 @@ void evtRoundEnd(Event event, const char[] name, bool dontBroadcast)
         g_AiTanks[i].airCorrGoal = NULL_VECTOR;
         g_AiTanks[i].bhopType = TankBhopType_None;
         g_fHeadBlockIgnoreUntil[i] = 0.0;
-        g_bWasOnLadder[i] = false;
     }
 }
 
 // ===== 动画活动映射 =====
 stock void initAnimMap()
 {
-    if (!g_hThrowAnimMap)    g_hThrowAnimMap    = new StringMap();
-    if (!g_hClimbAnimMap)    g_hClimbAnimMap    = new StringMap();
-    if (!g_hLowClimbAnimMap) g_hLowClimbAnimMap = new StringMap();
+    if (!g_hThrowAnimMap) g_hThrowAnimMap = new StringMap();
 
     // 投石动画（活动名）
     g_hThrowAnimMap.SetValue("ACT_SIGNAL2", true);
     g_hThrowAnimMap.SetValue("ACT_SIGNAL3", true);
     g_hThrowAnimMap.SetValue("ACT_SIGNAL_ADVANCE", true);
-
-    // 高翻越（Valve 复用了一些 DIES* 活动名）
-    g_hClimbAnimMap.SetValue("ACT_DIESIMPLE",  true);
-    g_hClimbAnimMap.SetValue("ACT_DIEBACKWARD",true);
-    g_hClimbAnimMap.SetValue("ACT_DIEFORWARD", true);
-    g_hClimbAnimMap.SetValue("ACT_DIEVIOLENT", true);
-
-    // 低翻越（复用 RANGE_ATTACK* 活动名）
-    g_hLowClimbAnimMap.SetValue("ACT_RANGE_ATTACK1",     true);
-    g_hLowClimbAnimMap.SetValue("ACT_RANGE_ATTACK2",     true);
-    g_hLowClimbAnimMap.SetValue("ACT_RANGE_ATTACK1_LOW", true);
-    g_hLowClimbAnimMap.SetValue("ACT_RANGE_ATTACK2_LOW", true);
 }
 
 // ===== 玩家指令帧 =====
@@ -1404,13 +1371,8 @@ public void OnClientPutInServer(int client)
 {
     g_AiTanks[client].initData();
     g_fHeadBlockIgnoreUntil[client] = 0.0;
-    g_bWasOnLadder[client] = false;
-
     // 后置动画钩子：识别投石/翻越等序列变化
     AnimHookEnable(client, INVALID_FUNCTION, tankAnimHookPostCb);
-
-    // NEW: 梯子播放速率常驻维护（PostThinkPost 每帧极轻量）
-    SDKHook(client, SDKHook_PostThinkPost, ladderRateModifyHookHandler);
 }
 
 public void OnClientDisconnect(int client)
@@ -1428,68 +1390,9 @@ public void OnClientDisconnect(int client)
     g_AiTanks[client].lastPathSegment.initData();
     g_AiTanks[client].airCorrGoal = NULL_VECTOR;
     g_AiTanks[client].bhopType = TankBhopType_None;
-    g_bWasOnLadder[client] = false;
 }
 
-// ===== 翻越播放速率维护（进入翻越时挂，退出解）=====
-void climbRateModifyHookHandler(int client)
-{
-    if (!isAiTank(client))
-        return;
-
-    int animSeq = GetEntProp(client, Prop_Data, "m_nSequence");
-
-    // 仍处于翻越：按“高/低翻越”倍速
-    if (isMatchedSequence(animSeq, view_as<TankSequenceType>(tankSequence_Climb)))
-    {
-        float targetRate = getClimbPlaybackRate(animSeq);
-        float currentRate = GetEntPropFloat(client, Prop_Send, "m_flPlaybackRate");
-        if (currentRate != targetRate)
-        {
-            SetEntPropFloat(client, Prop_Send, "m_flPlaybackRate", targetRate);
-        }
-        return;
-    }
-
-    // NEW: 若此刻处于“梯子”，交给梯子常驻维护，不复位
-    if (GetEntityMoveType(client) == MOVETYPE_LADDER)
-    {
-        return;
-    }
-
-    // 其它状态：复位并解绑本钩子
-    SetEntPropFloat(client, Prop_Send, "m_flPlaybackRate", 1.0);
-    SDKUnhook(client, SDKHook_PostThinkPost, climbRateModifyHookHandler);
-}
-
-// ===== NEW: 梯子播放速率常驻维护（互不干扰翻越）=====
-void ladderRateModifyHookHandler(int client)
-{
-    if (!isAiTank(client))
-        return;
-
-    // 在梯子上：持续“喂”播放速率为 ai_tank3_ladder_climb_rate
-    if (GetEntityMoveType(client) == MOVETYPE_LADDER)
-    {
-        g_bWasOnLadder[client] = true;
-        float want = g_cvLadderClimbAnimRate.FloatValue;
-        float cur  = GetEntPropFloat(client, Prop_Send, "m_flPlaybackRate");
-        if (cur != want)
-            SetEntPropFloat(client, Prop_Send, "m_flPlaybackRate", want);
-        return;
-    }
-
-    if (g_bWasOnLadder[client])
-    {
-        g_bWasOnLadder[client] = false;
-
-        int animSeq = GetEntProp(client, Prop_Data, "m_nSequence");
-        if (!isMatchedSequence(animSeq, view_as<TankSequenceType>(tankSequence_Climb)))
-            SetEntPropFloat(client, Prop_Send, "m_flPlaybackRate", 1.0);
-    }
-}
-
-// ===== 动画后置钩子：识别投石/攀爬序列并触发相应逻辑 =====
+// ===== 动画后置钩子：识别投石序列并触发相应逻辑 =====
 Action tankAnimHookPostCb(int tank, int &sequence)
 {
     if (!isAiTank(tank))
@@ -1498,7 +1401,6 @@ Action tankAnimHookPostCb(int tank, int &sequence)
         return Plugin_Continue;
     }
 
-    // 投石：跳砖 + 定时刷新 throwing 标志
     if (isMatchedSequence(sequence, view_as<TankSequenceType>(tankSequence_Throw)))
     {
         if (g_cvJumpRock.BoolValue && !g_AiTanks[tank].wasThrowing)
@@ -1508,17 +1410,10 @@ Action tankAnimHookPostCb(int tank, int &sequence)
             CreateTimer(0.5, timerResetThrowingFlagHandler, GetClientUserId(tank), TIMER_REPEAT | TIMER_FLAG_NO_MAPCHANGE);
         }
     }
-    // 翻越：开启 PostThinkPost（仅在倍速变化时绑定，离开翻越自动解绑）
-    else if (isMatchedSequence(sequence, view_as<TankSequenceType>(tankSequence_Climb)))
-    {
-        float targetRate = getClimbPlaybackRate(sequence);
-        if (GetEntPropFloat(tank, Prop_Send, "m_flPlaybackRate") != targetRate)
-            SDKHook(tank, SDKHook_PostThinkPost, climbRateModifyHookHandler);
-    }
     return Plugin_Continue;
 }
 
-// 判断序列是否匹配“投石/翻越”两类
+// 判断序列是否匹配投石动画
 bool isMatchedSequence(int sequence, TankSequenceType seqType)
 {
     if (sequence < 0) return false;
@@ -1531,34 +1426,8 @@ bool isMatchedSequence(int sequence, TankSequenceType seqType)
     {
         case view_as<TankSequenceType>(tankSequence_Throw):
             return g_hThrowAnimMap.ContainsKey(seqName);
-        case view_as<TankSequenceType>(tankSequence_Climb):
-        {
-            bool matchedHigh = g_hClimbAnimMap && g_hClimbAnimMap.ContainsKey(seqName);
-            bool matchedLow = g_hLowClimbAnimMap && g_hLowClimbAnimMap.ContainsKey(seqName);
-            return matchedHigh || matchedLow;
-        }
     }
     return false;
-}
-
-// 是否属于“低矮翻越”
-bool isLowClimbSequence(int sequence)
-{
-    if (sequence < 0 || !g_hLowClimbAnimMap) return false;
-
-    char seqName[64];
-    if (!AnimGetActivity(sequence, seqName, sizeof(seqName)))
-        return false;
-
-    return g_hLowClimbAnimMap.ContainsKey(seqName);
-}
-
-// 根据序列选择翻越倍速：低矮用 low，其他用高翻越
-float getClimbPlaybackRate(int sequence)
-{
-    if (isLowClimbSequence(sequence))
-        return g_cvLowClimbAnimRate.FloatValue;
-    return g_cvClimbAnimRate.FloatValue;
 }
 
 // ===== 投石：跳砖、距离限制、出手角度 =====

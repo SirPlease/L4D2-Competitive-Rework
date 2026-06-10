@@ -14,7 +14,7 @@
 	}
 	"Join_FinishRemindsAdministratorVerify"
 	{
-		"chi"		"{green}[AnneDonate]{default} 扫码支付完成后，请输入 {olive}!wc{default} / {olive}!wanchen{default} / {olive}!finish{default} 提醒管理员核实。"
+		"chi"		"{green}[AnneDonate]{default} 扫码支付完成后，请输入 {olive}!wc 邮箱{default} / {olive}!wanchen 邮箱{default} / {olive}!finish 邮箱{default} 提醒管理员核实。"
 	}
 	"Join_AnneDonateSponsorshipConfirmedNot"
 	{

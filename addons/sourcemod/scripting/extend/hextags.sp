@@ -508,7 +508,7 @@ public void OnClientPostAdminCheck(int client)
 
 public void OnClientCookiesCached(int client)
 {
-	if (!IsValidClient(client))
+	if (!IsValidClient(client, false, true))
 		return;
 	
 	// HideTag cookie
@@ -533,13 +533,9 @@ public void OnClientCookiesCached(int client)
 	// Anonymous cookie
 	GetClientCookie(client, hVibilityAdminsCookie, sValue, sizeof(sValue));
 	int cookieValue = StringToInt(sValue);
-	if (cookieValue == 1)
-	{
-		bIsAnonymous[client] = true;
-		
-		LoadTags(client);
-		SetClientScoreTag(client, selectedTags[client].ScoreTag);
-	}
+	bIsAnonymous[client] = cookieValue == 1;
+
+	LoadTags(client);
 	return;
 }
 
@@ -873,6 +869,7 @@ void LoadTags(int client)
 		if (iSelTagId[client] == 0 || !cv_bEnableTagsList.BoolValue)
 		{
 			userTags[client].GetArray(0, selectedTags[client], sizeof(CustomTags));
+			SetClientScoreTag(client, selectedTags[client].ScoreTag);
 			return;
 		}
 		tagsKv.Rewind();
@@ -880,6 +877,7 @@ void LoadTags(int client)
 		{
 			SetClientCookie(client, hSelTagCookie, "");
 			userTags[client].GetArray(0, selectedTags[client], sizeof(CustomTags));
+			SetClientScoreTag(client, selectedTags[client].ScoreTag);
 			return;
 		}
 		// Key found
@@ -1378,6 +1376,7 @@ public int Native_SetClientTag(Handle plugin, int numParams)
 		case (ScoreTag):
 		{
 			strcopy(selectedTags[client].ScoreTag, sizeof(CustomTags::ScoreTag), sTag);
+			SetClientScoreTag(client, selectedTags[client].ScoreTag);
 		}
 		case (ChatTag):
 		{

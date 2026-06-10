@@ -45,8 +45,9 @@ public Plugin myinfo =
 	version = "1.2",
 	url = "https://github.com/fantasylidong/CompetitiveWithAnne"
 };
-#define UPDATE_URL_ANNE "http://anne.trygek.com/plugin_update/Anne_Updater.txt"
-#define UPDATE_URL_ANNEALL "http://anne.trygek.com/plugin_update/Anne_Updater_All.txt"
+#define AUTOUPDATE_URL_LENGTH 256
+#define UPDATE_URL_PUBLIC "http://anne.trygek.com/plugin_update/Anne_Updater_All.txt"
+#define UPDATE_URL_PRIVATE "http://anne.trygek.com/plugin_update/private/Anne_Updater_Private.txt"
 
 bool  
 	g_bEnableGetbotCommand[MAXPLAYERS] = { false },
@@ -56,6 +57,7 @@ bool
 char
 	g_sDonateAmount[MAXPLAYERS + 1][16],
 	g_sDonateMethod[MAXPLAYERS + 1][16],
+	g_sDonateNote[MAXPLAYERS + 1][128],
 	g_sDonateOptionAmount[DONATE_MAX_OPTIONS][16],
 	g_sDonateOptionDisplay[DONATE_MAX_OPTIONS][64];
 
@@ -66,6 +68,8 @@ ConVar
 	hCvarMotdTitle,
 	hCvarMotdUrl,
 	hCvarEnableAutoupdate,
+	hCvarAutoupdatePublicUrl,
+	hCvarAutoupdatePrivateUrl,
 	hCvarEnableInf,
 	hCvarKickFamilyAccount,
 	hCvarIPUrl,
@@ -77,12 +81,16 @@ public void OnPluginStart()
 	LoadTranslations("join.phrases");
 	hCvarEnableInf = CreateConVar("join_enable_inf", "1", "是否可以开启加入特感", _, true, 0.0, true, 1.0);
 	hCvarKickFamilyAccount = CreateConVar("join_enable_kickfamilyaccount", "1", "是否开启踢出家庭共享账户", _, true, 0.0, true, 1.0);
-	hCvarEnableAutoupdate = CreateConVar("join_autoupdate", "0", "是否开启AnneHappy核心插件自动更新：0关闭，1核心全量，2/3兼容旧配置，4常用插件", _, true, 0.0, true, 4.0);
+	hCvarEnableAutoupdate = CreateConVar("join_autoupdate", "0", "是否开启AnneHappy核心插件自动更新：0关闭，1公开核心清单，2/3/4私用清单", _, true, 0.0, true, 4.0);
+	hCvarAutoupdatePublicUrl = CreateConVar("join_autoupdate_public_url", UPDATE_URL_PUBLIC, "join_autoupdate为1时使用的公开核心更新清单URL");
+	hCvarAutoupdatePrivateUrl = CreateConVar("join_autoupdate_private_url", UPDATE_URL_PRIVATE, "join_autoupdate为2/3/4时使用的私用更新清单URL");
 	hCvarMotdTitle = CreateConVar("sm_cfgmotd_title", "AnneHappy电信服");
 	hCvarMotdUrl = CreateConVar("sm_cfgmotd_url", "http://anne.trygek.com/l4d2/");  // 主页以后更换为数据库控制
 	hCvarIPUrl = CreateConVar("sm_cfgip_url", "http://anne.trygek.com/ip.php");	// 服务器ip页面，以后更换为数据库控制
 	hCvarDonateUrl = CreateConVar("sm_donate_url", "http://anne.trygek.com/sponsor/l4d2.php"); //赞助页面
 	hCvarEnableAutoupdate.AddChangeHook(UpdateStatuChange);
+	hCvarAutoupdatePublicUrl.AddChangeHook(UpdateStatuChange);
+	hCvarAutoupdatePrivateUrl.AddChangeHook(UpdateStatuChange);
 	AutoExecConfig(true, "join");
 	RegConsoleCmd("sm_away", AFKTurnClientToSpe);
 	RegConsoleCmd("sm_afk", AFKTurnClientToSpe);
@@ -129,31 +137,38 @@ void RefreshAutoUpdater()
 
 	Updater_RemovePlugin();
 
+	char updateUrl[AUTOUPDATE_URL_LENGTH];
+	if (!GetAutoUpdateUrl(updateUrl, sizeof(updateUrl)))
+	{
+		return;
+	}
+
+	Updater_AddPlugin(updateUrl);
+	Updater_ForceUpdate();
+}
+
+bool GetAutoUpdateUrl(char[] updateUrl, int maxLength)
+{
+	updateUrl[0] = '\0';
+
 	switch (hCvarEnableAutoupdate.IntValue)
 	{
 		case 1:
 		{
-			Updater_AddPlugin(UPDATE_URL_ANNEALL);
+			hCvarAutoupdatePublicUrl.GetString(updateUrl, maxLength);
 		}
-		case 2:
+		case 2, 3, 4:
 		{
-			Updater_AddPlugin(UPDATE_URL_ANNE);
-		}
-		case 3:
-		{
-			Updater_AddPlugin(UPDATE_URL_ANNE);
-		}
-		case 4:
-		{
-			Updater_AddPlugin(UPDATE_URL_ANNE);
+			hCvarAutoupdatePrivateUrl.GetString(updateUrl, maxLength);
 		}
 		default:
 		{
-			return;
+			return false;
 		}
 	}
 
-	Updater_ForceUpdate();
+	TrimString(updateUrl);
+	return updateUrl[0] != '\0';
 }
 
 public void OnAllPluginsLoaded(){
@@ -351,6 +366,7 @@ public void OnClientDisconnect(int client)
 	{
 		g_sDonateAmount[client][0] = '\0';
 		g_sDonateMethod[client][0] = '\0';
+		g_sDonateNote[client][0] = '\0';
 	}
 }
 
@@ -466,6 +482,7 @@ public Action DonateServer(int client, int args)
 	if(args >= 2)
 	{
 		char amount[16], method[16], note[128];
+		note[0] = '\0';
 		GetCmdArg(1, amount, sizeof(amount));
 		GetCmdArg(2, method, sizeof(method));
 		if(!IsDonateMethodAllowed(method))
@@ -480,7 +497,7 @@ public Action DonateServer(int client, int args)
 		}
 		strcopy(g_sDonateAmount[client], sizeof(g_sDonateAmount[]), amount);
 		strcopy(g_sDonateMethod[client], sizeof(g_sDonateMethod[]), method);
-		SubmitDonateRequest(client, amount, method, note);
+		strcopy(g_sDonateNote[client], sizeof(g_sDonateNote[]), note);
 		ShowDonateWebToPlayer(client, amount, method);
 		CPrintToChat(client, "%t", "Join_FinishRemindsAdministratorVerify");
 		return Plugin_Handled;
@@ -495,6 +512,13 @@ public Action FinishDonatePayment(int client, int args)
 	if(!IsValidClient(client) || IsFakeClient(client))
 		return Plugin_Handled;
 
+	char email[128];
+	email[0] = '\0';
+	if(args >= 1)
+	{
+		GetCmdArg(1, email, sizeof(email));
+	}
+
 	if(g_sDonateAmount[client][0] == '\0' || g_sDonateMethod[client][0] == '\0')
 	{
 		CPrintToChat(client, "%t", "Join_AnneDonateSponsorshipConfirmedNot");
@@ -502,7 +526,7 @@ public Action FinishDonatePayment(int client, int args)
 		return Plugin_Handled;
 	}
 
-	SubmitDonateFinishRequest(client, g_sDonateAmount[client], g_sDonateMethod[client]);
+	SubmitDonateFinishRequest(client, g_sDonateAmount[client], g_sDonateMethod[client], g_sDonateNote[client], email);
 	CPrintToChat(client, "%t", "Join_AnneDonateRecordingPaymentCompletion");
 	return Plugin_Handled;
 }
@@ -586,12 +610,16 @@ public int DonateAmountMenuHandler(Menu menu, MenuAction action, int client, int
 		menu.GetItem(item, amount, sizeof(amount));
 		if(StrEqual(amount, "web"))
 		{
+			g_sDonateAmount[client][0] = '\0';
+			g_sDonateMethod[client][0] = '\0';
+			g_sDonateNote[client][0] = '\0';
 			ShowDonateWebToPlayer(client, "", "");
 		}
 		else
 		{
 			strcopy(g_sDonateAmount[client], sizeof(g_sDonateAmount[]), amount);
 			g_sDonateMethod[client][0] = '\0';
+			g_sDonateNote[client][0] = '\0';
 			ShowDonateMethodMenu(client);
 		}
 	}
@@ -624,7 +652,6 @@ public int DonateMethodMenuHandler(Menu menu, MenuAction action, int client, int
 		char method[16];
 		menu.GetItem(item, method, sizeof(method));
 		strcopy(g_sDonateMethod[client], sizeof(g_sDonateMethod[]), method);
-		SubmitDonateRequest(client, g_sDonateAmount[client], method, "");
 		ShowDonateWebToPlayer(client, g_sDonateAmount[client], method);
 		CPrintToChat(client, "%t", "Join_FinishRemindsAdministratorVerify");
 	}
@@ -635,68 +662,7 @@ public int DonateMethodMenuHandler(Menu menu, MenuAction action, int client, int
 	return 0;
 }
 
-void SubmitDonateRequest(int client, const char[] amount, const char[] method, const char[] note)
-{
-	char baseUrl[192], steam64[32], name[MAX_NAME_LENGTH];
-	GetDonateBaseUrl(baseUrl, sizeof(baseUrl));
-	GetClientName(client, name, sizeof(name));
-
-	if(!GetClientAuthId(client, AuthId_SteamID64, steam64, sizeof(steam64), true))
-	{
-		CPrintToChat(client, "%t", "Join_AnneDonateUnableObtainSteam");
-		return;
-	}
-
-	if(GetFeatureStatus(FeatureType_Native, "SteamWorks_CreateHTTPRequest") != FeatureStatus_Available)
-	{
-		CPrintToChat(client, "%t", "Join_AnneDonateSteamWorksNot");
-		return;
-	}
-
-	Handle request = SteamWorks_CreateHTTPRequest(k_EHTTPMethodPOST, baseUrl);
-	if(request == null)
-	{
-		CPrintToChat(client, "%t", "Join_AnneDonateFailedCreateSponsorship");
-		return;
-	}
-
-	SteamWorks_SetHTTPRequestGetOrPostParameter(request, "direct_steam_id", steam64);
-	SteamWorks_SetHTTPRequestGetOrPostParameter(request, "direct_name", name);
-	SteamWorks_SetHTTPRequestGetOrPostParameter(request, "amount", amount);
-	SteamWorks_SetHTTPRequestGetOrPostParameter(request, "method", method);
-	SteamWorks_SetHTTPRequestGetOrPostParameter(request, "note", note);
-	SteamWorks_SetHTTPRequestGetOrPostParameter(request, "game", "1");
-	SteamWorks_SetHTTPRequestContextValue(request, GetClientUserId(client));
-	SteamWorks_SetHTTPCallbacks(request, DonateSubmitCompleted);
-
-	if(!SteamWorks_SendHTTPRequest(request))
-	{
-		delete request;
-		CPrintToChat(client, "%t", "Join_AnneDonateFailedSendSponsorship");
-		return;
-	}
-
-	CPrintToChat(client, "%t", "Join_AnneDonateSponsorshipRecordCreated");
-}
-
-public void DonateSubmitCompleted(Handle request, bool failure, bool requestSuccessful, EHTTPStatusCode statusCode, any userid)
-{
-	int client = GetClientOfUserId(userid);
-	if(IsValidClient(client) && !IsFakeClient(client))
-	{
-		if(failure || !requestSuccessful || statusCode < k_EHTTPStatusCode200OK || statusCode >= k_EHTTPStatusCode300MultipleChoices)
-		{
-			CPrintToChat(client, "%t", "Join_AnneDonateSponsorshipInformationSubmission", statusCode);
-		}
-		else
-		{
-			CPrintToChat(client, "%t", "Join_AnneDonateSponsorshipRecordCreatedScan");
-		}
-	}
-	delete request;
-}
-
-void SubmitDonateFinishRequest(int client, const char[] amount, const char[] method)
+void SubmitDonateFinishRequest(int client, const char[] amount, const char[] method, const char[] note, const char[] email)
 {
 	char baseUrl[192], steam64[32], name[MAX_NAME_LENGTH];
 	GetDonateBaseUrl(baseUrl, sizeof(baseUrl));
@@ -725,6 +691,9 @@ void SubmitDonateFinishRequest(int client, const char[] amount, const char[] met
 	SteamWorks_SetHTTPRequestGetOrPostParameter(request, "direct_name", name);
 	SteamWorks_SetHTTPRequestGetOrPostParameter(request, "amount", amount);
 	SteamWorks_SetHTTPRequestGetOrPostParameter(request, "method", method);
+	SteamWorks_SetHTTPRequestGetOrPostParameter(request, "note", note);
+	SteamWorks_SetHTTPRequestGetOrPostParameter(request, "email", email);
+	SteamWorks_SetHTTPRequestGetOrPostParameter(request, "direct_email", email);
 	SteamWorks_SetHTTPRequestGetOrPostParameter(request, "game", "1");
 	SteamWorks_SetHTTPRequestGetOrPostParameter(request, "game_action", "paid");
 	SteamWorks_SetHTTPRequestContextValue(request, GetClientUserId(client));

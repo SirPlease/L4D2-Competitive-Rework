@@ -487,6 +487,117 @@
 | `optional/AnneHappy/text.smx` | `sm_xx` | 玩家/控制台 | - | - | `allcharger`, `alone`, `annehappy`, `annehappy_hardcore`, `annehappy_shotgun`, `hunters`, `witchparty` |
 | `optional/servercleanup.smx` | `sm_srvcln_now` | 管理员 | ADMFLAG_ROOT | - | `allcharger`, `alone`, `annehappy`, `annehappy_hardcore`, `annehappy_shotgun`, `coop`, `hunters`, `realism`, `witchparty` |
 
+## Anne 私有武器属性实验插件命令
+
+这些插件目前是私有实验层，通常放在 `plugins/optional/AnneHappy/` 下按需加载。网页后台“玩家武器属性”写入数据库后，由 `l4d2_player_attr_db` 读取并调用 PWA/PMA/PMA-Trace native；调试时也可以直接用下表命令手动设置。
+
+### 生效和默认值链路
+
+- 原生默认：由 `l4d2_weaponinfo_dump` 执行 `sm_widump_all_defaults` 生成 JSON，Web 后台读取 `addons/sourcemod/data/l4d2_weaponinfo_defaults.json`；近战轨迹会额外 dump `scripts/melee/*.txt` 的主/副攻击段，若服务器不能通过 Valve 文件系统读取 VPK 内脚本，可把脚本镜像放到 `addons/sourcemod/data/l4d2_melee_scripts/*.txt`。
+- vote 默认：来自 `cfg/vote/weapon` 下当前模式 cfg 的 `sm_weapon <weapon> <attr> <value>` 行，只是全局默认，不是玩家覆盖。
+- 玩家覆盖：存入 `l4d2_player_attr_profiles`，游戏服 `l4d2_player_attr_db` 在进服、切枪、定时刷新或手动 reload/apply 时下发。
+- 日志：PWA `logs/l4d2_pwa_native_attrs.log`，PMA `logs/l4d2_pma_native_attrs.log`，Trace `logs/l4d2_pma_trace_attrs.log`，DB 协调器 `logs/l4d2_player_attr_db.log`。
+
+### DB 协调器
+
+| 插件 | 命令 | 类型 | 权限 | 说明 |
+| --- | --- | --- | --- | --- |
+| `optional/AnneHappy/l4d2_player_attr_db.smx` | `sm_pattrdb_reload` | 管理员 | ADMFLAG_ROOT | 重新连接/读取数据库里的玩家属性行，并对在线玩家尝试应用。 |
+| `optional/AnneHappy/l4d2_player_attr_db.smx` | `sm_pattrdb_status` | 管理员 | ADMFLAG_ROOT | 显示 DB 插件启用状态、连接状态、缓存行数、最后加载时间和 PWA/PMA/Trace native 是否可用。 |
+| `optional/AnneHappy/l4d2_player_attr_db.smx` | `sm_pattrdb_apply <target>` | 管理员 | ADMFLAG_ROOT | 对目标玩家立即按当前持有武器/近战应用已缓存 DB 行。 |
+
+常用流程：
+
+```text
+sm plugins load optional/AnneHappy/l4d2_pwa_native_attrs
+sm plugins load optional/AnneHappy/l4d2_player_attr_db
+sm_pattrdb_status
+sm_pattrdb_reload
+sm_pattrdb_apply "#userid"
+```
+
+### PWA 枪械 per-player 属性
+
+| 插件 | 命令 | 类型 | 权限 | 说明 |
+| --- | --- | --- | --- | --- |
+| `optional/AnneHappy/l4d2_pwa_native_attrs.smx` | `sm_pwa_set <target> <weapon\|@active> <attr> <value> [attr value]...` | 管理员 | ADMFLAG_ROOT | 手动给目标设置枪械 profile。支持一次写多个属性。 |
+| `optional/AnneHappy/l4d2_pwa_native_attrs.smx` | `sm_pwa_clear <target>` | 管理员 | ADMFLAG_ROOT | 清除目标当前 PWA profile。 |
+| `optional/AnneHappy/l4d2_pwa_native_attrs.smx` | `sm_pwa_list` | 管理员 | ADMFLAG_ROOT | 列出当前在线玩家的 PWA profile。 |
+| `optional/AnneHappy/l4d2_pwa_native_attrs.smx` | `sm_pwa_reload_config` | 管理员 | ADMFLAG_ROOT | 重新读取旧 cfg profile。DB 协调器启用时通常会关闭旧 cfg 自动应用。 |
+| `optional/AnneHappy/l4d2_pwa_native_attrs.smx` | `sm_pwa_apply_config <target> <weapon\|@active>` | 管理员 | ADMFLAG_ROOT | 手动应用旧 cfg profile。 |
+| `optional/AnneHappy/l4d2_pwa_native_attrs.smx` | `sm_pwa_config_status` | 管理员 | ADMFLAG_ROOT | 查看旧 cfg profile 缓存状态。 |
+| `optional/AnneHappy/l4d2_pwa_native_attrs.smx` | `sm_pwa_restore` | 管理员 | ADMFLAG_ROOT | 将被 PWA 碰过的全局 WeaponInfo 属性恢复到缓存基线。 |
+| `optional/AnneHappy/l4d2_pwa_native_attrs.smx` | `sm_pwa_tx_audit <target_a> <target_b> <weapon\|@active>` | 管理员 | ADMFLAG_ROOT | 模拟同 tick 嵌套 apply/restore，检查是否串值。 |
+| `optional/AnneHappy/l4d2_pwa_native_attrs.smx` | `sm_pwa_return_audit <target> <weapon\|@active>` | 管理员 | ADMFLAG_ROOT | 检查 GetMaxClip1 等返回值覆盖。 |
+| `optional/AnneHappy/l4d2_pwa_native_attrs.smx` | `sm_pwa_native_audit <target_a> <target_b> <weapon\|@active> [safe\|all]` | 管理员 | ADMFLAG_ROOT | SDKCall/native detour 矩阵审计。 |
+| `optional/AnneHappy/l4d2_pwa_native_attrs.smx` | `sm_pwa_live_fire_audit <target_a> <target_b> <weapon\|@active>` | 管理员 | ADMFLAG_ROOT | 强制同 tick 开火，审计真实开火窗口。 |
+| `optional/AnneHappy/l4d2_pwa_native_attrs.smx` | `sm_pwa_live_fire_cancel` | 管理员 | ADMFLAG_ROOT | 取消 live fire 审计并恢复 profile/武器。 |
+| `optional/AnneHappy/l4d2_pwa_native_attrs.smx` | `sm_pwa_live_return_audit <target_a> <target_b> <weapon\|@active> [seconds]` | 管理员 | ADMFLAG_ROOT | 观察真实换弹/部署/最大弹夹返回覆盖。 |
+| `optional/AnneHappy/l4d2_pwa_native_attrs.smx` | `sm_pwa_live_return_cancel` | 管理员 | ADMFLAG_ROOT | 取消 live return 审计。 |
+| `optional/AnneHappy/l4d2_pwa_native_attrs.smx` | `sm_pwa_matrix_audit <target_a> <target_b> <weapon\|@active> [safe\|all\|live\|full]` | 管理员 | ADMFLAG_ROOT | 设置两名玩家不同 profile 并跑矩阵。 |
+| `optional/AnneHappy/l4d2_pwa_native_attrs.smx` | `sm_pwa_bot_matrix_audit <bot_a> <bot_b> <weapon> [safe\|all]` | 管理员 | ADMFLAG_ROOT | 给两个 survivor bot 装枪并跑矩阵 smoke。 |
+| `optional/AnneHappy/l4d2_pwa_native_attrs.smx` | `sm_pwa_bot_live_smoke <bot_a> <bot_b> <weapon> [live\|full]` | 管理员 | ADMFLAG_ROOT | bot 真实开火 smoke。 |
+| `optional/AnneHappy/l4d2_pwa_native_attrs.smx` | `sm_pwa_preflight <target_a> <target_b> <weapon\|@active>` | 管理员 | ADMFLAG_ROOT | 检查依赖、武器和 live fire readiness。 |
+| `optional/AnneHappy/l4d2_pwa_native_attrs.smx` | `sm_pwa_preflight_matrix <target_a> <target_b> <weapon\|@active> [safe\|all\|live\|full]` | 管理员 | ADMFLAG_ROOT | 先 preflight，再跑矩阵。 |
+
+常用手动测试：
+
+```text
+sm_pwa_set "#userid" @active damage 50 tankdamagemult 2.0
+sm_pwa_list
+sm_pwa_clear "#userid"
+```
+
+### PMA 近战原生属性
+
+| 插件 | 命令 | 类型 | 权限 | 说明 |
+| --- | --- | --- | --- | --- |
+| `optional/AnneHappy/l4d2_pma_native_attrs.smx` | `sm_pma_set <target> <melee\|@active> <attr> <value> [attr value]...` | 管理员 | ADMFLAG_ROOT | 手动给目标设置近战原生 profile。 |
+| `optional/AnneHappy/l4d2_pma_native_attrs.smx` | `sm_pma_clear <target>` | 管理员 | ADMFLAG_ROOT | 清除目标 PMA profile。 |
+| `optional/AnneHappy/l4d2_pma_native_attrs.smx` | `sm_pma_list` | 管理员 | ADMFLAG_ROOT | 列出当前 PMA profile。 |
+| `optional/AnneHappy/l4d2_pma_native_attrs.smx` | `sm_pma_reload_config` | 管理员 | ADMFLAG_ROOT | 重新读取旧 cfg profile。 |
+| `optional/AnneHappy/l4d2_pma_native_attrs.smx` | `sm_pma_apply_config <target> <melee\|@active>` | 管理员 | ADMFLAG_ROOT | 手动应用旧 cfg profile。 |
+| `optional/AnneHappy/l4d2_pma_native_attrs.smx` | `sm_pma_config_status` | 管理员 | ADMFLAG_ROOT | 查看旧 cfg profile 缓存状态。 |
+| `optional/AnneHappy/l4d2_pma_native_attrs.smx` | `sm_pma_restore` | 管理员 | ADMFLAG_ROOT | 恢复被 PMA 碰过的全局 melee attr 基线。 |
+| `optional/AnneHappy/l4d2_pma_native_attrs.smx` | `sm_pma_dump [melee\|@active]` | 管理员 | ADMFLAG_ROOT | dump 指定近战原生属性。 |
+| `optional/AnneHappy/l4d2_pma_native_attrs.smx` | `sm_pma_tx_audit <target_a> <target_b> <melee\|@active>` | 管理员 | ADMFLAG_ROOT | 模拟同 tick 近战 apply/restore。 |
+| `optional/AnneHappy/l4d2_pma_native_attrs.smx` | `sm_pma_matrix_audit <target_a> <target_b> <melee\|@active>` | 管理员 | ADMFLAG_ROOT | 设置两名玩家不同近战 profile 并跑审计。 |
+| `optional/AnneHappy/l4d2_pma_native_attrs.smx` | `sm_pma_live_swing_audit <target_a> <target_b> <melee\|@active>` | 管理员 | ADMFLAG_ROOT | 强制同 tick 挥砍并审计 apply/restore。 |
+| `optional/AnneHappy/l4d2_pma_native_attrs.smx` | `sm_pma_bot_live_smoke <bot_a> <bot_b> <melee>` | 管理员 | ADMFLAG_ROOT | bot 近战 live smoke。 |
+
+### PMA-Trace 近战轨迹属性
+
+| 插件 | 命令 | 类型 | 权限 | 说明 |
+| --- | --- | --- | --- | --- |
+| `optional/AnneHappy/l4d2_pma_trace_attrs.smx` | `sm_pma_trace_attr_set <target> [melee\|@active\|*] <range\|dirscale\|yawbias> <value> [attr value]...` | 管理员 | ADMFLAG_ROOT | 手动设置近战轨迹 profile。 |
+| `optional/AnneHappy/l4d2_pma_trace_attrs.smx` | `sm_pma_trace_attr_clear <target>` | 管理员 | ADMFLAG_ROOT | 清除目标 Trace profile。 |
+| `optional/AnneHappy/l4d2_pma_trace_attrs.smx` | `sm_pma_trace_attr_list` | 管理员 | ADMFLAG_ROOT | 列出 Trace profile。 |
+| `optional/AnneHappy/l4d2_pma_trace_attrs.smx` | `sm_pma_trace_attr_status` | 管理员 | ADMFLAG_ROOT | 查看 Trace counters 和状态。 |
+| `optional/AnneHappy/l4d2_pma_trace_attrs.smx` | `sm_pma_trace_attr_reload_config` | 管理员 | ADMFLAG_ROOT | 重新读取旧 cfg profile。 |
+| `optional/AnneHappy/l4d2_pma_trace_attrs.smx` | `sm_pma_trace_attr_apply_config <target> <melee\|@active>` | 管理员 | ADMFLAG_ROOT | 手动应用旧 cfg Trace profile。 |
+| `optional/AnneHappy/l4d2_pma_trace_attrs.smx` | `sm_pma_trace_attr_live_audit <target_a> <target_b>` | 管理员 | ADMFLAG_ROOT | 强制同 tick 近战轨迹审计。 |
+| `optional/AnneHappy/l4d2_pma_trace_attrs.smx` | `sm_pma_trace_attr_bot_live_smoke <bot_a> <bot_b> <melee>` | 管理员 | ADMFLAG_ROOT | bot 轨迹 live smoke。 |
+
+启用方向向量修改：
+
+```text
+sm_cvar l4d2_pma_trace_attrs_vector_change 1
+sm_pma_trace_attr_set "#userid" @active range 160 dirscale 1.0 yawbias 20
+sm_pma_trace_attr_live_audit "#userid_a" "#userid_b"
+```
+
+### WeaponInfo dump/probe
+
+| 插件 | 命令 | 类型 | 权限 | 说明 |
+| --- | --- | --- | --- | --- |
+| `optional/AnneHappy/l4d2_weaponinfo_dump.smx` | `sm_widump <weapon\|@me> [attr]` | 管理员 | ADMFLAG_ROOT | dump 指定枪械 WeaponInfo 属性，`@me` 使用当前武器。 |
+| `optional/AnneHappy/l4d2_weaponinfo_dump.smx` | `sm_widump_offsets` | 管理员 | ADMFLAG_ROOT | dump Left4DHooks 暴露的 weapon attribute offset。 |
+| `optional/AnneHappy/l4d2_weaponinfo_dump.smx` | `sm_widump_all_defaults [path]` | 管理员 | ADMFLAG_ROOT | 将枪械、近战属性和近战脚本轨迹原生默认值写成 JSON，默认给 Web 后台读取。 |
+| `optional/AnneHappy/l4d2_weaponinfo_probe.smx` | `sm_wiprobe_set <target> <weapon\|@active> <attr> <value> [attr value]...` | 管理员 | ADMFLAG_ROOT | 早期 WeaponInfo 原型测试 profile。 |
+| `optional/AnneHappy/l4d2_weaponinfo_probe.smx` | `sm_wiprobe_clear <target>` | 管理员 | ADMFLAG_ROOT | 清除 probe profile。 |
+| `optional/AnneHappy/l4d2_weaponinfo_probe.smx` | `sm_wiprobe_list` | 管理员 | ADMFLAG_ROOT | 列出 probe profile。 |
+| `optional/AnneHappy/l4d2_weaponinfo_probe.smx` | `sm_wiprobe_restore` | 管理员 | ADMFLAG_ROOT | 恢复 probe 碰过的 WeaponInfo 基线。 |
+
 ## 附录：未被当前模式配置加载的启用目录插件命令
 
 共 70 条命令/监听入口。
@@ -532,28 +643,6 @@
 | `duoren/survivor_chat_select.smx` | `sm_zoey` | 玩家/控制台 | - | Changes your survivor character into Zoey |
 | `optional/AnneHappy/ai_tank_2.smx` | `sm_checkladder` | 管理员 | ADMFLAG_ROOT | 测试当前地图有多少个梯子 |
 | `optional/AnneHappy/ai_tank_new.smx` | `sm_con` | 管理员 | ADMFLAG_BAN | - |
-| `optional/AnneHappy/l4d_stats.smx` | `say` | 聊天钩子 | - | 监听聊天输入；通常用于解析聊天触发或屏蔽命令回显 |
-| `optional/AnneHappy/l4d_stats.smx` | `say_team` | 聊天钩子 | - | 监听聊天输入；通常用于解析聊天触发或屏蔽命令回显 |
-| `optional/AnneHappy/l4d_stats.smx` | `sm_maptimes` | 玩家/控制台 | - | - |
-| `optional/AnneHappy/l4d_stats.smx` | `sm_nextrank` | 玩家/控制台 | - | - |
-| `optional/AnneHappy/l4d_stats.smx` | `sm_qtop10` | 玩家/控制台 | - | - |
-| `optional/AnneHappy/l4d_stats.smx` | `sm_quartertop10` | 玩家/控制台 | - | - |
-| `optional/AnneHappy/l4d_stats.smx` | `sm_rank` | 玩家/控制台 | - | - |
-| `optional/AnneHappy/l4d_stats.smx` | `sm_rank_motd` | 管理员 | ADMFLAG_GENERIC | Set Message Of The Day |
-| `optional/AnneHappy/l4d_stats.smx` | `sm_rankmenu` | 玩家/控制台 | - | - |
-| `optional/AnneHappy/l4d_stats.smx` | `sm_rankmute` | 玩家/控制台 | - | - |
-| `optional/AnneHappy/l4d_stats.smx` | `sm_rankmutetoggle` | 玩家/控制台 | - | - |
-| `optional/AnneHappy/l4d_stats.smx` | `sm_rankvote` | 玩家/控制台 | - | - |
-| `optional/AnneHappy/l4d_stats.smx` | `sm_resetscore` | 玩家/控制台 | - | - |
-| `optional/AnneHappy/l4d_stats.smx` | `sm_showmaptimes` | 玩家/控制台 | - | - |
-| `optional/AnneHappy/l4d_stats.smx` | `sm_showmotd` | 玩家/控制台 | - | - |
-| `optional/AnneHappy/l4d_stats.smx` | `sm_showppm` | 玩家/控制台 | - | - |
-| `optional/AnneHappy/l4d_stats.smx` | `sm_showrank` | 玩家/控制台 | - | - |
-| `optional/AnneHappy/l4d_stats.smx` | `sm_showtimer` | 玩家/控制台 | - | - |
-| `optional/AnneHappy/l4d_stats.smx` | `sm_timedmaps` | 玩家/控制台 | - | - |
-| `optional/AnneHappy/l4d_stats.smx` | `sm_top10` | 玩家/控制台 | - | - |
-| `optional/AnneHappy/l4d_stats.smx` | `sm_top10ppm` | 玩家/控制台 | - | - |
-| `optional/AnneHappy/l4d_stats.smx` | `sm_top10q` | 玩家/控制台 | - | - |
 | `optional/code_patcher.smx` | `codepatch_list` | 服务器配置 | - | - |
 | `optional/code_patcher.smx` | `codepatch_patch` | 服务器配置 | - | - |
 | `optional/code_patcher.smx` | `codepatch_unpatch` | 服务器配置 | - | - |

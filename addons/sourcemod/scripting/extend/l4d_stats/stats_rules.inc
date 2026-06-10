@@ -39,7 +39,7 @@ HunterSmokerSave(Savior, Victim, BasePoints, AdvMult, ExpertMult, String:SaveFro
 	Score = NewPlayerBonus_ApplyScoreMultiplier(Savior, Score);
 	decl String:UpdatePoints[32];
 
-	switch (CurrentGamemodeID)
+	switch (Stats_GetCurrentStatsGamemodeID())
 	{
 		case GAMEMODE_VERSUS:
 		{
@@ -216,31 +216,32 @@ InvalidGameMode()
 	// Currently will always return False in Survival and Versus gamemodes.
 	// This will be removed in a future version when stats for those versions work.
 
-	if (CurrentGamemodeID == GAMEMODE_COOP && GetConVarBool(cvar_EnableCoop))
+	new StatsGamemodeID = Stats_GetCurrentStatsGamemodeID();
+	if (StatsGamemodeID == GAMEMODE_COOP && GetConVarBool(cvar_EnableCoop))
 	{
 		return false;
 	}
-	else if (CurrentGamemodeID == GAMEMODE_SURVIVAL && GetConVarBool(cvar_EnableSv))
+	else if (StatsGamemodeID == GAMEMODE_SURVIVAL && GetConVarBool(cvar_EnableSv))
 	{
 		return false;
 	}
-	else if (CurrentGamemodeID == GAMEMODE_VERSUS && GetConVarBool(cvar_EnableVersus))
+	else if (StatsGamemodeID == GAMEMODE_VERSUS && GetConVarBool(cvar_EnableVersus))
 	{
 		return false;
 	}
-	else if (CurrentGamemodeID == GAMEMODE_SCAVENGE && GetConVarBool(cvar_EnableScavenge))
+	else if (StatsGamemodeID == GAMEMODE_SCAVENGE && GetConVarBool(cvar_EnableScavenge))
 	{
 		return false;
 	}
-	else if (CurrentGamemodeID == GAMEMODE_REALISM && GetConVarBool(cvar_EnableRealism))
+	else if (StatsGamemodeID == GAMEMODE_REALISM && GetConVarBool(cvar_EnableRealism))
 	{
 		return false;
 	}
-	else if (CurrentGamemodeID == GAMEMODE_REALISMVERSUS && GetConVarBool(cvar_EnableRealismVersus))
+	else if (StatsGamemodeID == GAMEMODE_REALISMVERSUS && GetConVarBool(cvar_EnableRealismVersus))
 	{
 		return false;
 	}
-	else if (CurrentGamemodeID == GAMEMODE_OTHERMUTATIONS && GetConVarBool(cvar_EnableMutations))
+	else if (StatsGamemodeID == GAMEMODE_OTHERMUTATIONS && GetConVarBool(cvar_EnableMutations))
 	{
 		return false;
 	}
@@ -352,6 +353,7 @@ ResetInfVars()
 }
 
 public Action L4D_OnFirstSurvivorLeftSafeArea(int client){
+	g_bStatsPlaytimeStarted = true;
 	Stats_RecordStartGrantedSupportItems();
 	Stats_ScheduleInitialSupportItemScans(12.0);
 
@@ -377,6 +379,7 @@ ResetVars()
 	PanicEventIncap = false;
 	CampaignOver = false;
 	Isstart = false;
+	g_bStatsPlaytimeStarted = false;
 	SupportStartGrantRecorded = false;
 	SupportStartGrantUntil = 0.0;
 	WitchExists = false;
@@ -625,7 +628,7 @@ public CheckSurvivorsWin()
 	decl String:UpdatePoints[32], String:UpdatePointsPenalty[32];
 	new ClientTeam, bool:NegativeScore = GetConVarBool(cvar_EnableNegativeScore);
 
-	switch (CurrentGamemodeID)
+	switch (Stats_GetCurrentStatsGamemodeID())
 	{
 		case GAMEMODE_VERSUS:
 		{
@@ -806,9 +809,10 @@ stock char[] GetAnneVersion()
 
 IsSingleTeamGamemode()
 {
-	if (CurrentGamemodeID == GAMEMODE_SCAVENGE ||
-			CurrentGamemodeID == GAMEMODE_VERSUS ||
-			CurrentGamemodeID == GAMEMODE_REALISMVERSUS)
+	new StatsGamemodeID = Stats_GetCurrentStatsGamemodeID();
+	if (StatsGamemodeID == GAMEMODE_SCAVENGE ||
+			StatsGamemodeID == GAMEMODE_VERSUS ||
+			StatsGamemodeID == GAMEMODE_REALISMVERSUS)
 		return false;
 
 	return true;
@@ -816,9 +820,10 @@ IsSingleTeamGamemode()
 
 CheckSurvivorsAllDown()
 {
+	new StatsGamemodeID = Stats_GetCurrentStatsGamemodeID();
 	if (CampaignOver ||
-				CurrentGamemodeID == GAMEMODE_COOP ||
-				CurrentGamemodeID == GAMEMODE_REALISM)
+				StatsGamemodeID == GAMEMODE_COOP ||
+				StatsGamemodeID == GAMEMODE_REALISM)
 		return;
 
 	new maxplayers = MaxClients;
@@ -898,27 +903,32 @@ CheckSurvivorsAllDown()
 	new Score = ModifyScoreDifficultyFloat(GetConVarInt(cvar_VictoryInfected), 0.75, 0.5, TEAM_INFECTED) * IncapCounter;
 
 	if (Score > 0)
+	{
 		for (i = 0; i < InfectedCounter; i++)
 		{
 			GetClientRankAuthString(Infected[i], ClientID, sizeof(ClientID));
 
-			if (CurrentGamemodeID == GAMEMODE_VERSUS)
-				Format(query, sizeof(query), "UPDATE %splayers SET points_infected = points_infected + %i, award_infected_win = award_infected_win + 1 WHERE steamid = '%s'", DbPrefix, Score, ClientID);
-			else if (CurrentGamemodeID == GAMEMODE_REALISMVERSUS)
-				Format(query, sizeof(query), "UPDATE %splayers SET points_realism_infected = points_realism_infected + %i, award_infected_win = award_infected_win + 1 WHERE steamid = '%s'", DbPrefix, Score, ClientID);
-			else if (CurrentGamemodeID == GAMEMODE_SCAVENGE)
-				Format(query, sizeof(query), "UPDATE %splayers SET points_scavenge_infected = points_scavenge_infected + %i, award_scavenge_infected_win = award_scavenge_infected_win + 1 WHERE steamid = '%s'", DbPrefix, Score, ClientID);
+			decl String:UpdatePoints[32], String:AwardField[32];
+			Stats_GetPointsColumnForTeam(TEAM_INFECTED, UpdatePoints, sizeof(UpdatePoints));
+			if (StatsGamemodeID == GAMEMODE_SCAVENGE)
+				Format(AwardField, sizeof(AwardField), "award_scavenge_infected_win");
 			else
-				Format(query, sizeof(query), "UPDATE %splayers SET points_mutations = points_mutations + %i, award_scavenge_infected_win = award_scavenge_infected_win + 1 WHERE steamid = '%s'", DbPrefix, Score, ClientID);
+				Format(AwardField, sizeof(AwardField), "award_infected_win");
+			Format(query, sizeof(query), "UPDATE %splayers SET %s = %s + %i, %s = %s + 1 WHERE steamid = '%s'", DbPrefix, UpdatePoints, UpdatePoints, Score, AwardField, AwardField, ClientID);
 
 			SendSQLUpdate(query);
 		}
+	}
 
 	UpdateMapStat("infected_win", 1);
 	if (IncapCounter > 0)
 		UpdateMapStat("survivor_kills", IncapCounter);
 	if (Score > 0)
-		UpdateMapStat("points_infected", Score);
+	{
+		decl String:MapPoints[32];
+		Stats_GetMapPointsFieldForTeam(TEAM_INFECTED, MapPoints, sizeof(MapPoints));
+		UpdateMapStat(MapPoints, Score);
+	}
 
 	if (Score > 0 && Mode)
 		StatsPrintToChatTeam(TEAM_INFECTED, "{lightgreen}所有感染者 {olive}因杀死了所有幸存者 {default}获得 {green}%i {default}分!", Score);
@@ -929,11 +939,11 @@ CheckSurvivorsAllDown()
 	{
 		return ;
 	}
-	if (CurrentGamemodeID == GAMEMODE_VERSUS)
+	if (StatsGamemodeID == GAMEMODE_VERSUS)
 	{
 		Score = ModifyScoreDifficultyFloatNR(GetConVarInt(cvar_Restart), 0.75, 0.5, TEAM_SURVIVORS);
 	}
-	else if (CurrentGamemodeID == GAMEMODE_REALISMVERSUS)
+	else if (StatsGamemodeID == GAMEMODE_REALISMVERSUS)
 	{
 		Score = ModifyScoreDifficultyFloatNR(GetConVarInt(cvar_Restart), 0.6, 0.3, TEAM_SURVIVORS);
 	}
@@ -947,14 +957,9 @@ CheckSurvivorsAllDown()
 	{
 		GetClientRankAuthString(KilledSurvivor[i], ClientID, sizeof(ClientID));
 
-		if (CurrentGamemodeID == GAMEMODE_VERSUS)
-			Format(query, sizeof(query), "UPDATE %splayers SET points_survivors = points_survivors - %i WHERE steamid = '%s'", DbPrefix, Score, ClientID);
-		else if (CurrentGamemodeID == GAMEMODE_REALISMVERSUS)
-			Format(query, sizeof(query), "UPDATE %splayers SET points_realism_survivors = points_realism_survivors - %i WHERE steamid = '%s'", DbPrefix, Score, ClientID);
-		else if (CurrentGamemodeID == GAMEMODE_SCAVENGE)
-			Format(query, sizeof(query), "UPDATE %splayers SET points_scavenge_survivors = points_scavenge_survivors - %i WHERE steamid = '%s'", DbPrefix, Score, ClientID);
-		else
-			Format(query, sizeof(query), "UPDATE %splayers SET points_mutations = points_mutations - %i WHERE steamid = '%s'", DbPrefix, Score, ClientID);
+		decl String:UpdatePoints[32];
+		Stats_GetPointsColumnForTeam(TEAM_SURVIVORS, UpdatePoints, sizeof(UpdatePoints));
+		Format(query, sizeof(query), "UPDATE %splayers SET %s = %s - %i WHERE steamid = '%s'", DbPrefix, UpdatePoints, UpdatePoints, Score, ClientID);
 
 		SendSQLUpdate(query);
 	}
@@ -1198,18 +1203,15 @@ TankDamage(Client, Damage)
 
 				decl String:query[1024];
 
-				if (CurrentGamemodeID == GAMEMODE_VERSUS)
-					Format(query, sizeof(query), "UPDATE %splayers SET points_infected = points_infected + %i, award_bulldozer = award_bulldozer + 1 WHERE steamid = '%s'", DbPrefix, Score, ClientID);
-				else if (CurrentGamemodeID == GAMEMODE_REALISMVERSUS)
-					Format(query, sizeof(query), "UPDATE %splayers SET points_realism_infected = points_realism_infected + %i, award_bulldozer = award_bulldozer + 1 WHERE steamid = '%s'", DbPrefix, Score, ClientID);
-				else if (CurrentGamemodeID == GAMEMODE_SCAVENGE)
-					Format(query, sizeof(query), "UPDATE %splayers SET points_scavenge_infected = points_scavenge_infected + %i, award_bulldozer = award_bulldozer + 1 WHERE steamid = '%s'", DbPrefix, Score, ClientID);
-				else
-					Format(query, sizeof(query), "UPDATE %splayers SET points_mutations = points_mutations + %i, award_bulldozer = award_bulldozer + 1 WHERE steamid = '%s'", DbPrefix, Score, ClientID);
+				decl String:UpdatePoints[32];
+				Stats_GetPointsColumnForTeam(TEAM_INFECTED, UpdatePoints, sizeof(UpdatePoints));
+				Format(query, sizeof(query), "UPDATE %splayers SET %s = %s + %i, award_bulldozer = award_bulldozer + 1 WHERE steamid = '%s'", DbPrefix, UpdatePoints, UpdatePoints, Score, ClientID);
 
 				SendSQLUpdate(query);
 
-				UpdateMapStat("points_infected", Score);
+				decl String:MapPoints[32];
+				Stats_GetMapPointsFieldForTeam(TEAM_INFECTED, MapPoints, sizeof(MapPoints));
+				UpdateMapStat(MapPoints, Score);
 
 				new Mode = GetConVarInt(cvar_AnnounceMode);
 
@@ -1267,7 +1269,7 @@ UpdateFriendlyFire(Attacker, Victim)
 
 	decl String:UpdatePoints[32];
 
-	switch (CurrentGamemodeID)
+	switch (Stats_GetCurrentStatsGamemodeID())
 	{
 		case GAMEMODE_VERSUS:
 		{
@@ -1354,7 +1356,7 @@ UpdatePlayerScore(Client, Score)
 	if (Score == 0)
 		return;
 
-	switch (CurrentGamemodeID)
+	switch (Stats_GetCurrentStatsGamemodeID())
 	{
 		case GAMEMODE_VERSUS:
 		{
@@ -1511,15 +1513,23 @@ SurvivorDiedNamed(Attacker, Victim, const String:VictimName[], const String:Atta
 
 	new len = 0;
 	decl String:query[1024];
+	decl String:UpdatePoints[32], String:KillsField[32];
 
-	if (CurrentGamemodeID == GAMEMODE_VERSUS)
-		len += Format(query[len], sizeof(query)-len, "UPDATE %splayers SET points_infected = points_infected + %i, versus_kills_survivors = versus_kills_survivors + 1 ", DbPrefix, Score);
-	else if (CurrentGamemodeID == GAMEMODE_REALISMVERSUS)
-		len += Format(query[len], sizeof(query)-len, "UPDATE %splayers SET points_realism_infected = points_realism_infected + %i, realism_kills_survivors = realism_kills_survivors + 1 ", DbPrefix, Score);
-	else if (CurrentGamemodeID == GAMEMODE_SCAVENGE)
-		len += Format(query[len], sizeof(query)-len, "UPDATE %splayers SET points_scavenge_infected = points_scavenge_infected + %i, scavenge_kills_survivors = scavenge_kills_survivors + 1 ", DbPrefix, Score);
-	else
-		len += Format(query[len], sizeof(query)-len, "UPDATE %splayers SET points_mutations = points_mutations + %i, mutations_kills_survivors = mutations_kills_survivors + 1 ", DbPrefix, Score);
+	Stats_GetPointsColumnForTeam(TEAM_INFECTED, UpdatePoints, sizeof(UpdatePoints));
+	switch (Stats_GetCurrentStatsGamemodeID())
+	{
+		case GAMEMODE_VERSUS:
+			Format(KillsField, sizeof(KillsField), "versus_kills_survivors");
+		case GAMEMODE_REALISMVERSUS:
+			Format(KillsField, sizeof(KillsField), "realism_kills_survivors");
+		case GAMEMODE_SCAVENGE:
+			Format(KillsField, sizeof(KillsField), "scavenge_kills_survivors");
+		case GAMEMODE_OTHERMUTATIONS:
+			Format(KillsField, sizeof(KillsField), "mutations_kills_survivors");
+		default:
+			Format(KillsField, sizeof(KillsField), "kills");
+	}
+	len += Format(query[len], sizeof(query)-len, "UPDATE %splayers SET %s = %s + %i, %s = %s + 1 ", DbPrefix, UpdatePoints, UpdatePoints, Score, KillsField, KillsField);
 	len += Format(query[len], sizeof(query)-len, "WHERE steamid = '%s'", AttackerID);
 	SendSQLUpdate(query);
 	ModeStats_RecordKills(Attacker, 1);
@@ -1540,7 +1550,9 @@ SurvivorDiedNamed(Attacker, Victim, const String:VictimName[], const String:Atta
 	}
 
 	UpdateMapStat("survivor_kills", 1);
-	UpdateMapStat("points_infected", Score);
+	decl String:MapPoints[32];
+	Stats_GetMapPointsFieldForTeam(TEAM_INFECTED, MapPoints, sizeof(MapPoints));
+	UpdateMapStat(MapPoints, Score);
 	AddScore(Attacker, Score);
 }
 
@@ -1593,14 +1605,9 @@ SurvivorHurt(Attacker, Victim, Damage, AttackerInfType = -1, Handle:event = INVA
 
 		if (RockHit > 0 && strcmp(Weapon, "tank_rock", false) == 0)
 		{
-			if (CurrentGamemodeID == GAMEMODE_VERSUS)
-				UpdatePlayerScore2(Attacker, RockHit, "points_infected");
-			else if (CurrentGamemodeID == GAMEMODE_REALISMVERSUS)
-				UpdatePlayerScore2(Attacker, RockHit, "points_realism_infected");
-			else if (CurrentGamemodeID == GAMEMODE_SCAVENGE)
-				UpdatePlayerScore2(Attacker, RockHit, "points_scavenge_infected");
-			else
-				UpdatePlayerScore2(Attacker, RockHit, "points_mutations");
+			decl String:UpdatePoints[32];
+			Stats_GetPointsColumnForTeam(TEAM_INFECTED, UpdatePoints, sizeof(UpdatePoints));
+			UpdatePlayerScore2(Attacker, RockHit, UpdatePoints);
 			UpdateTankSniper(Attacker);
 
 			decl String:VictimName[MAX_LINE_WIDTH];
@@ -1816,18 +1823,15 @@ SurvivorIncappedByInfected(Attacker, Victim, Mode = -1)
 		return;
 
 	decl String:query[512];
+	decl String:UpdatePoints[32];
 
-	if (CurrentGamemodeID == GAMEMODE_VERSUS)
-		Format(query, sizeof(query), "UPDATE %splayers SET points_infected = points_infected + %i, award_survivor_down = award_survivor_down + 1 WHERE steamid = '%s'", DbPrefix, Score, AttackerID);
-	else if (CurrentGamemodeID == GAMEMODE_REALISMVERSUS)
-		Format(query, sizeof(query), "UPDATE %splayers SET points_realism_infected = points_realism_infected + %i, award_survivor_down = award_survivor_down + 1 WHERE steamid = '%s'", DbPrefix, Score, AttackerID);
-	else if (CurrentGamemodeID == GAMEMODE_SCAVENGE)
-		Format(query, sizeof(query), "UPDATE %splayers SET points_scavenge_infected = points_scavenge_infected + %i, award_survivor_down = award_survivor_down + 1 WHERE steamid = '%s'", DbPrefix, Score, AttackerID);
-	else
-		Format(query, sizeof(query), "UPDATE %splayers SET points_mutations = points_mutations + %i, award_survivor_down = award_survivor_down + 1 WHERE steamid = '%s'", DbPrefix, Score, AttackerID);
+	Stats_GetPointsColumnForTeam(TEAM_INFECTED, UpdatePoints, sizeof(UpdatePoints));
+	Format(query, sizeof(query), "UPDATE %splayers SET %s = %s + %i, award_survivor_down = award_survivor_down + 1 WHERE steamid = '%s'", DbPrefix, UpdatePoints, UpdatePoints, Score, AttackerID);
 	SendSQLUpdate(query);
 
-	UpdateMapStat("points_infected", Score);
+	decl String:MapPoints[32];
+	Stats_GetMapPointsFieldForTeam(TEAM_INFECTED, MapPoints, sizeof(MapPoints));
+	UpdateMapStat(MapPoints, Score);
 
 	if (Mode < 0)
 		Mode = GetConVarInt(cvar_AnnounceMode);

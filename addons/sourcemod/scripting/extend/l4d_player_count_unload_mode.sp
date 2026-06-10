@@ -49,7 +49,7 @@
 #include <sdkhooks>
 #include <multicolors>      // https://github.com/fbef0102/L4D1_2-Plugins/releases
 
-#define PLUGIN_VERSION			"1.0-2024/10/21"
+#define PLUGIN_VERSION			"1.1.0-2026/06/10"
 #define PLUGIN_NAME			    "l4d_player_count_unload_mode"
 #define DEBUG 0
 
@@ -95,13 +95,13 @@ ConVar survivor_limit, z_max_player_zombies;
 int g_iCvarSurvivorLimit, g_iCvarInfectedMax;
 
 ConVar g_hCvarEnable, g_hCvarTime, g_hCvarCount, g_hCvarFlag, g_hCvarDelay;
-ConVar g_hCvarPeakMode, g_hCvarPeakRatio, g_hCvarPeakHoldTime, g_hCvarDBConfig, g_hCvarServerId, g_hCvarStatusTable, g_hCvarStatusInterval, g_hCvarStatusMaxAge;
+ConVar g_hCvarPeakMode, g_hCvarPeakRatio, g_hCvarPeakHoldTime, g_hCvarDBConfig, g_hCvarServerId, g_hCvarServerIp, g_hCvarServerPort, g_hCvarStatusTable, g_hCvarStatusInterval, g_hCvarStatusMaxAge;
 // 服务器本地相对 UTC 的偏移（分钟）。优先用 %z，失败时回退到可配置的 ConVar。
 ConVar g_hTzServerOffset; // 可选：回退用（例如老 Windows 不支持 %z）
 bool g_bCvarEnable;
-int g_iCvarCount, g_iCvarPeakMode, g_iCvarPeakHoldTime, g_iCvarStatusMaxAge;
+int g_iCvarCount, g_iCvarPeakMode, g_iCvarPeakHoldTime, g_iCvarServerPort, g_iCvarStatusMaxAge;
 float g_fCvarDelay, g_fCvarPeakRatio, g_fCvarStatusInterval;
-char g_sCvarime[128], g_sCvarFlag[AdminFlags_TOTAL], g_sCvarDBConfig[64], g_sCvarServerId[128], g_sCvarStatusTable[64];
+char g_sCvarime[128], g_sCvarFlag[AdminFlags_TOTAL], g_sCvarDBConfig[64], g_sCvarServerId[128], g_sCvarServerIp[64], g_sCvarStatusTable[64];
 
 enum struct ETimeData
 {
@@ -149,6 +149,8 @@ public void OnPluginStart()
     g_hCvarPeakHoldTime = CreateConVar( PLUGIN_NAME ... "_peak_hold_time", "3600",          "peak_mode=1 时，一旦进入高峰期后至少持续限制多少秒；0=不保持", CVAR_FLAGS, true, 0.0);
     g_hCvarDBConfig     = CreateConVar( PLUGIN_NAME ... "_db_config",     "l4dstats",        "peak_mode=1 使用的 databases.cfg 区块名", CVAR_FLAGS);
     g_hCvarServerId     = CreateConVar( PLUGIN_NAME ... "_server_id",     "",               "本服务器唯一ID；留空时优先从hostname提取前缀#编号，如Anne云服#21，失败则使用hostname:hostport", CVAR_FLAGS);
+    g_hCvarServerIp     = CreateConVar( PLUGIN_NAME ... "_server_ip",     "",               "写入网页状态表的服务器公网IP/域名；可填host或host:port；留空时自动读取net_public_adr/ip/hostip", CVAR_FLAGS);
+    g_hCvarServerPort   = CreateConVar( PLUGIN_NAME ... "_server_port",   "0",              "写入网页状态表的服务器外网端口；0=自动读取hostport/port；server_ip填host:port时优先使用其中端口", CVAR_FLAGS, true, 0.0, true, 65535.0);
     g_hCvarStatusTable  = CreateConVar( PLUGIN_NAME ... "_status_table",  "l4d_server_status", "peak_mode=1 使用的服务器状态表名", CVAR_FLAGS);
     g_hCvarStatusInterval = CreateConVar(PLUGIN_NAME ... "_status_interval", "180.0",       "peak_mode=1 本服人数写入数据库的心跳间隔秒数；人数变化时会尽快写入", CVAR_FLAGS, true, 5.0);
     g_hCvarStatusMaxAge = CreateConVar( PLUGIN_NAME ... "_status_max_age", "540",           "peak_mode=1 查询全服状态时，只统计多少秒内更新过的服务器，建议为status_interval的3倍", CVAR_FLAGS, true, 10.0);
@@ -171,6 +173,8 @@ public void OnPluginStart()
     g_hCvarPeakHoldTime.AddChangeHook(ConVarChanged_PeakCvars);
     g_hCvarDBConfig.AddChangeHook(ConVarChanged_PeakCvars);
     g_hCvarServerId.AddChangeHook(ConVarChanged_PeakCvars);
+    g_hCvarServerIp.AddChangeHook(ConVarChanged_PeakCvars);
+    g_hCvarServerPort.AddChangeHook(ConVarChanged_PeakCvars);
     g_hCvarStatusTable.AddChangeHook(ConVarChanged_PeakCvars);
     g_hCvarStatusInterval.AddChangeHook(ConVarChanged_PeakCvars);
     g_hCvarStatusMaxAge.AddChangeHook(ConVarChanged_PeakCvars);
@@ -225,11 +229,16 @@ void GetCvars()
     g_iCvarPeakHoldTime = g_hCvarPeakHoldTime.IntValue;
     g_hCvarDBConfig.GetString(g_sCvarDBConfig, sizeof(g_sCvarDBConfig));
     g_hCvarServerId.GetString(g_sCvarServerId, sizeof(g_sCvarServerId));
+    g_hCvarServerIp.GetString(g_sCvarServerIp, sizeof(g_sCvarServerIp));
+    g_iCvarServerPort = g_hCvarServerPort.IntValue;
     g_hCvarStatusTable.GetString(g_sCvarStatusTable, sizeof(g_sCvarStatusTable));
     g_fCvarStatusInterval = g_hCvarStatusInterval.FloatValue;
     g_iCvarStatusMaxAge = g_hCvarStatusMaxAge.IntValue;
 
     TrimString(g_sCvarServerId);
+    TrimString(g_sCvarServerIp);
+    if (g_iCvarServerPort < 0 || g_iCvarServerPort > 65535)
+        g_iCvarServerPort = 0;
     TrimString(g_sCvarStatusTable);
     if (g_sCvarStatusTable[0] == '\0' || !IsSafeSQLIdentifier(g_sCvarStatusTable))
     {
@@ -509,18 +518,22 @@ public void SQLCB_OnConnect(Handle owner, Handle hndl, const char[] error, any d
 
 void CreateStatusTable()
 {
-    char sQuery[768];
+    char sQuery[1024];
     if (g_bIsMySQL)
     {
         FormatEx(sQuery, sizeof(sQuery),
             "CREATE TABLE IF NOT EXISTS `%s` ( \
+                `address_key` VARCHAR(160) NOT NULL, \
                 `server_id` VARCHAR(128) NOT NULL, \
                 `hostname` VARCHAR(128) NOT NULL DEFAULT '', \
+                `ip` VARCHAR(64) NOT NULL DEFAULT '', \
+                `port` INT NOT NULL DEFAULT 0, \
                 `players` INT NOT NULL DEFAULT 0, \
                 `updated_at` INT NOT NULL DEFAULT 0, \
                 `enabled` TINYINT NOT NULL DEFAULT 1, \
                 `is_good_server` TINYINT NOT NULL DEFAULT 0, \
-                PRIMARY KEY (`server_id`), \
+                PRIMARY KEY (`address_key`), \
+                KEY `server_id` (`server_id`), \
                 KEY `updated_at` (`updated_at`) \
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4",
             g_sCvarStatusTable);
@@ -529,8 +542,11 @@ void CreateStatusTable()
     {
         FormatEx(sQuery, sizeof(sQuery),
             "CREATE TABLE IF NOT EXISTS `%s` ( \
-                `server_id` TEXT NOT NULL PRIMARY KEY, \
+                `address_key` TEXT NOT NULL PRIMARY KEY, \
+                `server_id` TEXT NOT NULL DEFAULT '', \
                 `hostname` TEXT NOT NULL DEFAULT '', \
+                `ip` TEXT NOT NULL DEFAULT '', \
+                `port` INTEGER NOT NULL DEFAULT 0, \
                 `players` INTEGER NOT NULL DEFAULT 0, \
                 `updated_at` INTEGER NOT NULL DEFAULT 0, \
                 `enabled` INTEGER NOT NULL DEFAULT 1, \
@@ -548,6 +564,104 @@ public void SQLCB_CreateStatusTable(Handle owner, Handle hndl, const char[] erro
     {
         LogError("[%s] Create status table failed: %s", PLUGIN_NAME, error);
         return;
+    }
+
+    EnsureStatusAddressKeyColumn();
+}
+
+bool IsIgnorableSchemaError(const char[] error)
+{
+    return error[0] == '\0'
+        || StrContains(error, "Duplicate column", false) != -1
+        || StrContains(error, "duplicate column", false) != -1
+        || StrContains(error, "Duplicate key name", false) != -1
+        || StrContains(error, "duplicate key name", false) != -1
+        || StrContains(error, "Multiple primary key", false) != -1
+        || StrContains(error, "multiple primary key", false) != -1;
+}
+
+void EnsureStatusAddressKeyColumn()
+{
+    char sQuery[512];
+    if (g_bIsMySQL)
+    {
+        FormatEx(sQuery, sizeof(sQuery),
+            "ALTER TABLE `%s` ADD COLUMN `address_key` VARCHAR(160) NOT NULL DEFAULT '' FIRST",
+            g_sCvarStatusTable);
+    }
+    else
+    {
+        FormatEx(sQuery, sizeof(sQuery),
+            "ALTER TABLE `%s` ADD COLUMN `address_key` TEXT NOT NULL DEFAULT ''",
+            g_sCvarStatusTable);
+    }
+
+    SQL_TQuery(g_hDB, SQLCB_EnsureStatusAddressKeyColumn, sQuery);
+}
+
+public void SQLCB_EnsureStatusAddressKeyColumn(Handle owner, Handle hndl, const char[] error, any data)
+{
+    if (hndl == null && !IsIgnorableSchemaError(error))
+    {
+        LogError("[%s] Add status address_key column failed: %s", PLUGIN_NAME, error);
+    }
+
+    EnsureStatusIpColumn();
+}
+
+void EnsureStatusIpColumn()
+{
+    char sQuery[512];
+    if (g_bIsMySQL)
+    {
+        FormatEx(sQuery, sizeof(sQuery),
+            "ALTER TABLE `%s` ADD COLUMN `ip` VARCHAR(64) NOT NULL DEFAULT '' AFTER `hostname`",
+            g_sCvarStatusTable);
+    }
+    else
+    {
+        FormatEx(sQuery, sizeof(sQuery),
+            "ALTER TABLE `%s` ADD COLUMN `ip` TEXT NOT NULL DEFAULT ''",
+            g_sCvarStatusTable);
+    }
+
+    SQL_TQuery(g_hDB, SQLCB_EnsureStatusIpColumn, sQuery);
+}
+
+public void SQLCB_EnsureStatusIpColumn(Handle owner, Handle hndl, const char[] error, any data)
+{
+    if (hndl == null && !IsIgnorableSchemaError(error))
+    {
+        LogError("[%s] Add status ip column failed: %s", PLUGIN_NAME, error);
+    }
+
+    EnsureStatusPortColumn();
+}
+
+void EnsureStatusPortColumn()
+{
+    char sQuery[512];
+    if (g_bIsMySQL)
+    {
+        FormatEx(sQuery, sizeof(sQuery),
+            "ALTER TABLE `%s` ADD COLUMN `port` INT NOT NULL DEFAULT 0 AFTER `ip`",
+            g_sCvarStatusTable);
+    }
+    else
+    {
+        FormatEx(sQuery, sizeof(sQuery),
+            "ALTER TABLE `%s` ADD COLUMN `port` INTEGER NOT NULL DEFAULT 0",
+            g_sCvarStatusTable);
+    }
+
+    SQL_TQuery(g_hDB, SQLCB_EnsureStatusPortColumn, sQuery);
+}
+
+public void SQLCB_EnsureStatusPortColumn(Handle owner, Handle hndl, const char[] error, any data)
+{
+    if (hndl == null && !IsIgnorableSchemaError(error))
+    {
+        LogError("[%s] Add status port column failed: %s", PLUGIN_NAME, error);
     }
 
     EnsureStatusGoodServerColumn();
@@ -574,12 +688,80 @@ void EnsureStatusGoodServerColumn()
 
 public void SQLCB_EnsureStatusGoodServerColumn(Handle owner, Handle hndl, const char[] error, any data)
 {
-    if (hndl == null && error[0] != '\0'
-        && StrContains(error, "Duplicate column", false) == -1
-        && StrContains(error, "duplicate column", false) == -1)
+    if (hndl == null && !IsIgnorableSchemaError(error))
     {
         LogError("[%s] Add status good-server column failed: %s", PLUGIN_NAME, error);
+    }
+
+    MigrateStatusAddressKeys();
+}
+
+void MigrateStatusAddressKeys()
+{
+    char sQuery[512];
+    FormatEx(sQuery, sizeof(sQuery),
+        "UPDATE `%s` SET `address_key` = `server_id` WHERE `address_key` = '' OR `address_key` IS NULL",
+        g_sCvarStatusTable);
+    SQL_TQuery(g_hDB, SQLCB_MigrateStatusAddressKeys, sQuery);
+}
+
+public void SQLCB_MigrateStatusAddressKeys(Handle owner, Handle hndl, const char[] error, any data)
+{
+    if (hndl == null && error[0] != '\0')
+    {
+        LogError("[%s] Migrate status address_key failed: %s", PLUGIN_NAME, error);
+    }
+
+    MigrateStatusPrimaryKey();
+}
+
+void MigrateStatusPrimaryKey()
+{
+    if (!g_bIsMySQL)
+    {
+        CreatePeakStateTable();
         return;
+    }
+
+    char sQuery[512];
+    FormatEx(sQuery, sizeof(sQuery),
+        "ALTER TABLE `%s` DROP PRIMARY KEY, ADD PRIMARY KEY (`address_key`)",
+        g_sCvarStatusTable);
+    SQL_TQuery(g_hDB, SQLCB_MigrateStatusPrimaryKey, sQuery);
+}
+
+public void SQLCB_MigrateStatusPrimaryKey(Handle owner, Handle hndl, const char[] error, any data)
+{
+    if (hndl == null && error[0] != '\0'
+        && StrContains(error, "Multiple primary key", false) == -1
+        && StrContains(error, "multiple primary key", false) == -1)
+    {
+        LogError("[%s] Migrate status primary key failed: %s", PLUGIN_NAME, error);
+    }
+
+    EnsureStatusServerIdIndex();
+}
+
+void EnsureStatusServerIdIndex()
+{
+    if (!g_bIsMySQL)
+    {
+        CreatePeakStateTable();
+        return;
+    }
+
+    char sQuery[512];
+    FormatEx(sQuery, sizeof(sQuery),
+        "ALTER TABLE `%s` ADD INDEX `server_id` (`server_id`)",
+        g_sCvarStatusTable);
+    SQL_TQuery(g_hDB, SQLCB_EnsureStatusServerIdIndex, sQuery);
+}
+
+public void SQLCB_EnsureStatusServerIdIndex(Handle owner, Handle hndl, const char[] error, any data)
+{
+    if (hndl == null && !IsIgnorableSchemaError(error))
+    {
+        LogError("[%s] Add status server_id index failed: %s", PLUGIN_NAME, error);
     }
 
     CreatePeakStateTable();
@@ -634,7 +816,7 @@ void CleanupLegacyStatusRows()
 
     char sQuery[256];
     FormatEx(sQuery, sizeof(sQuery),
-        "DELETE FROM `%s` WHERE `server_id` COLLATE utf8mb4_bin NOT REGEXP '^Anne云服#[0-9]+$'",
+        "DELETE FROM `%s` WHERE (`address_key` = '' OR `address_key` IS NULL) AND `server_id` COLLATE utf8mb4_bin NOT REGEXP '^Anne云服#[0-9]+$'",
         g_sCvarStatusTable);
     SQL_TQuery(g_hDB, SQLCB_Generic, sQuery);
 }
@@ -674,7 +856,8 @@ void UpdateServerStatus(bool bForce = false)
             return;
     }
 
-    char sServerId[256], sHostname[256], sEscServerId[512], sEscHostname[512];
+    char sServerId[256], sHostname[256], sServerIp[64], sAddressKey[192];
+    char sEscServerId[512], sEscHostname[512], sEscServerIp[128], sEscAddressKey[384];
     ConVar hHostname = FindConVar("hostname");
     if (hHostname != null)
         hHostname.GetString(sHostname, sizeof(sHostname));
@@ -684,28 +867,44 @@ void UpdateServerStatus(bool bForce = false)
     if (!BuildCurrentServerId(sHostname, sServerId, sizeof(sServerId)))
         return;
 
+    int iPort;
+    if (!BuildCurrentServerAddress(sServerIp, sizeof(sServerIp), iPort, sAddressKey, sizeof(sAddressKey)))
+        return;
+
     SQL_EscapeString(g_hDB, sServerId, sEscServerId, sizeof(sEscServerId));
     SQL_EscapeString(g_hDB, sHostname, sEscHostname, sizeof(sEscHostname));
+    SQL_EscapeString(g_hDB, sServerIp, sEscServerIp, sizeof(sEscServerIp));
+    SQL_EscapeString(g_hDB, sAddressKey, sEscAddressKey, sizeof(sEscAddressKey));
 
-    char sQuery[1024];
+    char sQuery[1536];
     if (g_bIsMySQL)
     {
         FormatEx(sQuery, sizeof(sQuery),
-            "INSERT INTO `%s` (`server_id`, `hostname`, `players`, `updated_at`, `enabled`) VALUES ('%s', '%s', %d, UNIX_TIMESTAMP(), 1) \
-             ON DUPLICATE KEY UPDATE `hostname` = VALUES(`hostname`), `players` = VALUES(`players`), `updated_at` = VALUES(`updated_at`), `enabled` = VALUES(`enabled`)",
-            g_sCvarStatusTable, sEscServerId, sEscHostname, iPlayers);
+            "INSERT INTO `%s` (`address_key`, `server_id`, `hostname`, `ip`, `port`, `players`, `updated_at`, `enabled`) VALUES ('%s', '%s', '%s', '%s', %d, %d, UNIX_TIMESTAMP(), 1) \
+             ON DUPLICATE KEY UPDATE `server_id` = VALUES(`server_id`), `hostname` = VALUES(`hostname`), `ip` = VALUES(`ip`), `port` = VALUES(`port`), `players` = VALUES(`players`), `updated_at` = VALUES(`updated_at`), `enabled` = VALUES(`enabled`)",
+            g_sCvarStatusTable, sEscAddressKey, sEscServerId, sEscHostname, sEscServerIp, iPort, iPlayers);
+        SQL_TQuery(g_hDB, SQLCB_Generic, sQuery);
+
+        FormatEx(sQuery, sizeof(sQuery),
+            "DELETE FROM `%s` WHERE `server_id` = '%s' AND `address_key` <> '%s' AND (`ip` = '' OR `port` = 0 OR `address_key` = `server_id`)",
+            g_sCvarStatusTable, sEscServerId, sEscAddressKey);
         SQL_TQuery(g_hDB, SQLCB_Generic, sQuery);
     }
     else
     {
         FormatEx(sQuery, sizeof(sQuery),
-            "INSERT OR IGNORE INTO `%s` (`server_id`, `hostname`, `players`, `updated_at`, `enabled`) VALUES ('%s', '%s', %d, strftime('%%s','now'), 1)",
-            g_sCvarStatusTable, sEscServerId, sEscHostname, iPlayers);
+            "INSERT OR IGNORE INTO `%s` (`address_key`, `server_id`, `hostname`, `ip`, `port`, `players`, `updated_at`, `enabled`) VALUES ('%s', '%s', '%s', '%s', %d, %d, strftime('%%s','now'), 1)",
+            g_sCvarStatusTable, sEscAddressKey, sEscServerId, sEscHostname, sEscServerIp, iPort, iPlayers);
         SQL_TQuery(g_hDB, SQLCB_Generic, sQuery);
 
         FormatEx(sQuery, sizeof(sQuery),
-            "UPDATE `%s` SET `hostname` = '%s', `players` = %d, `updated_at` = strftime('%%s','now'), `enabled` = 1 WHERE `server_id` = '%s'",
-            g_sCvarStatusTable, sEscHostname, iPlayers, sEscServerId);
+            "UPDATE `%s` SET `server_id` = '%s', `hostname` = '%s', `ip` = '%s', `port` = %d, `players` = %d, `updated_at` = strftime('%%s','now'), `enabled` = 1 WHERE `address_key` = '%s'",
+            g_sCvarStatusTable, sEscServerId, sEscHostname, sEscServerIp, iPort, iPlayers, sEscAddressKey);
+        SQL_TQuery(g_hDB, SQLCB_Generic, sQuery);
+
+        FormatEx(sQuery, sizeof(sQuery),
+            "DELETE FROM `%s` WHERE `server_id` = '%s' AND `address_key` <> '%s' AND (`ip` = '' OR `port` = 0 OR `address_key` = `server_id`)",
+            g_sCvarStatusTable, sEscServerId, sEscAddressKey);
         SQL_TQuery(g_hDB, SQLCB_Generic, sQuery);
     }
 
@@ -754,13 +953,13 @@ void QueryPeakState(int iReplyUserid)
     if (g_bIsMySQL)
     {
         FormatEx(sQuery, sizeof(sQuery),
-            "SELECT SUM(CASE WHEN `players` > 0 THEN 1 ELSE 0 END), COUNT(*), COALESCE((SELECT `hold_until` FROM `%s` WHERE `state_key` = 'global' LIMIT 1), 0), COALESCE((SELECT `is_good_server` FROM `%s` WHERE `server_id` = '%s' LIMIT 1), 0) FROM `%s` WHERE `enabled` = 1 AND `updated_at` >= UNIX_TIMESTAMP() - %d",
+            "SELECT SUM(CASE WHEN `players` > 0 THEN 1 ELSE 0 END), COUNT(*), COALESCE((SELECT `hold_until` FROM `%s` WHERE `state_key` = 'global' LIMIT 1), 0), COALESCE((SELECT MAX(`is_good_server`) FROM `%s` WHERE `server_id` = '%s'), 0) FROM `%s` WHERE `enabled` = 1 AND `updated_at` >= UNIX_TIMESTAMP() - %d",
             PEAK_STATE_TABLE, g_sCvarStatusTable, sEscServerId, g_sCvarStatusTable, g_iCvarStatusMaxAge);
     }
     else
     {
         FormatEx(sQuery, sizeof(sQuery),
-            "SELECT SUM(CASE WHEN `players` > 0 THEN 1 ELSE 0 END), COUNT(*), COALESCE((SELECT `hold_until` FROM `%s` WHERE `state_key` = 'global' LIMIT 1), 0), COALESCE((SELECT `is_good_server` FROM `%s` WHERE `server_id` = '%s' LIMIT 1), 0) FROM `%s` WHERE `enabled` = 1 AND `updated_at` >= strftime('%%s','now') - %d",
+            "SELECT SUM(CASE WHEN `players` > 0 THEN 1 ELSE 0 END), COUNT(*), COALESCE((SELECT `hold_until` FROM `%s` WHERE `state_key` = 'global' LIMIT 1), 0), COALESCE((SELECT MAX(`is_good_server`) FROM `%s` WHERE `server_id` = '%s'), 0) FROM `%s` WHERE `enabled` = 1 AND `updated_at` >= strftime('%%s','now') - %d",
             PEAK_STATE_TABLE, g_sCvarStatusTable, sEscServerId, g_sCvarStatusTable, g_iCvarStatusMaxAge);
     }
 
@@ -1050,6 +1249,133 @@ void BuildServerIdFromHostname(const char[] hostname, char[] buffer, int maxlen)
     int iPort = (hHostPort != null) ? hHostPort.IntValue : 0;
 
     FormatEx(buffer, maxlen, "%s:%d", hostname, iPort);
+}
+
+bool BuildCurrentServerAddress(char[] ipBuffer, int ipMaxLen, int &port, char[] addressKey, int addressKeyMaxLen)
+{
+    if (g_sCvarServerIp[0] != '\0')
+    {
+        strcopy(ipBuffer, ipMaxLen, g_sCvarServerIp);
+        int configuredPort = 0;
+        ExtractAddressPort(ipBuffer, configuredPort);
+        port = configuredPort;
+    }
+    else if (!GetCurrentServerPublicIp(ipBuffer, ipMaxLen))
+    {
+        return false;
+    }
+    else
+    {
+        port = 0;
+    }
+
+    if (g_iCvarServerPort > 0)
+        port = g_iCvarServerPort;
+
+    if (port <= 0)
+        port = GetCurrentServerPort();
+
+    TrimString(ipBuffer);
+    if (ipBuffer[0] == '\0' || port <= 0)
+        return false;
+
+    FormatEx(addressKey, addressKeyMaxLen, "%s:%d", ipBuffer, port);
+    TrimString(addressKey);
+    return addressKey[0] != '\0';
+}
+
+void ExtractAddressPort(char[] address, int &port)
+{
+    TrimString(address);
+    int iLen = strlen(address);
+    if (iLen <= 0)
+        return;
+
+    int iColon = -1;
+    for (int i = iLen - 1; i >= 0; i--)
+    {
+        if (address[i] == ':')
+        {
+            iColon = i;
+            break;
+        }
+    }
+
+    if (iColon <= 0 || iColon >= iLen - 1)
+        return;
+
+    char sPort[12];
+    int iOut = 0;
+    for (int i = iColon + 1; i < iLen && iOut < sizeof(sPort) - 1; i++)
+    {
+        if (address[i] < '0' || address[i] > '9')
+            return;
+        sPort[iOut++] = address[i];
+    }
+    sPort[iOut] = '\0';
+
+    int iParsedPort = StringToInt(sPort);
+    if (iParsedPort <= 0 || iParsedPort > 65535)
+        return;
+
+    address[iColon] = '\0';
+    TrimString(address);
+    if (address[0] == '\0')
+        return;
+
+    port = iParsedPort;
+}
+
+int GetCurrentServerPort()
+{
+    ConVar hHostPort = FindConVar("hostport");
+    if (hHostPort != null && hHostPort.IntValue > 0)
+        return hHostPort.IntValue;
+
+    ConVar hPort = FindConVar("port");
+    if (hPort != null && hPort.IntValue > 0)
+        return hPort.IntValue;
+
+    return 0;
+}
+
+bool GetCurrentServerPublicIp(char[] buffer, int maxlen)
+{
+    ConVar hPublicAdr = FindConVar("net_public_adr");
+    if (hPublicAdr != null)
+    {
+        hPublicAdr.GetString(buffer, maxlen);
+        TrimString(buffer);
+        if (buffer[0] != '\0')
+            return true;
+    }
+
+    ConVar hIp = FindConVar("ip");
+    if (hIp != null)
+    {
+        hIp.GetString(buffer, maxlen);
+        TrimString(buffer);
+        if (buffer[0] != '\0' && !StrEqual(buffer, "0.0.0.0") && !StrEqual(buffer, "localhost", false))
+            return true;
+    }
+
+    ConVar hHostIp = FindConVar("hostip");
+    if (hHostIp != null)
+    {
+        int iHostIp = hHostIp.IntValue;
+        if (iHostIp > 0)
+        {
+            FormatEx(buffer, maxlen, "%d.%d.%d.%d",
+                (iHostIp >> 24) & 0xFF,
+                (iHostIp >> 16) & 0xFF,
+                (iHostIp >> 8) & 0xFF,
+                iHostIp & 0xFF);
+            return true;
+        }
+    }
+
+    buffer[0] = '\0';
+    return false;
 }
 
 bool BuildCurrentServerId(const char[] hostname, char[] buffer, int maxlen)

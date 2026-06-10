@@ -26,6 +26,8 @@
 #define CVAR_FLAGS                     FCVAR_NOTIFY
 #define IsValidClient(%1)              (1 <= %1 && %1 <= MaxClients && IsClientInGame(%1))
 #define IsValidAliveClient(%1)         (IsValidClient(%1) && IsPlayerAlive(%1))
+#define AUTO_GIVE_ENTITY_RESERVE       64
+#define L4D_SLOT_PILLS                 4
 
 enum ZombieClass
 {
@@ -650,9 +652,14 @@ public Action Timer_AutoGive(Handle timer)
         if (!IsSurvivor(i)) continue;
 
         if (!IsPlayerAlive(i))
-            L4D_RespawnPlayer(i);
+        {
+            if (!HasEntityBudgetForAutoGive(i, "respawn"))
+                continue;
 
-        BypassAndExecuteCommand(i, "give", "pain_pills");
+            L4D_RespawnPlayer(i);
+        }
+
+        GivePainPillsIfNeeded(i);
         BypassAndExecuteCommand(i, "give", "health");
         SetEntPropFloat(i, Prop_Send, "m_healthBuffer", 0.0);
         SetEntProp(i,   Prop_Send, "m_currentReviveCount", 0);
@@ -663,8 +670,8 @@ public Action Timer_AutoGive(Handle timer)
             for (int s = 0; s < 2; s++)
                 DeleteInventoryItem(i, s);
 
-            BypassAndExecuteCommand(i, "give", "smg_silenced");
-            BypassAndExecuteCommand(i, "give", "pistol");
+            GiveItemIfEntityBudgetAllows(i, "smg_silenced");
+            GiveItemIfEntityBudgetAllows(i, "pistol");
         }
     }
     return Plugin_Continue;
@@ -694,15 +701,49 @@ void ResetInventory()
         for (int s = 0; s <= 4; s++)
             DeleteInventoryItem(i, s);
 
-        BypassAndExecuteCommand(i, "give", "pistol");
+        GiveItemIfEntityBudgetAllows(i, "pistol");
     }
 }
 
 void DeleteInventoryItem(int client, int slot)
 {
     int item = GetPlayerWeaponSlot(client, slot);
-    if (item > MaxClients)
-        RemovePlayerItem(client, item);
+    if (item <= MaxClients || !IsValidEntity(item))
+        return;
+
+    if (RemovePlayerItem(client, item) && IsValidEntity(item))
+        AcceptEntityInput(item, "Kill");
+}
+
+void GivePainPillsIfNeeded(int client)
+{
+    int item = GetPlayerWeaponSlot(client, L4D_SLOT_PILLS);
+    if (item > MaxClients && IsValidEntity(item))
+        return;
+
+    GiveItemIfEntityBudgetAllows(client, "pain_pills");
+}
+
+bool GiveItemIfEntityBudgetAllows(int client, const char[] item)
+{
+    if (!HasEntityBudgetForAutoGive(client, item))
+        return false;
+
+    BypassAndExecuteCommand(client, "give", item);
+    return true;
+}
+
+bool HasEntityBudgetForAutoGive(int client, const char[] context)
+{
+    int entityCount = GetEntityCount();
+    int maxEntities = GetMaxEntities();
+
+    if (entityCount + AUTO_GIVE_ENTITY_RESERVE < maxEntities)
+        return true;
+
+    LogError("[AutoGive] skipped %s for %N: entity count is too high (%d/%d, reserve %d)",
+        context, client, entityCount, maxEntities, AUTO_GIVE_ENTITY_RESERVE);
+    return false;
 }
 
 void RestoreHealth()

@@ -14,7 +14,7 @@
 	}
 	"Join_FinishRemindsAdministratorVerify"
 	{
-		"zho"		"{green}[AnneDonate]{default} 掃碼支付完成後，請輸入 {olive}!wc{default} / {olive}!wanchen!wanchenZ/ {olive}!finish{default} 提醒管理者核實。"
+		"zho"		"{green}[AnneDonate]{default} 掃碼支付完成後，請輸入 {olive}!wc 郵箱{default} / {olive}!wanchen 郵箱{default} / {olive}!finish 郵箱{default} 提醒管理者核實。"
 	}
 	"Join_AnneDonateSponsorshipConfirmedNot"
 	{

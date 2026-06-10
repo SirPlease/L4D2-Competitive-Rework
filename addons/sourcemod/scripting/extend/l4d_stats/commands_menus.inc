@@ -1434,7 +1434,7 @@ public Action:cmd_MapTimes(client, args)
 	decl String:Info[MAX_LINE_WIDTH], String:CurrentMapName[MAX_LINE_WIDTH];
 
 	GetCurrentMap(CurrentMapName, sizeof(CurrentMapName));
-	Format(Info, sizeof(Info), "%i\\%s", CurrentGamemodeID, CurrentMapName);
+	Format(Info, sizeof(Info), "%i\\%s", Stats_GetCurrentStatsGamemodeID(), CurrentMapName);
 
 	DisplayTimedMapsMenu3FromInfo(client, Info);
 
@@ -1906,7 +1906,7 @@ public CreateTimedMapsMenu(Handle:owner, Handle:hndl, const String:error[], any:
 				continue;
 		}
 
-		if (CurrentGamemodeID == Gamemode)
+		if (Stats_GetCurrentStatsGamemodeID() == Gamemode)
 			StrCat(GamemodeTitle, sizeof(GamemodeTitle), TM_MENU_CURRENT);
 
 		AddMenuItem(menu, GamemodeInfo, GamemodeTitle);
@@ -2028,7 +2028,7 @@ public CreateTimedMapsMenu2(Handle:owner, Handle:hndl, const String:error[], any
 
 		Format(Info, sizeof(Info), "%i\\%s", Gamemode, Map);
 
-		if (CurrentGamemodeID == Gamemode && StrEqual(CurrentMapName, Map))
+		if (Stats_GetCurrentStatsGamemodeID() == Gamemode && StrEqual(CurrentMapName, Map))
 			StrCat(Map, sizeof(Map), TM_MENU_CURRENT);
 
 		AddMenuItem(menu, Info, Map);

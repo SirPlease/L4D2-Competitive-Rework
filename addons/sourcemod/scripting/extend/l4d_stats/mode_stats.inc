@@ -60,7 +60,7 @@ stock bool:ModeStats_ShouldTrackClient(Client)
 
 stock ModeStats_RecordPlaytime(Client, Minutes)
 {
-	if (Minutes <= 0 || !ModeStats_ShouldTrackClient(Client))
+	if (Minutes <= 0 || !Stats_ShouldCountClientPlaytime(Client) || !ModeStats_ShouldTrackClient(Client))
 		return;
 
 	decl String:ClientID[MAX_LINE_WIDTH];
@@ -71,7 +71,7 @@ stock ModeStats_RecordPlaytime(Client, Minutes)
 		"INSERT INTO `%splayer_mode_stats` (steamid, mode_id, anne_mode, playtime, updated) VALUES ('%s', %i, %i, %i, UNIX_TIMESTAMP()) ON DUPLICATE KEY UPDATE playtime = playtime + %i, updated = UNIX_TIMESTAMP()",
 		DbPrefix,
 		ClientID,
-		CurrentGamemodeID,
+		Stats_GetCurrentStatsGamemodeID(),
 		ModeStats_GetAnneMode(),
 		Minutes,
 		Minutes);
@@ -91,7 +91,7 @@ stock ModeStats_RecordScore(Client, Score)
 		"INSERT INTO `%splayer_mode_stats` (steamid, mode_id, anne_mode, points, updated) VALUES ('%s', %i, %i, %i, UNIX_TIMESTAMP()) ON DUPLICATE KEY UPDATE points = points + %i, updated = UNIX_TIMESTAMP()",
 		DbPrefix,
 		ClientID,
-		CurrentGamemodeID,
+		Stats_GetCurrentStatsGamemodeID(),
 		ModeStats_GetAnneMode(),
 		Score,
 		Score);
@@ -114,7 +114,7 @@ stock ModeStats_RecordKills(Client, Kills, Headshots = 0)
 		"INSERT INTO `%splayer_mode_stats` (steamid, mode_id, anne_mode, kills, headshots, updated) VALUES ('%s', %i, %i, %i, %i, UNIX_TIMESTAMP()) ON DUPLICATE KEY UPDATE kills = kills + %i, headshots = headshots + %i, updated = UNIX_TIMESTAMP()",
 		DbPrefix,
 		ClientID,
-		CurrentGamemodeID,
+		Stats_GetCurrentStatsGamemodeID(),
 		ModeStats_GetAnneMode(),
 		Kills,
 		Headshots,

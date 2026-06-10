@@ -4,11 +4,18 @@
 #include <sourcemod>
 #include <sdktools>
 #include <sdkhooks>
+#include <left4dhooks>
 
 #define PLUGIN_VERSION "1.1.0"
 
 #define TEAM_SURVIVOR 2
 #define TEAM_INFECTED 3
+#define ZC_SMOKER 1
+#define ZC_BOOMER 2
+#define ZC_HUNTER 3
+#define ZC_SPITTER 4
+#define ZC_JOCKEY 5
+#define ZC_CHARGER 6
 #define ZC_TANK 8
 
 #define NORMAL_SPEED 1.0
@@ -27,20 +34,37 @@ ConVar g_cvAiLadderBoost;
 ConVar g_cvPzLadderBoost;
 ConVar g_cvLegacyBoostMultiplier;
 ConVar g_cvTankLadderBoost;
+ConVar g_cvClimbAnimBoost;
+ConVar g_cvSiClimbAnimRate;
+ConVar g_cvTankClimbAnimRate;
+ConVar g_cvTankLowClimbAnimRate;
+ConVar g_cvTankLadderAnimRate;
+ConVar g_cvClampExitSpeed;
 
 bool g_bIsOnLadder[MAXPLAYERS + 1] = {false, ...};
 bool g_bSpeedBoosted[MAXPLAYERS + 1] = {false, ...};
+bool g_bWasOnLadder[MAXPLAYERS + 1] = {false, ...};
+bool g_bClimbAnimBoosted[MAXPLAYERS + 1] = {false, ...};
+bool g_bAnimHooked[MAXPLAYERS + 1] = {false, ...};
 float g_fOriginalSpeed[MAXPLAYERS + 1] = {0.0, ...};
 float g_fActiveMultiplier[MAXPLAYERS + 1] = {0.0, ...};
 float g_fCooldownEndTime[MAXPLAYERS + 1] = {0.0, ...};
 
 Handle g_hCheckTimer = null;
+StringMap g_hTankClimbAnimMap;
+StringMap g_hTankLowClimbAnimMap;
+
+enum ClimbSequenceType
+{
+    ClimbSequence_High,
+    ClimbSequence_Low
+}
 
 public Plugin myinfo =
 {
     name = "[L4D2] Infected Ladder Speed Boost",
     author = "YourName, AiMee, AnneHappy",
-    description = "Merged infected ladder booster with visibility-gated boost and legacy fixed boost cvars",
+    description = "Merged infected ladder booster with visibility-gated boost and climb animation controls",
     version = PLUGIN_VERSION,
     url = ""
 };
@@ -59,9 +83,17 @@ public void OnPluginStart()
     g_cvAiLadderBoost = CreateConVar("l4d2_ai_ladder_boost", "1", "兼容旧l4d2_si_ladder_booster：AI特感在梯子上固定加速", FCVAR_SPONLY, true, 0.0, true, 1.0);
     g_cvPzLadderBoost = CreateConVar("l4d2_pz_ladder_boost", "0", "兼容旧l4d2_si_ladder_booster：真人特感在梯子上固定加速", FCVAR_SPONLY, true, 0.0, true, 1.0);
     g_cvLegacyBoostMultiplier = CreateConVar("l4d2_boost_multiplier", "3.2", "兼容旧l4d2_si_ladder_booster：固定爬梯加速倍数", FCVAR_SPONLY, true, 1.0, true, 10.0);
-    g_cvTankLadderBoost = CreateConVar("l4d2_ladder_boost_tank", "0", "是否允许该通用插件加速Tank爬梯；0=交给ai_tank3处理", FCVAR_NOTIFY, true, 0.0, true, 1.0);
+    g_cvTankLadderBoost = CreateConVar("l4d2_ladder_boost_tank", "1", "是否允许该通用插件加速Tank爬梯", FCVAR_NOTIFY, true, 0.0, true, 1.0);
+    g_cvClimbAnimBoost = CreateConVar("l4d2_climb_anim_boost", "1", "是否由该插件处理特感翻越/爬小障碍动画加速", FCVAR_NOTIFY, true, 0.0, true, 1.0);
+    g_cvSiClimbAnimRate = CreateConVar("l4d2_si_climb_anim_rate", "3.2", "非Tank特感翻越/爬小障碍动画播放倍速（1.0=原速）", FCVAR_NOTIFY, true, 0.0);
+    g_cvTankClimbAnimRate = CreateConVar("l4d2_tank_climb_anim_rate", "3.5", "Tank 高翻越动画播放倍速（1.0=原速）", FCVAR_NOTIFY, true, 0.0);
+    g_cvTankLowClimbAnimRate = CreateConVar("l4d2_tank_low_climb_anim_rate", "2.5", "Tank 低翻越动画播放倍速（1.0=原速）", FCVAR_NOTIFY, true, 0.0);
+    g_cvTankLadderAnimRate = CreateConVar("l4d2_tank_ladder_anim_rate", "1.0", "Tank 梯子动画播放倍速；真实爬梯速度由 m_flLaggedMovementValue 控制", FCVAR_NOTIFY, true, 0.0);
+    g_cvClampExitSpeed = CreateConVar("l4d2_ladder_boost_clamp_exit_speed", "1", "特感离开梯子时将水平速度限制到当前走路速度，防止10倍速度带出", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 
     AutoExecConfig(true, "l4d2_infected_ladder_speed");
+
+    InitClimbAnimMaps();
 
     RegAdminCmd("sm_ladder_debug", Command_LadderDebug, ADMFLAG_GENERIC, "显示插件调试信息");
     RegAdminCmd("sm_ladder_status", Command_LadderStatus, ADMFLAG_GENERIC, "显示所有玩家状态");
@@ -84,6 +116,12 @@ void HookBoostCvars()
     g_cvPzLadderBoost.AddChangeHook(OnConVarChanged);
     g_cvLegacyBoostMultiplier.AddChangeHook(OnConVarChanged);
     g_cvTankLadderBoost.AddChangeHook(OnConVarChanged);
+    g_cvClimbAnimBoost.AddChangeHook(OnConVarChanged);
+    g_cvSiClimbAnimRate.AddChangeHook(OnConVarChanged);
+    g_cvTankClimbAnimRate.AddChangeHook(OnConVarChanged);
+    g_cvTankLowClimbAnimRate.AddChangeHook(OnConVarChanged);
+    g_cvTankLadderAnimRate.AddChangeHook(OnConVarChanged);
+    g_cvClampExitSpeed.AddChangeHook(OnConVarChanged);
 }
 
 public void OnPluginEnd()
@@ -96,8 +134,13 @@ public void OnPluginEnd()
         {
             RestorePlayerSpeed(i);
         }
+        RestorePlaybackRate(i);
+        RemoveAnimationHook(i);
         RemoveClientHooks(i);
     }
+
+    delete g_hTankClimbAnimMap;
+    delete g_hTankLowClimbAnimMap;
 }
 
 public void OnMapStart()
@@ -108,6 +151,12 @@ public void OnMapStart()
 public void OnMapEnd()
 {
     StopCheckTimer();
+
+    for (int i = 1; i <= MaxClients; i++)
+    {
+        g_bAnimHooked[i] = false;
+        g_bClimbAnimBoosted[i] = false;
+    }
 }
 
 public void OnClientPostAdminCheck(int client)
@@ -116,11 +165,14 @@ public void OnClientPostAdminCheck(int client)
     {
         SetupClientHooks(client);
     }
+
+    SetupAnimationHook(client);
 }
 
 public void OnClientDisconnect(int client)
 {
     RemoveClientHooks(client);
+    RemoveAnimationHook(client);
     ResetClientData(client);
 }
 
@@ -147,6 +199,7 @@ void Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
         {
             RestorePlayerSpeed(i);
         }
+        RestorePlaybackRate(i);
 
         ResetClientData(i);
     }
@@ -171,6 +224,7 @@ void Event_PlayerSpawn(Event event, const char[] name, bool dontBroadcast)
     {
         RestorePlayerSpeed(client);
     }
+    RestorePlaybackRate(client);
 
     ResetClientData(client);
 
@@ -178,6 +232,8 @@ void Event_PlayerSpawn(Event event, const char[] name, bool dontBroadcast)
     {
         SetupClientHooks(client);
     }
+
+    SetupAnimationHook(client);
 }
 
 void Event_PlayerDeath(Event event, const char[] name, bool dontBroadcast)
@@ -192,6 +248,7 @@ void Event_PlayerDeath(Event event, const char[] name, bool dontBroadcast)
     {
         RestorePlayerSpeed(client);
     }
+    RestorePlaybackRate(client);
 
     ResetClientData(client);
 }
@@ -202,6 +259,7 @@ void Event_PlayerDisconnect(Event event, const char[] name, bool dontBroadcast)
     if (client > 0)
     {
         RemoveClientHooks(client);
+        RemoveAnimationHook(client);
         ResetClientData(client);
     }
 }
@@ -226,12 +284,17 @@ void RefreshRuntimeHooks()
         {
             SetupClientHooks(i);
         }
+
+        if (IsValidClient(i))
+        {
+            SetupAnimationHook(i);
+        }
     }
 }
 
 bool ShouldRunBoostChecks()
 {
-    return g_cvEnabled.BoolValue || g_cvAiLadderBoost.BoolValue || g_cvPzLadderBoost.BoolValue;
+    return g_cvEnabled.BoolValue || g_cvAiLadderBoost.BoolValue || g_cvPzLadderBoost.BoolValue || g_cvTankLadderBoost.BoolValue;
 }
 
 void StartCheckTimer()
@@ -278,6 +341,85 @@ void RemoveClientHooks(int client)
     SDKUnhook(client, SDKHook_PostThinkPost, Hook_PostThinkPost);
 }
 
+void SetupAnimationHook(int client)
+{
+    if (!IsValidClient(client) || GetClientTeam(client) != TEAM_INFECTED || g_bAnimHooked[client])
+    {
+        return;
+    }
+
+    AnimHookEnable(client, INVALID_FUNCTION, Hook_AnimationPost);
+    SDKHook(client, SDKHook_PostThinkPost, Hook_ClimbAnimThink);
+    g_bAnimHooked[client] = true;
+}
+
+void RemoveAnimationHook(int client)
+{
+    if (client < 1 || client > MaxClients || !g_bAnimHooked[client])
+    {
+        return;
+    }
+
+    if (!IsValidClient(client))
+    {
+        g_bAnimHooked[client] = false;
+        return;
+    }
+
+    AnimHookDisable(client, INVALID_FUNCTION, Hook_AnimationPost);
+    SDKUnhook(client, SDKHook_PostThinkPost, Hook_ClimbAnimThink);
+    g_bAnimHooked[client] = false;
+}
+
+Action Hook_AnimationPost(int client, int &sequence)
+{
+    if (!g_cvClimbAnimBoost.BoolValue || !IsValidInfected(client))
+    {
+        return Plugin_Continue;
+    }
+
+    float rate = GetClimbPlaybackRate(client, sequence);
+    if (rate <= NORMAL_SPEED + SPEED_EPSILON)
+    {
+        return Plugin_Continue;
+    }
+
+    SetClientPlaybackRate(client, rate);
+    g_bClimbAnimBoosted[client] = true;
+    return Plugin_Continue;
+}
+
+public void Hook_ClimbAnimThink(int client)
+{
+    if (!g_cvClimbAnimBoost.BoolValue || !IsValidInfected(client))
+    {
+        RestorePlaybackRate(client);
+        return;
+    }
+
+    if (IsTank(client) && IsPlayerOnLadder(client))
+    {
+        float ladderRate = g_cvTankLadderAnimRate.FloatValue;
+        if (ladderRate > NORMAL_SPEED + SPEED_EPSILON)
+        {
+            SetClientPlaybackRate(client, ladderRate);
+            g_bClimbAnimBoosted[client] = true;
+            return;
+        }
+    }
+
+    int sequence = GetEntProp(client, Prop_Data, "m_nSequence");
+    float rate = GetClimbPlaybackRate(client, sequence);
+    if (rate > NORMAL_SPEED + SPEED_EPSILON)
+    {
+        SetClientPlaybackRate(client, rate);
+        g_bClimbAnimBoosted[client] = true;
+        return;
+    }
+
+    RestorePlaybackRate(client);
+}
+
 public void Hook_PreThink(int client)
 {
     if (!ShouldRunBoostChecks() || !IsValidInfected(client))
@@ -315,7 +457,7 @@ public void Hook_PostThinkPost(int client)
 
 public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3], float angles[3])
 {
-    if (!g_bSpeedBoosted[client])
+    if (!g_bSpeedBoosted[client] && !g_bWasOnLadder[client])
     {
         return Plugin_Continue;
     }
@@ -324,16 +466,24 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
     {
         RestorePlayerSpeed(client);
         g_bIsOnLadder[client] = false;
+        g_bWasOnLadder[client] = false;
         return Plugin_Continue;
     }
 
-    if (!IsPlayerOnLadder(client) || !IsClassAllowedForBoost(client))
+    bool isOnLadder = IsPlayerOnLadder(client);
+    if (!isOnLadder || !IsClassAllowedForBoost(client))
     {
+        if (g_bWasOnLadder[client])
+        {
+            ClampClientExitVelocity(client);
+        }
         RestorePlayerSpeed(client);
         g_bIsOnLadder[client] = false;
+        g_bWasOnLadder[client] = false;
         return Plugin_Continue;
     }
 
+    g_bWasOnLadder[client] = true;
     CheckAndUpdatePlayerSpeed(client);
 
     return Plugin_Continue;
@@ -384,11 +534,20 @@ void CheckAndUpdatePlayerSpeed(int client)
     {
         if (g_bSpeedBoosted[client])
         {
+            if (g_bWasOnLadder[client])
+            {
+                ClampClientExitVelocity(client);
+            }
             RestorePlayerSpeed(client);
+        }
+        if (!isOnLadder)
+        {
+            g_bWasOnLadder[client] = false;
         }
         return;
     }
 
+    g_bWasOnLadder[client] = true;
     float multiplier = GetDesiredBoostMultiplier(client);
     if (multiplier <= NORMAL_SPEED + SPEED_EPSILON)
     {
@@ -406,18 +565,24 @@ float GetDesiredBoostMultiplier(int client)
 {
     float multiplier = NORMAL_SPEED;
     bool fakeClient = IsFakeClient(client);
+    bool tank = IsTank(client);
 
-    if (fakeClient && g_cvAiLadderBoost.BoolValue)
+    if (tank && g_cvTankLadderBoost.BoolValue)
     {
         multiplier = MaxFloat(multiplier, g_cvLegacyBoostMultiplier.FloatValue);
     }
 
-    if (!fakeClient && g_cvPzLadderBoost.BoolValue && !IsInfectedGhost(client))
+    if (!tank && fakeClient && g_cvAiLadderBoost.BoolValue)
     {
         multiplier = MaxFloat(multiplier, g_cvLegacyBoostMultiplier.FloatValue);
     }
 
-    if (g_cvEnabled.BoolValue && IsSightBoostAllowed(client))
+    if (!tank && !fakeClient && g_cvPzLadderBoost.BoolValue && !IsInfectedGhost(client))
+    {
+        multiplier = MaxFloat(multiplier, g_cvLegacyBoostMultiplier.FloatValue);
+    }
+
+    if (!tank && g_cvEnabled.BoolValue && IsSightBoostAllowed(client))
     {
         multiplier = MaxFloat(multiplier, g_cvSpeedMultiplier.FloatValue);
     }
@@ -488,11 +653,16 @@ void ApplyPlayerSpeed(int client, float multiplier)
     g_fActiveMultiplier[client] = multiplier;
 }
 
-void RestorePlayerSpeed(int client)
+void RestorePlayerSpeed(int client, bool clampVelocity = false)
 {
     if (!IsValidClient(client) || !g_bSpeedBoosted[client])
     {
         return;
+    }
+
+    if (clampVelocity)
+    {
+        ClampClientExitVelocity(client);
     }
 
     float restoreSpeed = (g_fOriginalSpeed[client] > 0.0) ? g_fOriginalSpeed[client] : NORMAL_SPEED;
@@ -520,9 +690,195 @@ void ResetClientData(int client)
 
     g_bIsOnLadder[client] = false;
     g_bSpeedBoosted[client] = false;
+    g_bWasOnLadder[client] = false;
+    g_bClimbAnimBoosted[client] = false;
     g_fOriginalSpeed[client] = 0.0;
     g_fActiveMultiplier[client] = 0.0;
     g_fCooldownEndTime[client] = 0.0;
+}
+
+void InitClimbAnimMaps()
+{
+    if (!g_hTankClimbAnimMap)
+    {
+        g_hTankClimbAnimMap = new StringMap();
+    }
+    if (!g_hTankLowClimbAnimMap)
+    {
+        g_hTankLowClimbAnimMap = new StringMap();
+    }
+
+    g_hTankClimbAnimMap.SetValue("ACT_DIESIMPLE", true);
+    g_hTankClimbAnimMap.SetValue("ACT_DIEBACKWARD", true);
+    g_hTankClimbAnimMap.SetValue("ACT_DIEFORWARD", true);
+    g_hTankClimbAnimMap.SetValue("ACT_DIEVIOLENT", true);
+
+    g_hTankLowClimbAnimMap.SetValue("ACT_RANGE_ATTACK1", true);
+    g_hTankLowClimbAnimMap.SetValue("ACT_RANGE_ATTACK2", true);
+    g_hTankLowClimbAnimMap.SetValue("ACT_RANGE_ATTACK1_LOW", true);
+    g_hTankLowClimbAnimMap.SetValue("ACT_RANGE_ATTACK2_LOW", true);
+}
+
+float GetClimbPlaybackRate(int client, int sequence)
+{
+    if (!IsValidInfected(client))
+    {
+        return NORMAL_SPEED;
+    }
+
+    if (IsTank(client))
+    {
+        ClimbSequenceType type;
+        if (!GetTankClimbSequenceType(sequence, type))
+        {
+            return NORMAL_SPEED;
+        }
+
+        return type == ClimbSequence_Low ? g_cvTankLowClimbAnimRate.FloatValue : g_cvTankClimbAnimRate.FloatValue;
+    }
+
+    int zombieClass = GetZombieClass(client);
+    if (zombieClass < ZC_SMOKER || zombieClass > ZC_CHARGER)
+    {
+        return NORMAL_SPEED;
+    }
+
+    if (!IsPlayerOnLadder(client) && IsGenericClimbSequence(sequence))
+    {
+        return g_cvSiClimbAnimRate.FloatValue;
+    }
+
+    return NORMAL_SPEED;
+}
+
+bool GetTankClimbSequenceType(int sequence, ClimbSequenceType &type)
+{
+    if (sequence < 0)
+    {
+        return false;
+    }
+
+    char seqName[64];
+    if (!AnimGetActivity(sequence, seqName, sizeof(seqName)))
+    {
+        return false;
+    }
+
+    if (g_hTankLowClimbAnimMap && g_hTankLowClimbAnimMap.ContainsKey(seqName))
+    {
+        type = ClimbSequence_Low;
+        return true;
+    }
+
+    if (g_hTankClimbAnimMap && g_hTankClimbAnimMap.ContainsKey(seqName))
+    {
+        type = ClimbSequence_High;
+        return true;
+    }
+
+    return false;
+}
+
+bool IsGenericClimbSequence(int sequence)
+{
+    if (sequence < 0)
+    {
+        return false;
+    }
+
+    char seqName[64];
+    if (!AnimGetActivity(sequence, seqName, sizeof(seqName)))
+    {
+        return false;
+    }
+
+    if (StrContains(seqName, "LADDER", false) != -1)
+    {
+        return false;
+    }
+
+    return StrContains(seqName, "CLIMB", false) != -1;
+}
+
+void RestorePlaybackRate(int client)
+{
+    if (client < 1 || client > MaxClients || !g_bClimbAnimBoosted[client])
+    {
+        return;
+    }
+
+    if (IsValidClient(client))
+    {
+        SetClientPlaybackRate(client, NORMAL_SPEED);
+    }
+
+    g_bClimbAnimBoosted[client] = false;
+}
+
+void SetClientPlaybackRate(int client, float value)
+{
+    if (!IsValidClient(client))
+    {
+        return;
+    }
+
+    float current = GetEntPropFloat(client, Prop_Send, "m_flPlaybackRate");
+    if (FloatAbs(current - value) > SPEED_EPSILON)
+    {
+        SetEntPropFloat(client, Prop_Send, "m_flPlaybackRate", value);
+    }
+}
+
+void ClampClientExitVelocity(int client)
+{
+    if (!g_cvClampExitSpeed.BoolValue || !IsValidClient(client))
+    {
+        return;
+    }
+
+    float maxSpeed = GetClientWalkSpeed(client);
+    if (maxSpeed <= 0.0)
+    {
+        return;
+    }
+
+    float velocity[3];
+    GetEntPropVector(client, Prop_Data, "m_vecAbsVelocity", velocity);
+    float horizontal = SquareRoot(velocity[0] * velocity[0] + velocity[1] * velocity[1]);
+    if (horizontal <= maxSpeed || horizontal <= 0.0)
+    {
+        return;
+    }
+
+    float scale = maxSpeed / horizontal;
+    velocity[0] *= scale;
+    velocity[1] *= scale;
+    TeleportEntity(client, NULL_VECTOR, NULL_VECTOR, velocity);
+}
+
+float GetClientWalkSpeed(int client)
+{
+    if (HasEntProp(client, Prop_Send, "m_flMaxspeed"))
+    {
+        float speed = GetEntPropFloat(client, Prop_Send, "m_flMaxspeed");
+        if (speed > 0.0)
+        {
+            return speed;
+        }
+    }
+
+    switch (GetZombieClass(client))
+    {
+        case ZC_SMOKER: return 210.0;
+        case ZC_BOOMER: return 175.0;
+        case ZC_HUNTER: return 300.0;
+        case ZC_SPITTER: return 210.0;
+        case ZC_JOCKEY: return 250.0;
+        case ZC_CHARGER: return 250.0;
+        case ZC_TANK: return 210.0;
+    }
+
+    return 250.0;
 }
 
 bool IsClassAllowedForBoost(int client)
@@ -566,12 +922,22 @@ bool IsPlayerOnLadder(int client)
 
 bool IsTank(int client)
 {
-    if (!IsValidInfected(client) || !HasEntProp(client, Prop_Send, "m_zombieClass"))
+    if (!IsValidInfected(client))
     {
         return false;
     }
 
-    return GetEntProp(client, Prop_Send, "m_zombieClass") == ZC_TANK;
+    return GetZombieClass(client) == ZC_TANK;
+}
+
+int GetZombieClass(int client)
+{
+    if (!IsValidClient(client) || !HasEntProp(client, Prop_Send, "m_zombieClass"))
+    {
+        return 0;
+    }
+
+    return GetEntProp(client, Prop_Send, "m_zombieClass");
 }
 
 bool IsInfectedGhost(int client)

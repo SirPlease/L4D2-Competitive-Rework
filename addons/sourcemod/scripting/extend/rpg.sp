@@ -49,6 +49,7 @@ ConVar g_hAntiKickBlockCmdKick;
 ConVar g_hAntiKickMinImmunity;   // 0=只要有任意管理员标识就保护；>0=要求免疫等级>=此值才保护
 ConVar g_hAntiKickEqualBlock;    // 同级免疫是否禁止互踢（默认禁用互踢）
 bool g_bHitSoundAvailable = false,g_bGodFrameSystemAvailable = false, g_bHatSystemAvailable = false, g_bHextagsSystemAvailable = false, g_bl4dstatsSystemAvailable = false, g_bMysqlSystemAvailable = false, g_bReadyUpSystemAvailable = false, g_bInfectedControlAvailable = false, g_bpunchangelSystemAvailable= false, g_bDamageShowHudAvailable = false;
+bool g_bPendingCustomTagApply[MAXPLAYERS + 1];
 //new lastpoints[MAXPLAYERS + 1];
 
 //枚举变量,修改武器消耗积分在此。
@@ -416,7 +417,15 @@ public void OnLibraryAdded(const char[] name)
     if (StrEqual(name, "l4d2_godframes_control_merge")) { g_bGodFrameSystemAvailable = true; }
     else if (StrEqual(name, "l4d_hats")) { g_bHatSystemAvailable = true; }
     else if (StrEqual(name, "l4d_stats")) { g_bl4dstatsSystemAvailable = true; }
-    else if (StrEqual(name, "hextags")) { g_bHextagsSystemAvailable = true; }
+    else if (StrEqual(name, "hextags"))
+	{
+		g_bHextagsSystemAvailable = true;
+		for (int i = 1; i <= MaxClients; i++)
+		{
+			if (g_bPendingCustomTagApply[i])
+				ApplyCustomTagIfReady(i);
+		}
+	}
     else if (StrEqual(name, "readyup")) { g_bReadyUpSystemAvailable = true; }
     else if (StrEqual(name, "infected_control"))
     {
@@ -880,18 +889,45 @@ public void OnClientPostAdminCheck(int client)
 public void OnClientDisconnect(int client)
 {
 	g_iDbLoadRetryCount[client] = 0;
+	g_bPendingCustomTagApply[client] = false;
 }
 
 public Action SetClientTag(Handle timer, int client)
 {
-    if (!IsValidClient(client) || IsFakeClient(client))
-        return Plugin_Handled;
+	ApplyCustomTagIfReady(client);
+	return Plugin_Stop;
+}
 
-    if (player[client].tags.ChatTag[0] != '\0' && g_bHextagsSystemAvailable)
-    {
-        SetTags(client, player[client].tags.ChatTag);
-    }
-    return Plugin_Continue;
+public void HexTags_OnTagsUpdated(int client)
+{
+	if (client < 1 || client > MaxClients || player[client].tags.ChatTag[0] == '\0')
+		return;
+
+	g_bPendingCustomTagApply[client] = true;
+	RequestFrame(Frame_ApplyCustomTag, GetClientUserId(client));
+}
+
+public void Frame_ApplyCustomTag(any userid)
+{
+	int client = GetClientOfUserId(userid);
+	if (client > 0)
+		ApplyCustomTagIfReady(client);
+}
+
+bool ApplyCustomTagIfReady(int client)
+{
+	if (!IsValidClient(client) || IsFakeClient(client) || player[client].tags.ChatTag[0] == '\0')
+		return false;
+
+	if (!g_bHextagsSystemAvailable)
+	{
+		g_bPendingCustomTagApply[client] = true;
+		return false;
+	}
+
+	g_bPendingCustomTagApply[client] = false;
+	SetTags(client, player[client].tags.ChatTag);
+	return true;
 }
 
 
@@ -1506,6 +1542,7 @@ public void ShowMelee(Handle owner, Handle hndl, const char []error, any data)
 		player[client].ClientRecoil = SQL_FetchInt(hndl, 5);
 		FakeClientCommand(client, "sm_recoil %d", player[client].ClientRecoil);
  		SQL_FetchString(hndl, 6, player[client].tags.ChatTag, 24);
+		ApplyCustomTagIfReady(client);
 		ValidateClientGlow(client, true, true);
 	}
 	else

@@ -7,7 +7,7 @@
 
 public SetCurrentGamemodeName()
 {
-	switch (CurrentGamemodeID)
+	switch (Stats_GetCurrentStatsGamemodeID())
 	{
 		case GAMEMODE_COOP:
 		{
@@ -93,7 +93,7 @@ public Action Event_RoundEnd(Handle:event, String:event_name[], bool:dontBroadca
 			decl String:UserID[MAX_LINE_WIDTH];
 			GetClientRankAuthString(i, UserID, sizeof(UserID));
 
-			switch (CurrentGamemodeID)
+			switch (Stats_GetCurrentStatsGamemodeID())
 			{
 				case GAMEMODE_VERSUS:
 				{
@@ -140,6 +140,7 @@ public Action:event_ScavengeRoundStart(Handle:event, const String:name[], bool:d
 {
 	event_RoundStart(event, name, dontBroadcast);
 
+	g_bStatsPlaytimeStarted = true;
 	StartMapTiming();
 }
 
@@ -151,8 +152,8 @@ public Action:event_RoundStart(Handle:event, const String:name[], bool:dontBroad
 	CheckCurrentMapDB();
 	MapTimingStartTime = 0.0;
 	MapTimingBlocked = false;
+	g_bStatsPlaytimeStarted = false;
 	g_broundend = false;
 	NewPlayerBonus_ResetRound();
 	ResetRankChangeCheck();
 }
-

@@ -70,6 +70,7 @@ l4d_multislots_autokicktank
 l4d_multislots_max_survivors
 l4d_multislots_survivors_manager_enable
 l4d_ready_cfg_name
+l4d2_nav_variant_name
 l4d2_addons_eclipse
 l4d2_hunter_patch_convert_leap
 l4d2_hunter_patch_crouch_pounce

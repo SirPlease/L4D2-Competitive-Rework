@@ -55,7 +55,8 @@ public PrintToConsoleAll(const String:Message[], any:...)
 
 MapTimingEnabled()
 {
-	return MapTimingBlocked || CurrentGamemodeID == GAMEMODE_COOP || CurrentGamemodeID == GAMEMODE_SURVIVAL || CurrentGamemodeID == GAMEMODE_REALISM || CurrentGamemodeID == GAMEMODE_OTHERMUTATIONS;
+	new StatsGamemodeID = Stats_GetCurrentStatsGamemodeID();
+	return MapTimingBlocked || StatsGamemodeID == GAMEMODE_COOP || StatsGamemodeID == GAMEMODE_SURVIVAL || StatsGamemodeID == GAMEMODE_REALISM || StatsGamemodeID == GAMEMODE_OTHERMUTATIONS;
 }
 
 MapTimingRuns_RecordParticipant(const String:RunID[], const String:MapName[], GamemodeID, const String:ClientID[], Float:TotalTime, PlayerCounter, GameDifficulty, const String:Mutation[], Mode)
@@ -346,6 +347,7 @@ public bool StopMapTiming()
 		//return;
 
 	new GameDifficulty = GetMapTimingDifficulty();
+	new StatsGamemodeID = Stats_GetCurrentStatsGamemodeID();
 	if(mode > 0)
 	{
 		GetThisModeBestTime(g_brpgAvailable && L4D_RPG_GetGlobalValue(INDEX_USEBUY));	
@@ -374,10 +376,10 @@ public bool StopMapTiming()
 					if (enabled)
 						{
 							dp = CreateDataPack();
-							MapTimingRuns_RecordParticipant(RunID, MapName, CurrentGamemodeID, ClientID, TotalTime, PlayerCounter, GameDifficulty, CurrentMutation, mode);
+							MapTimingRuns_RecordParticipant(RunID, MapName, StatsGamemodeID, ClientID, TotalTime, PlayerCounter, GameDifficulty, CurrentMutation, mode);
 
 							WritePackString(dp, MapName);
-							WritePackCell(dp, CurrentGamemodeID);
+							WritePackCell(dp, StatsGamemodeID);
 							WritePackString(dp, ClientID);
 							WritePackFloat(dp, TotalTime);
 							WritePackCell(dp, i);
@@ -387,11 +389,11 @@ public bool StopMapTiming()
 
 						if(mode > 0)
 						{
-							Format(query, sizeof(query), "SELECT time FROM %stimedmaps WHERE map = '%s' AND gamemode = %i AND difficulty = %i AND mutation = '%s' AND steamid = '%s' AND sinum = %i AND sitime = %i AND anneversion = '%s' AND mode = %i AND usebuy = %i AND auto = %i AND players = %i", DbPrefix, MapName, CurrentGamemodeID, GameDifficulty, CurrentMutation, ClientID, GetAnneInfectedNumber(), GetAnneSISpawnTime(), GetAnneVersion(), mode, g_brpgAvailable && L4D_RPG_GetGlobalValue(INDEX_USEBUY), IsAutoSpawnTime(), PlayerCounter);
+							Format(query, sizeof(query), "SELECT time FROM %stimedmaps WHERE map = '%s' AND gamemode = %i AND difficulty = %i AND mutation = '%s' AND steamid = '%s' AND sinum = %i AND sitime = %i AND anneversion = '%s' AND mode = %i AND usebuy = %i AND auto = %i AND players = %i", DbPrefix, MapName, StatsGamemodeID, GameDifficulty, CurrentMutation, ClientID, GetAnneInfectedNumber(), GetAnneSISpawnTime(), GetAnneVersion(), mode, g_brpgAvailable && L4D_RPG_GetGlobalValue(INDEX_USEBUY), IsAutoSpawnTime(), PlayerCounter);
 						}
 						else
 						{
-							Format(query, sizeof(query), "SELECT time FROM %stimedmaps WHERE map = '%s' AND gamemode = %i AND difficulty = %i AND mutation = '%s' AND steamid = '%s' AND mode = %i", DbPrefix, MapName, CurrentGamemodeID, GameDifficulty, CurrentMutation, ClientID, mode);
+							Format(query, sizeof(query), "SELECT time FROM %stimedmaps WHERE map = '%s' AND gamemode = %i AND difficulty = %i AND mutation = '%s' AND steamid = '%s' AND mode = %i", DbPrefix, MapName, StatsGamemodeID, GameDifficulty, CurrentMutation, ClientID, mode);
 						}
 						SQL_TQuery(db, UpdateMapTimingStat, query, dp);
 					}
@@ -412,11 +414,12 @@ GetThisModeBestTime(int UseBuy=0)
 	GetCurrentMap(MapName, sizeof(MapName));
 
 	new GameDifficulty = GetMapTimingDifficulty();
+	new StatsGamemodeID = Stats_GetCurrentStatsGamemodeID();
 	int mode = GetMapTimingMode();
 	if (mode <= 0)
 		mode = 1;
-	Format(query, sizeof(query), "SELECT time FROM %stimedmaps WHERE map = '%s' AND gamemode = %i AND difficulty = %i AND mutation = '%s'  AND sinum = %i AND sitime = %i AND anneversion = '%s' AND mode = %i AND usebuy = %i AND auto = %i AND players = %i ORDER BY time LIMIT 1",\
-	 		DbPrefix, MapName, CurrentGamemodeID, GameDifficulty, CurrentMutation, GetAnneInfectedNumber(), GetAnneSISpawnTime(),\
+	Format(query, sizeof(query), "SELECT time FROM %stimedmaps WHERE map = '%s' AND gamemode = %i AND difficulty = %i AND mutation = '%s'  AND sinum = %i AND sitime = %i AND anneversion = '%s' AND mode = %i AND usebuy = %i AND auto = %i AND players = %i ORDER BY time LIMIT 1", \
+			DbPrefix, MapName, StatsGamemodeID, GameDifficulty, CurrentMutation, GetAnneInfectedNumber(), GetAnneSISpawnTime(), \
 			GetAnneVersion(), mode, UseBuy, IsAutoSpawnTime(), GetConVarInt(cvar_SurvivorLimit));
 	LogMessage("GetFastTimequery: %s", query);
 	SQL_TQuery(db, GetFastTime, query);
@@ -433,9 +436,10 @@ MaybeAnnounceAnneNoBuyFastest(const String:MapName[], Float:TotalTime, PlayerCou
 	if (g_brpgAvailable && L4D_RPG_GetGlobalValue(INDEX_USEBUY))
 		return;
 
+	new StatsGamemodeID = Stats_GetCurrentStatsGamemodeID();
 	decl String:query[512];
 	Format(query, sizeof(query), "SELECT time FROM %stimedmaps WHERE map = '%s' AND gamemode = %i AND difficulty = %i AND mutation = '%s' AND sinum = %i AND sitime = 16 AND anneversion = '%s' AND mode = %i AND usebuy = 0 AND auto = %i AND players = %i ORDER BY time LIMIT 1",
-		DbPrefix, MapName, CurrentGamemodeID, GameDifficulty, CurrentMutation, GetAnneInfectedNumber(), GetAnneVersion(), Mode, IsAutoSpawnTime(), PlayerCounter);
+		DbPrefix, MapName, StatsGamemodeID, GameDifficulty, CurrentMutation, GetAnneInfectedNumber(), GetAnneVersion(), Mode, IsAutoSpawnTime(), PlayerCounter);
 
 	new Handle:dp = CreateDataPack();
 	WritePackString(dp, MapName);

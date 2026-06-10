@@ -106,7 +106,7 @@ stock ScoreLog_Record(Client, Score)
 		EscClientID,
 		EscClientName,
 		EscMapName,
-		CurrentGamemodeID,
+		Stats_GetCurrentStatsGamemodeID(),
 		EscDifficulty,
 		GetClientTeam(Client),
 		Score,

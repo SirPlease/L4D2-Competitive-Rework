@@ -117,6 +117,14 @@
 				/* 55 8B EC 8B 45 08 6A 00 50 E8 ? ? ? ? 85 C0 74 ? 80 78 10 04 */
 			}
 
+			"KeyValues::SetPtr"
+			{
+				"library"	"server"
+				"linux"		"@_ZN9KeyValues6SetPtrEPKcPv"
+				"windows"	"\x55\x8B\xEC\x8B\x45\x08\x56\x6A\x01\x50\xE8\x2A\x2A\x2A\x2A\x8B\xF0\x85\xF6\x74\x2A\x8B\x45\x0C\xC6\x46\x10\x04"
+				/* 55 8B EC 8B 45 08 56 6A 01 50 E8 ? ? ? ? 8B F0 85 F6 74 ? 8B 45 0C C6 46 10 04 */
+			}
+
 			"KeyValues::FindKey"
 			{
 				"library"	"server"
@@ -191,4 +199,3 @@
 		}
 	}
 }
-

@@ -32,6 +32,36 @@ $RECYCLE.BIN/
 addons/sourcemod/scripting/compiled/
 addons/sourcemod/scripting/**/*.smx
 
+# Local per-player weapon-attribute experiment
+private/re/
+addons/sourcemod/scripting/optional/AnneHappy/l4d2_player_weapon_attrs.sp
+addons/sourcemod/plugins/optional/AnneHappy/l4d2_player_weapon_attrs.smx
+addons/sourcemod/configs/l4d2_player_weapon_attrs.cfg
+docs/l4d2_per_player_weapon_attrs.md
+addons/sourcemod/scripting/optional/AnneHappy/l4d2_weaponinfo_dump.sp
+addons/sourcemod/scripting/optional/AnneHappy/l4d2_weaponinfo_probe.sp
+addons/sourcemod/plugins/optional/AnneHappy/l4d2_weaponinfo_dump.smx
+addons/sourcemod/plugins/optional/AnneHappy/l4d2_weaponinfo_probe.smx
+addons/sourcemod/scripting/optional/AnneHappy/l4d2_pwa_native_attrs.sp
+addons/sourcemod/plugins/optional/AnneHappy/l4d2_pwa_native_attrs.smx
+addons/sourcemod/gamedata/l4d2_pwa_native_attrs.txt
+addons/sourcemod/configs/l4d2_pwa_native_attrs.cfg
+addons/sourcemod/scripting/optional/AnneHappy/l4d2_pma_native_attrs.sp
+addons/sourcemod/plugins/optional/AnneHappy/l4d2_pma_native_attrs.smx
+addons/sourcemod/configs/l4d2_pma_native_attrs.cfg
+addons/sourcemod/gamedata/l4d2_pma_native_attrs.txt
+addons/sourcemod/scripting/optional/AnneHappy/l4d2_pma_trace_probe.sp
+addons/sourcemod/plugins/optional/AnneHappy/l4d2_pma_trace_probe.smx
+addons/sourcemod/gamedata/l4d2_pma_trace_probe.txt
+addons/sourcemod/scripting/optional/AnneHappy/l4d2_pma_trace_attrs.sp
+addons/sourcemod/plugins/optional/AnneHappy/l4d2_pma_trace_attrs.smx
+addons/sourcemod/gamedata/l4d2_pma_trace_attrs.txt
+addons/sourcemod/configs/l4d2_pma_trace_attrs.cfg
+addons/sourcemod/scripting/include/l4d2_player_attr_api.inc
+addons/sourcemod/scripting/optional/AnneHappy/l4d2_player_attr_db.sp
+addons/sourcemod/plugins/optional/AnneHappy/l4d2_player_attr_db.smx
+addons/sourcemod/configs/l4d2_player_attr_db.sql
+
 # Local database migration config with passwords
 scripts/01-cloud-mariadb-migrate.sh
 scripts/02-home-docker-mariadb-replica.sh

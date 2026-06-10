@@ -38,7 +38,7 @@ public Action:event_CampaignWin(Handle:event, const String:name[], bool:dontBroa
 	decl String:iID[MAX_LINE_WIDTH];
 	decl String:UpdatePoints[32], String:UpdatePointsPenalty[32];
 
-	switch (CurrentGamemodeID)
+	switch (Stats_GetCurrentStatsGamemodeID())
 	{
 		case GAMEMODE_VERSUS:
 		{
@@ -222,7 +222,7 @@ public Action:timer_PanicEventEnd(Handle:timer, Handle:hndl)
 			decl String:iID[MAX_LINE_WIDTH];
 			decl String:UpdatePoints[32];
 
-			switch (CurrentGamemodeID)
+			switch (Stats_GetCurrentStatsGamemodeID())
 			{
 				case GAMEMODE_VERSUS:
 				{
@@ -342,7 +342,7 @@ public Action:event_PlayerBlindEnd(Handle:event, const String:name[], bool:dontB
 			decl String:iID[MAX_LINE_WIDTH];
 			decl String:UpdatePoints[32];
 
-			switch (CurrentGamemodeID)
+			switch (Stats_GetCurrentStatsGamemodeID())
 			{
 				case GAMEMODE_VERSUS:
 				{
@@ -467,7 +467,7 @@ PlayerIncap(Attacker, Victim)
 
 		decl String:UpdatePoints[32];
 
-		switch (CurrentGamemodeID)
+		switch (Stats_GetCurrentStatsGamemodeID())
 		{
 			case GAMEMODE_VERSUS:
 			{
@@ -656,18 +656,15 @@ public Action:event_PlayerLedge(Handle:event, const String:name[], bool:dontBroa
 		GetClientRankAuthString(Attacker, ClientID, sizeof(ClientID));
 
 		decl String:query[1024];
-		if (CurrentGamemodeID == GAMEMODE_VERSUS)
-			Format(query, sizeof(query), "UPDATE %splayers SET points_infected = points_infected + %i, award_ledgegrab = award_ledgegrab + 1 WHERE steamid = '%s'", DbPrefix, Score, ClientID);
-		else if (CurrentGamemodeID == GAMEMODE_REALISMVERSUS)
-			Format(query, sizeof(query), "UPDATE %splayers SET points_realism_infected = points_realism_infected + %i, award_ledgegrab = award_ledgegrab + 1 WHERE steamid = '%s'", DbPrefix, Score, ClientID);
-		else if (CurrentGamemodeID == GAMEMODE_SCAVENGE)
-			Format(query, sizeof(query), "UPDATE %splayers SET points_scavenge_infected = points_scavenge_infected + %i, award_ledgegrab = award_ledgegrab + 1 WHERE steamid = '%s'", DbPrefix, Score, ClientID);
-		else
-			Format(query, sizeof(query), "UPDATE %splayers SET points_mutations = points_mutations + %i, award_ledgegrab = award_ledgegrab + 1 WHERE steamid = '%s'", DbPrefix, Score, ClientID);
+		decl String:UpdatePoints[32];
+		Stats_GetPointsColumnForTeam(TEAM_INFECTED, UpdatePoints, sizeof(UpdatePoints));
+		Format(query, sizeof(query), "UPDATE %splayers SET %s = %s + %i, award_ledgegrab = award_ledgegrab + 1 WHERE steamid = '%s'", DbPrefix, UpdatePoints, UpdatePoints, Score, ClientID);
 
 		SendSQLUpdate(query);
 
-		UpdateMapStat("points_infected", Score);
+		decl String:MapPoints[32];
+		Stats_GetMapPointsFieldForTeam(TEAM_INFECTED, MapPoints, sizeof(MapPoints));
+		UpdateMapStat(MapPoints, Score);
 
 		if (Mode == 1 || Mode == 2)
 			StatsPrintToChat(Attacker, "你造成玩家 {olive}%s{default} 挂边获得 {green}%i {default}分!", VictimName, Score);
@@ -939,7 +936,7 @@ public Action:event_JockeyRelease(Handle:event, const String:name[], bool:dontBr
 
 		GetClientRankAuthString(Rescuer, RescuerID, sizeof(RescuerID));
 
-		switch (CurrentGamemodeID)
+		switch (Stats_GetCurrentStatsGamemodeID())
 		{
 			case GAMEMODE_VERSUS:
 			{
@@ -1050,7 +1047,7 @@ public Action:event_ChargerKilled(Handle:event, const String:name[], bool:dontBr
 
 	GetClientRankAuthString(Killer, KillerID, sizeof(KillerID));
 
-	switch (CurrentGamemodeID)
+	switch (Stats_GetCurrentStatsGamemodeID())
 	{
 		case GAMEMODE_VERSUS:
 		{
@@ -1300,7 +1297,7 @@ public Action:event_UpgradePackAdded(Handle:event, const String:name[], bool:don
 
 	decl String:UpdatePoints[32];
 
-	switch (CurrentGamemodeID)
+	switch (Stats_GetCurrentStatsGamemodeID())
 	{
 		case GAMEMODE_VERSUS:
 		{
@@ -1388,7 +1385,7 @@ public Action:event_GascanPoured(Handle:event, const String:name[], bool:dontBro
 
 	decl String:UpdatePoints[32];
 
-	switch (CurrentGamemodeID)
+	switch (Stats_GetCurrentStatsGamemodeID())
 	{
 		case GAMEMODE_VERSUS:
 		{
@@ -1557,6 +1554,9 @@ public Action:event_StartAreaPre(Handle:event, const String:name[], bool:dontBro
 public Action:event_StartArea(Handle:event, const String:name[], bool:dontBroadcast)
 {
 	if(CurrentGamemodeID != GAMEMODE_SURVIVAL && !StatsDisabled())
+		g_bStatsPlaytimeStarted = true;
+
+	if(CurrentGamemodeID != GAMEMODE_SURVIVAL && !StatsDisabled())
 	{
 		Stats_RecordStartGrantedSupportItems();
 		NewPlayerBonus_AnnounceRoundStart();
@@ -1675,14 +1675,9 @@ public Action:event_PlayerPounced(Handle:event, const String:name[], bool:dontBr
 	if (Dmg >= PerfectDmgLimit)
 	{
 		Score = GetConVarInt(cvar_HunterPerfectPounceSuccess);
-		if (CurrentGamemodeID == GAMEMODE_VERSUS)
-			Format(query, sizeof(query), "UPDATE %splayers SET points_infected = points_infected + %i, award_pounce_perfect = award_pounce_perfect + 1 WHERE steamid = '%s'", DbPrefix, Score, AttackerID);
-		else if (CurrentGamemodeID == GAMEMODE_REALISMVERSUS)
-			Format(query, sizeof(query), "UPDATE %splayers SET points_realism_infected = points_realism_infected + %i, award_pounce_perfect = award_pounce_perfect + 1 WHERE steamid = '%s'", DbPrefix, Score, AttackerID);
-		else if (CurrentGamemodeID == GAMEMODE_SCAVENGE)
-			Format(query, sizeof(query), "UPDATE %splayers SET points_scavenge_infected = points_scavenge_infected + %i, award_pounce_perfect = award_pounce_perfect + 1 WHERE steamid = '%s'", DbPrefix, Score, AttackerID);
-		else
-			Format(query, sizeof(query), "UPDATE %splayers SET points_mutations = points_mutations + %i, award_pounce_perfect = award_pounce_perfect + 1 WHERE steamid = '%s'", DbPrefix, Score, AttackerID);
+		decl String:UpdatePoints[32];
+		Stats_GetPointsColumnForTeam(TEAM_INFECTED, UpdatePoints, sizeof(UpdatePoints));
+		Format(query, sizeof(query), "UPDATE %splayers SET %s = %s + %i, award_pounce_perfect = award_pounce_perfect + 1 WHERE steamid = '%s'", DbPrefix, UpdatePoints, UpdatePoints, Score, AttackerID);
 		Format(Label, sizeof(Label), "Death From Above");
 
 		if (EnableSounds_Hunter_Perfect && GetConVarBool(cvar_SoundsEnabled))
@@ -1691,19 +1686,16 @@ public Action:event_PlayerPounced(Handle:event, const String:name[], bool:dontBr
 	else
 	{
 		Score = GetConVarInt(cvar_HunterNicePounceSuccess);
-		if (CurrentGamemodeID == GAMEMODE_VERSUS)
-			Format(query, sizeof(query), "UPDATE %splayers SET points_infected = points_infected + %i, award_pounce_nice = award_pounce_nice + 1 WHERE steamid = '%s'", DbPrefix, Score, AttackerID);
-		else if (CurrentGamemodeID == GAMEMODE_REALISMVERSUS)
-			Format(query, sizeof(query), "UPDATE %splayers SET points_realism_infected = points_realism_infected + %i, award_pounce_nice = award_pounce_nice + 1 WHERE steamid = '%s'", DbPrefix, Score, AttackerID);
-		else if (CurrentGamemodeID == GAMEMODE_SCAVENGE)
-			Format(query, sizeof(query), "UPDATE %splayers SET points_scavenge_infected = points_scavenge_infected + %i, award_pounce_nice = award_pounce_nice + 1 WHERE steamid = '%s'", DbPrefix, Score, AttackerID);
-		else
-			Format(query, sizeof(query), "UPDATE %splayers SET points_mutations = points_mutations + %i, award_pounce_nice = award_pounce_nice + 1 WHERE steamid = '%s'", DbPrefix, Score, AttackerID);
+		decl String:UpdatePoints[32];
+		Stats_GetPointsColumnForTeam(TEAM_INFECTED, UpdatePoints, sizeof(UpdatePoints));
+		Format(query, sizeof(query), "UPDATE %splayers SET %s = %s + %i, award_pounce_nice = award_pounce_nice + 1 WHERE steamid = '%s'", DbPrefix, UpdatePoints, UpdatePoints, Score, AttackerID);
 		Format(Label, sizeof(Label), "Pain From Above");
 	}
 
 	SendSQLUpdate(query);
-	UpdateMapStat("points_infected", Score);
+	decl String:MapPoints[32];
+	Stats_GetMapPointsFieldForTeam(TEAM_INFECTED, MapPoints, sizeof(MapPoints));
+	UpdateMapStat(MapPoints, Score);
 
 	if (Mode == 1 || Mode == 2)
 		StatsPrintToChat(Attacker, "你在{olive}%s{default}身上完成了一个 {olive}%s {default}扑倒，获得 {green}%i {default}分!", VictimName, Label, Score);
@@ -1752,7 +1744,7 @@ public Action:event_RevivePlayer(Handle:event, const String:name[], bool:dontBro
 
 	decl String:UpdatePoints[32];
 
-	switch (CurrentGamemodeID)
+	switch (Stats_GetCurrentStatsGamemodeID())
 	{
 		case GAMEMODE_VERSUS:
 		{
@@ -2146,7 +2138,7 @@ public Action:event_Award_L4D2(Handle:event, const String:name[], bool:dontBroad
 	decl String:UserID[MAX_LINE_WIDTH];
 	GetClientRankAuthString(User, UserID, sizeof(UserID));
 
-	switch (CurrentGamemodeID)
+	switch (Stats_GetCurrentStatsGamemodeID())
 	{
 		case GAMEMODE_VERSUS:
 		{
@@ -2253,6 +2245,7 @@ public SurvivalStart()
 {
 	UpdateMapStat("restarts", 1);
 	SurvivalStarted = true;
+	g_bStatsPlaytimeStarted = true;
 	MapTimingStartTime = 0.0;
 	MapTimingBlocked = false;
 	StartMapTiming();
@@ -2277,7 +2270,7 @@ public Action:event_CarAlarm(Handle:event, const String:name[], bool:dontBroadca
 	decl String:UpdatePoints[32];
 	decl String:query[1024];
 
-	switch (CurrentGamemodeID)
+	switch (Stats_GetCurrentStatsGamemodeID())
 	{
 		case GAMEMODE_VERSUS:
 		{
@@ -2355,7 +2348,7 @@ public Action:event_WitchCrowned(Handle:event, const String:name[], bool:dontBro
 		new Score = ModifyScoreDifficulty(GetConVarInt(cvar_WitchCrowned), 2, 3, TEAM_SURVIVORS);
 		decl String:UpdatePoints[32];
 
-		switch (CurrentGamemodeID)
+		switch (Stats_GetCurrentStatsGamemodeID())
 		{
 			case GAMEMODE_VERSUS:
 			{

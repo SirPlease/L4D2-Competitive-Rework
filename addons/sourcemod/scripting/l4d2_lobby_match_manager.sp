@@ -13,7 +13,7 @@
 #include <sourcescramble>			// https://github.com/nosoop/SMExt-SourceScramble
 #include <l4d2_source_keyvalues>	// https://github.com/fdxx/l4d2_source_keyvalues
 
-#define VERSION "0.7"
+#define VERSION "0.8"
 
 #define RMFLAG_NO_MODE_CHANGE			1
 #define RMFLAG_NO_DIFFICULTY_CHANGE		2
@@ -22,6 +22,7 @@
 
 #define UNRESERVE_ALWAYS	1
 #define UNRESERVE_WHEN_FULL	2
+#define UNRESERVE_DEFAULT_EMPTY	3
 
 #define MAX_COOKIE_LENGTH	20
 
@@ -44,6 +45,9 @@ MemoryPatch
 int
 	g_iUnreserveType,
 	g_iReserveModifyFlags;
+
+bool
+	g_bLobbyReservationObserved;
 
 Address
 	g_pMatchExtL4D,
@@ -73,7 +77,7 @@ public void OnPluginStart()
 	sv_reservation_timeout = FindConVar("sv_reservation_timeout");
 
 	CreateConVar("l4d2_lobby_match_manager_version", VERSION, "version", FCVAR_NOTIFY | FCVAR_DONTRECORD);
-	g_cvUnreserveType =			CreateConVar("l4d2_lmm_unreserve_type",				"2",	"1=Always unreserve, 2=Unreserve when lobby full.");
+	g_cvUnreserveType =			CreateConVar("l4d2_lmm_unreserve_type",				"3",	"0=Keep reservation, 1=Always unreserve and reject reservations, 2=Unreserve when lobby full, 3=Default/no mode: clear stale reservation while empty, but keep player-created lobby matchmaking.");
 	g_cvReserveModifyFlags =	CreateConVar("l4d2_lmm_reservation_modify_flags",	"7",	"Modify the lobby settings applied by the client to the server.\nSee RMFLAG_* (need cvar l4d2_lmm_unreserve_type != 1).");
 	
 	OnConVarChanged(null, "", "");
@@ -101,6 +105,10 @@ void OnConVarChanged(ConVar convar, const char[] oldValue, const char[] newValue
 		if (!g_mBlockReserve.Enable())
 			SetFailState("Failed to enable patch.");
 	}
+	else if (g_iUnreserveType == UNRESERVE_DEFAULT_EMPTY)
+	{
+		ClearDefaultLobbyIfIdle(false);
+	}
 }
 
 public void OnConfigsExecuted()
@@ -112,11 +120,15 @@ public void OnConfigsExecuted()
 		SetReservationCookie(false);
 		sv_allow_lobby_connect_only.BoolValue = false;
 	}
+	else if (g_iUnreserveType == UNRESERVE_DEFAULT_EMPTY)
+	{
+		ClearDefaultLobbyIfIdle(false);
+	}
 }
 
 MRESReturn OnApplyGameSettingsPre(Address pThis, DHookParam hParams)
 {
-	if (g_iUnreserveType == UNRESERVE_ALWAYS || !g_iReserveModifyFlags || hParams.IsNull(1))
+	if (g_iUnreserveType == UNRESERVE_ALWAYS || hParams.IsNull(1))
 		return MRES_Ignored;
 
 	char sBuffer[256];
@@ -124,6 +136,11 @@ MRESReturn OnApplyGameSettingsPre(Address pThis, DHookParam hParams)
 
 	kv.GetName(sBuffer, sizeof(sBuffer));
 	if (strcmp(sBuffer, "left4dead2", false)) // Exclude ExecGameTypeCfg
+		return MRES_Ignored;
+
+	g_bLobbyReservationObserved = true;
+
+	if (!g_iReserveModifyFlags)
 		return MRES_Ignored;
 
 	if (g_iReserveModifyFlags & RMFLAG_NO_MODE_CHANGE)
@@ -169,10 +186,29 @@ bool IsNeedForceOfficialMap(SourceKeyValues kvSettings)
 
 public void OnClientPutInServer(int client)
 {
-	if (g_iUnreserveType != UNRESERVE_WHEN_FULL || IsFakeClient(client))
+	if (IsFakeClient(client))
 		return;
 
-	CreateTimer(1.0, Timer_ClearLobbyIfFull, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE);
+	if (HasReservationCookie())
+		g_bLobbyReservationObserved = true;
+
+	if (g_iUnreserveType == UNRESERVE_WHEN_FULL)
+		CreateTimer(1.0, Timer_ClearLobbyIfFull, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE);
+}
+
+public void OnClientDisconnect(int client)
+{
+	if (IsFakeClient(client))
+		return;
+
+	if (g_iUnreserveType == UNRESERVE_DEFAULT_EMPTY)
+		CreateTimer(1.0, Timer_ClearDefaultLobbyIfEmpty, _, TIMER_FLAG_NO_MAPCHANGE);
+}
+
+Action Timer_ClearDefaultLobbyIfEmpty(Handle timer)
+{
+	ClearDefaultLobbyIfIdle(true);
+	return Plugin_Stop;
 }
 
 Action Timer_ClearLobbyIfFull(Handle timer, any userid)
@@ -191,6 +227,18 @@ Action Timer_ClearLobbyIfFull(Handle timer, any userid)
 	}
 
 	return Plugin_Stop;
+}
+
+void ClearDefaultLobbyIfIdle(bool forceClearObserved)
+{
+	if (g_iUnreserveType != UNRESERVE_DEFAULT_EMPTY || GetPlayerCount() > 0)
+		return;
+
+	if (!forceClearObserved && g_bLobbyReservationObserved)
+		return;
+
+	SetReservationCookie(false);
+	sv_allow_lobby_connect_only.BoolValue = false;
 }
 
 Action Cmd_Status(int client, int args)
@@ -259,12 +307,20 @@ void GetReservationCookie(int cookie[2])
 	cookie[1] = LoadFromAddress(g_pReservationCookie + view_as<Address>(4), NumberType_Int32);
 }
 
+bool HasReservationCookie()
+{
+	int cookie[2];
+	GetReservationCookie(cookie);
+	return cookie[0] != 0 || cookie[1] != 0;
+}
+
 void SetReservationCookie(bool reservation, const int cookie[2]={0, 0})
 {
 	StoreToAddress(g_pReservationCookie, cookie[0], NumberType_Int32);
 	StoreToAddress(g_pReservationCookie + view_as<Address>(4), cookie[1], NumberType_Int32);
 	SDKCall(g_hSDKUpdateGameType);
 	sv_hosting_lobby.BoolValue = reservation;
+	g_bLobbyReservationObserved = reservation;
 }
 
 void Init()

@@ -31,11 +31,15 @@
 			"name" "喷子硬核模式"
 		}
 	}
-	"Normal Configs"
+	"Coop/Realism Configs"
 	{
 		"coop"
 		{
 			"name" "战役模式"
+		}
+		"mutation4"
+		{
+			"name" "绝境求生模式"
 		}
 		"realism"
 		{

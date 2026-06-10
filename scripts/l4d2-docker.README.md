@@ -9,7 +9,7 @@
 - 首次部署 L4D2 Docker 服务器
 - 从旧版 `sqproxy` 脚本迁移到新版 `a2s-proxy-go`
 - 日常 `git pull`、重建镜像、重启游戏容器
-- 安装或更新 A2S Go Proxy、A2S 防火墙、Master SNAT
+- 安装或更新 A2S Go Proxy、A2S 防火墙、透明 A2S redirect/SNAT
 - 可选部署地图上传器容器
 
 ## 文件说明
@@ -68,7 +68,7 @@ OPTIONAL_STEAM_ID     -> L4D2_OPTIONAL_STEAM_ID
 
 `L4D2_SERVER_IP` 是给 Steam/玩家看的公网地址，`L4D2_BIND_IP` 是本机实际监听地址。NAT 机器上通常 `L4D2_SERVER_IP` 是公网 IP，`L4D2_BIND_IP` 是内网 IP；A2S Go Proxy 默认会通过 `L4D2_BIND_IP` 回查本机 srcds。
 
-如果旧脚本里检测到 `sqproxy`，新版脚本会自动启用 `L4D2_GO_PROXY_ENABLE=true`，并在安装 `a2s-proxy-go` 前停止旧的 `sqproxy` systemd 服务，避免端口冲突。
+如果旧脚本里检测到 `sqproxy`，新版脚本会自动启用 `L4D2_GO_PROXY_ENABLE=true`。`--install` / `--update` 会在安装 `a2s-proxy-go` 前停止旧的 `sqproxy` systemd 服务，清理 `/etc/sqproxy`，并尝试删除旧 `tc`/eBPF/qdisc 残留，避免旧网络规则继续影响 Steam 服务器列表。
 
 迁移时还会自动处理端口：
 
@@ -94,9 +94,11 @@ sudo bash scripts/l4d2-docker.sh --install
 首次安装会执行：
 
 - 安装系统依赖和 Docker
+- 清理旧 `sqproxy` 网络状态
 - 安装 A2S 防火墙
 - 下载并安装 `a2s-proxy-go`
 - 生成 `/etc/a2s-proxy-go/config.json`
+- 如果启用 A2S only 模式，生成透明 A2S redirect/SNAT 规则
 - 初始化基础容器
 - 拉取仓库更新并重建运行镜像
 - 启动全部游戏容器
@@ -111,6 +113,8 @@ sudo bash scripts/l4d2-docker.sh --update
 
 该命令会：
 
+- 清理旧 `sqproxy` 网络状态
+- 重建 A2S firewall / redirect/SNAT 规则
 - 启动基础容器
 - 在基础容器内执行 `git pull --ff-only`
 - 重建运行镜像
@@ -145,7 +149,6 @@ L4D2_GO_PROXY_VERSION_URL=https://anne.trygek.com/file_download.php?name=version
 ```bash
 L4D2_GO_PROXY_ENABLE=true
 L4D2_GO_PROXY_FORCE_DOWNLOAD=false
-L4D2_GO_PROXY_BYPASS_CACHE_PROBE=true
 ```
 
 强制重新下载 Go Proxy：
@@ -154,9 +157,9 @@ L4D2_GO_PROXY_BYPASS_CACHE_PROBE=true
 sudo L4D2_GO_PROXY_FORCE_DOWNLOAD=true bash scripts/l4d2-docker.sh --update
 ```
 
-手动只安装或刷新 Go Proxy，可以运行完整更新；脚本会根据远端 `version` 文件和本地版本自动判断是否需要下载。
+手动只安装或刷新 Go Proxy，可以运行完整更新；脚本会先读取远端 `version` 文件，再通过本地二进制的 `-version` 输出判断是否需要更新。下载完成后也会校验二进制实际版本必须等于远端 `version`。
 
-如果下载失败，脚本会自动尝试使用本地已有二进制：
+如果远端 `version` 不可用，脚本会尝试使用本地候选二进制；如果本地候选版本高于已安装版本，也会自动覆盖安装。如果远端 `version` 可用但下载失败，本地候选必须与远端版本一致才会被使用：
 
 ```text
 scripts/a2s-proxy-go
@@ -224,9 +227,11 @@ L4D2_GO_PROXY_TRANSPARENT_REDIRECT=true
 
 - srcds 直接监听公网游戏端口
 - iptables 只把 A2S 查询包重定向到 Go Proxy
+- iptables 会把 Go Proxy 回客户端的 UDP 源端口改回公网游戏端口
 - 非 A2S 游戏流量仍直接进入 srcds
 - `BACKEND_PORTS` 只作为 Go Proxy 内部监听端口，不再作为游戏后端端口
 - Go Proxy 默认回查 `L4D2_BIND_IP:L4D2_GAME_PORTS`，如果你的 srcds 只能通过其他本机地址访问，可以设置 `L4D2_GO_PROXY_BACKEND_IP`
+- `0x57` / `0x69` 会进入 Go Proxy 后直接丢弃，不再查询后端，也不回应客户端
 
 从老 `sqproxy` 脚本迁移时，默认会进入 A2S only 模式。如果旧配置里残留 `L4D2_GO_PROXY_TRANSPARENT_REDIRECT=false`，默认 `L4D2_GO_PROXY_MODE=a2s-only` 会在加载配置时自动改回 true。只有明确设置 `L4D2_GO_PROXY_MODE=front-proxy` 时，Go Proxy 才会占用公网游戏端口，游戏容器改用 backend 端口。
 
@@ -261,27 +266,6 @@ sudo bash scripts/l4d2-docker.sh --install-a2s
 sudo bash scripts/l4d2-docker.sh --remove-a2s
 ```
 
-## Master SNAT
-
-如果需要让后端 srcds 心跳在公网显示为游戏端口，可以启用：
-
-```bash
-L4D2_MASTER_SNAT_ENABLE=true
-L4D2_MASTER_SNAT_DEST=hl2master.steampowered.com:27011
-```
-
-安装：
-
-```bash
-sudo bash scripts/l4d2-docker.sh --install-snat
-```
-
-调试：
-
-```bash
-sudo bash scripts/l4d2-docker.sh --debug-snat
-```
-
 ## 地图上传器
 
 启用地图上传器：
@@ -289,8 +273,8 @@ sudo bash scripts/l4d2-docker.sh --debug-snat
 ```bash
 L4D2_MAP_UPLOADER_ENABLE=true
 L4D2_MAP_UPLOADER_IMAGE_NAME=docker.trygek.com/morzlee/vpk-uploader:latest
-L4D2_MAP_UPLOADER_FORCE_PULL=true
-L4D2_MAP_UPLOADER_PORT=12009
+L4D2_MAP_UPLOADER_REFRESH_IMAGE=false
+L4D2_MAP_UPLOADER_PORT=13009
 L4D2_MAP_UPLOADER_MAX_TOTAL_UPLOAD_MB=5120
 L4D2_MAP_UPLOADER_APP_SECRET=CHANGE_ME
 L4D2_MAP_UPLOADER_ADMIN_PASS=CHANGE_ME
@@ -302,7 +286,7 @@ L4D2_MAP_UPLOADER_ADMIN_PASS=CHANGE_ME
 sudo bash scripts/l4d2-docker.sh --install-uploader
 ```
 
-日常 `--update` 也会重建上传器容器。使用远程镜像时，`L4D2_MAP_UPLOADER_FORCE_PULL=true` 会先 `docker pull`，避免 `latest` 标签仍然使用本地旧镜像；如果 `L4D2_MAP_UPLOADER_DIR` 指向本地上传器源码目录，则会本地 `docker build`。
+日常 `--update` 也会重建上传器容器。默认只删除旧上传器容器，然后用本地已有镜像启动新容器，不会重新拉取镜像。如果需要强制刷新远程镜像，设置 `L4D2_MAP_UPLOADER_REFRESH_IMAGE=true`，脚本会删除旧容器和旧镜像，再 `docker pull` 新镜像并启动新容器。如果 `L4D2_MAP_UPLOADER_DIR` 指向本地上传器源码目录，则会本地 `docker build`。
 
 移除：
 

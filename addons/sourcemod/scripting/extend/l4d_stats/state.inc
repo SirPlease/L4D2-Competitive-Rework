@@ -36,6 +36,7 @@ new String:StatsSound_Boomer_Vomit[32];
 new String:StatsSound_Hunter_Perfect[32];
 new String:StatsSound_Tank_Bulldozer[32];
 new bool:Isstart = false;
+new bool:g_bStatsPlaytimeStarted = false;
 new bool:g_broundend = false;
 // Server version
 EngineVersion EngineVersion1 =  Engine_Left4Dead;

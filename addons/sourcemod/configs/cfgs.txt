@@ -52,11 +52,18 @@
 		{
 			"message" "喷子硬核模式"
 		}
+	}
+	"默认模式选择"
+	{
 		"sm_fm coop"
 		{
 			"message" "战役模式"
 		}
-		"sm_fm 写实模式"
+		"sm_fm mutation4"
+		{
+			"message" "绝境求生模式"
+		}
+		"sm_fm realism"
 		{
 			"message" "写实模式"
 		}

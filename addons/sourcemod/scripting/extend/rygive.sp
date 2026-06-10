@@ -24,6 +24,8 @@
 #define NAME_CreateTank			"NextBotCreatePlayerBot<Tank>"
 #define RYGIVE_LIMIT_IMMUNITY	90
 #define RYGIVE_ROUND_LIMIT		20
+#define RYGIVE_ENTITY_RESERVE	64
+#define RYGIVE_INFECTED_ENTITY_COST 4
 
 StringMap
 	g_smSteamIDs,
@@ -705,7 +707,7 @@ int Infected_MenuHandler(Menu menu, MenuAction action, int client, int param2) {
 int KickDeadInfectedBots(int client) {
 	int kickedBots;
 	for (int loopClient = 1; loopClient <= MaxClients; loopClient++) {
-		if (!IsClientInGame(loopClient) || GetClientTeam(client) != 3 || !IsFakeClient(loopClient) || IsPlayerAlive(loopClient))
+		if (!IsClientInGame(loopClient) || GetClientTeam(loopClient) != 3 || !IsFakeClient(loopClient) || IsPlayerAlive(loopClient))
 			continue;
 
 		KickClient(loopClient);
@@ -732,6 +734,9 @@ void NextFrame_CreateInfected(DataPack pack) {
 int CreateInfected(int client, const char[] zombie) {
 	float vEnd[3];
 	if (!GetTeleportEndPoint(client, vEnd))
+		return -1;
+
+	if (!HasRygiveEntityBudget(client, zombie, RYGIVE_INFECTED_ENTITY_COST))
 		return -1;
 
 	if (!TryConsumeRygiveRoundUse(client))
@@ -2209,6 +2214,31 @@ bool IsRygiveLimitedAdmin(int client) {
 	return GetClientImmunityLevel(client) == RYGIVE_LIMIT_IMMUNITY;
 }
 
+bool HasRygiveEntityBudget(int client, const char[] context, int needed = 1) {
+	int entityCount = GetEntityCount();
+	int maxEntities = GetMaxEntities();
+
+	if (entityCount + needed + RYGIVE_ENTITY_RESERVE < maxEntities)
+		return true;
+
+	if (client >= 1 && client <= MaxClients && IsClientInGame(client)) {
+		CPrintToChat(client,
+			"{default}[{green}RYGive{default}] 当前实体数量过高 {olive}%d/%d{default}，已跳过 {olive}%s{default}。",
+			entityCount, maxEntities, context);
+	}
+
+	LogError("[RYGive] skipped %s: entity count is too high (%d/%d, reserve %d, needed %d)",
+		context, entityCount, maxEntities, RYGIVE_ENTITY_RESERVE, needed);
+	return false;
+}
+
+bool IsNonEntityGiveCommand(const char[] command, int argPos) {
+	if (argPos == -1)
+		return false;
+
+	return strcmp(command[argPos], "health") == 0 || strcmp(command[argPos], "ammo") == 0;
+}
+
 void UpdateRpgRoundForRygiveItems() {
 	if (!g_bRPG)
 		return;
@@ -2295,10 +2325,16 @@ bool CheatCommand(int client, const char[] command) {
 		return false;
 
 	char cmd[32];
-	if (SplitString(command, " ", cmd, sizeof cmd) == -1)
+	int argPos = SplitString(command, " ", cmd, sizeof cmd);
+	if (argPos == -1)
 		strcopy(cmd, sizeof cmd, command);
 
-	if (strcmp(cmd, "give") == 0 && strcmp(command[5], "health") == 0) {
+	bool isGiveCommand = strcmp(cmd, "give") == 0;
+	bool isGiveHealth = isGiveCommand && argPos != -1 && strcmp(command[argPos], "health") == 0;
+	if (isGiveCommand && !IsNonEntityGiveCommand(command, argPos) && !HasRygiveEntityBudget(client, command))
+		return false;
+
+	if (isGiveHealth) {
 		int attacker = L4D2_GetInfectedAttacker(client);
 		if (attacker > 0 && IsClientInGame(attacker) && IsPlayerAlive(attacker)) {
 			L4D_CleanupPlayerState(attacker);
@@ -2313,10 +2349,10 @@ bool CheatCommand(int client, const char[] command) {
 	SetUserFlagBits(client, bits);
 	SetCommandFlags(cmd, flags);
 	
-	if (strcmp(cmd, "give") == 0) {
-		if (strcmp(command[5], "health") == 0)
+	if (isGiveCommand) {
+		if (isGiveHealth)
 			L4D_SetPlayerTempHealth(client, 0); //防止有虚血时give health会超过100血
-		else if (strcmp(command[5], "ammo") == 0)
+		else if (argPos != -1 && strcmp(command[argPos], "ammo") == 0)
 			ReloadAmmo(client); //榴弹发射器加子弹
 	}
 
