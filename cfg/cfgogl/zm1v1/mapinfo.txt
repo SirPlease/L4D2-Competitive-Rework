@@ -3080,6 +3080,21 @@
 		{
 			"pain_pills"	"4"
 		}
+		"witch_ban_flow"
+		{
+			"Early"
+			{
+				"min"		"0"
+				"max"		"30"
+			}
+		}
+	}
+	"dc2025_5"
+	{
+		"ItemLimits"
+		{
+			"pain_pills" "6"
+ 		}
 	}
 
 //-------- ↓↓↓ you can add custom info here ↓↓↓
