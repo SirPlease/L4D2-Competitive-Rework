@@ -43,7 +43,7 @@ public Plugin myinfo =
 	name = "Infected Warp",
 	author = "Confogl Team, CanadaRox, A1m`",
 	description = "Allows infected to warp to survivors",
-	version = "2.4.1",
+	version = "2.4.2",
 	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 };
 
@@ -112,7 +112,8 @@ Action Cmd_WarpToSurvivor(int iClient, int iArgs)
 		return Plugin_Handled;
 	}
 
-	if (GetClientTeam(iClient) != L4D2Team_Infected
+	if (!IsClientInGame(iClient)
+		|| GetClientTeam(iClient) != L4D2Team_Infected
 		|| GetEntProp(iClient, Prop_Send, "m_isGhost", 1) < 1
 		|| !IsPlayerAlive(iClient)
 	) {

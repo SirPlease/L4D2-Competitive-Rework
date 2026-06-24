@@ -98,6 +98,9 @@ void SetClientFrozen(int client, bool freeze)
 
 bool IsPlayer(int client)
 {
+	if (!IsClientInGame(client))
+		return false;
+
 	int team = GetClientTeam(client);
 	return (team == L4D2Team_Survivor || team == L4D2Team_Infected);
 }

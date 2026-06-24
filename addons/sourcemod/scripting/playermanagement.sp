@@ -15,7 +15,7 @@ public Plugin myinfo =
 	name		= "Player Management Plugin",
 	author		= "CanadaRox",
 	description = "Player management!  Swap players/teams and spectate!",
-	version		= "7.1",
+	version		= "7.1.1",
 	url			= ""
 };
 
@@ -157,6 +157,11 @@ void survivor_limitChanged(ConVar convar, const char[] oldValue, const char[] ne
 Action Spectate_Cmd(int client, int args)
 {
 	if (!sm_allow_spectate_command.BoolValue)
+	{
+		return Plugin_Handled;
+	}
+
+	if (!IsClientInGame(client))
 	{
 		return Plugin_Handled;
 	}
