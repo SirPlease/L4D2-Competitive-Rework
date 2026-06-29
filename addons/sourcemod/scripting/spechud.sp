@@ -19,7 +19,7 @@
 #include <lerpmonitor>
 #include <witch_and_tankifier>
 
-#define PLUGIN_VERSION "3.8.6"
+#define PLUGIN_VERSION "3.8.7"
 
 public Plugin myinfo =
 {
@@ -317,6 +317,19 @@ public void OnClientDisconnect(int client)
 	bTankHudHintShown[client] = false;
 }
 
+Action Timer_RespectateSpecs(Handle hTimer)
+{
+	for (int i = 1; i <= MaxClients; i++)
+	{
+		if (IsClientInGame(i) && !IsFakeClient(i) && GetClientTeam(i) == L4D2Team_Spectator)
+		{
+			FakeClientCommand(i, "sm_spectate");
+		}
+	}
+
+	return Plugin_Stop;
+}
+
 public void OnMapStart() { bRoundLive = false; }
 public void OnRoundIsLive()
 {
@@ -326,11 +339,7 @@ public void OnRoundIsLive()
 	
 	GetCurrentGameMode();
 	
-	for (int i = 1; i <= MaxClients; i++)
-	{
-		if (IsClientInGame(i) && GetClientTeam(i) == L4D2Team_Spectator && !IsClientSourceTV(i))
-			FakeClientCommand(i, "sm_spectate");
-	}
+	CreateTimer(0.2, Timer_RespectateSpecs);
 	
 	if (g_Gamemode == GAMEMODE_VERSUS)
 	{
