@@ -143,7 +143,7 @@ void OnTeamChange(Event hEvent, const char[] name, bool dontBroadcast)
 Action OnTeamChangeDelay(Handle hTimer, any userid)
 {
 	int client = GetClientOfUserId(userid);
-	if (client > 0) {
+	if (client > 0 && IsClientInGame(client) && !IsFakeClient(client)) {
 		RegisterSettings(client);
 	}
 
@@ -152,7 +152,7 @@ Action OnTeamChangeDelay(Handle hTimer, any userid)
 
 public void OnClientSettingsChanged(int client)
 {
-	if (IsValidEntity(client) && !IsFakeClient(client)) {
+	if (client > 0 && client <= MaxClients && IsClientInGame(client) && !IsFakeClient(client)) {
 		RegisterSettings(client);
 	}
 }
@@ -178,6 +178,10 @@ Action ListRates(int client, int args)
 
 void RegisterSettings(int client)
 {
+	if (client <= 0 || client > MaxClients || !IsClientInGame(client) || IsFakeClient(client)) {
+		return;
+	}
+
 	if (GetClientTeam(client) < L4D2Team_Survivor) {
 		return;
 	}
