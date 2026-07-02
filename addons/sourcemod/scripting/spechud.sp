@@ -19,7 +19,7 @@
 #include <lerpmonitor>
 #include <witch_and_tankifier>
 
-#define PLUGIN_VERSION "3.8.6"
+#define PLUGIN_VERSION "3.9.0"
 
 public Plugin myinfo =
 {
@@ -33,7 +33,7 @@ public Plugin myinfo =
 // ======================================================================
 //  Macros
 // ======================================================================
-#define SPECHUD_DRAW_INTERVAL 0.5
+#define SPECHUD_DRAW_INTERVAL 1.0
 #define TRANSLATION_FILE "spechud.phrases"
 
 // ======================================================================
@@ -317,6 +317,19 @@ public void OnClientDisconnect(int client)
 	bTankHudHintShown[client] = false;
 }
 
+Action Timer_RespectateSpecs(Handle hTimer)
+{
+	for (int i = 1; i <= MaxClients; i++)
+	{
+		if (IsClientInGame(i) && !IsFakeClient(i) && GetClientTeam(i) == L4D2Team_Spectator)
+		{
+			FakeClientCommand(i, "sm_spectate");
+		}
+	}
+
+	return Plugin_Stop;
+}
+
 public void OnMapStart() { bRoundLive = false; }
 public void OnRoundIsLive()
 {
@@ -326,11 +339,7 @@ public void OnRoundIsLive()
 	
 	GetCurrentGameMode();
 	
-	for (int i = 1; i <= MaxClients; i++)
-	{
-		if (IsClientInGame(i) && GetClientTeam(i) == L4D2Team_Spectator && !IsClientSourceTV(i))
-			FakeClientCommand(i, "sm_spectate");
-	}
+	CreateTimer(0.2, Timer_RespectateSpecs);
 	
 	if (g_Gamemode == GAMEMODE_VERSUS)
 	{
@@ -583,7 +592,7 @@ void FillHeaderInfo(Panel hSpecHud)
 		iTickrate = RoundToNearest(1.0 / GetTickInterval());
 	
 	static char buf[64];
-	Format(buf, sizeof(buf), "Server: %s [Slots %i/%i | %iT]", sHostname, GetRealClientCount(), iMaxPlayers, iTickrate);
+	Format(buf, sizeof(buf), "%s [%i/%i | %iT]", sHostname, GetRealClientCount(), iMaxPlayers, iTickrate);
 	DrawPanelText(hSpecHud, buf);
 }
 
@@ -680,10 +689,24 @@ int SortSurvByCharacter(int elem1, int elem2, const int[] array, Handle hndl)
 	else { return 0; }
 }
 
+void GetClientPing(int client, char[] buffer, int bufferSize)
+{
+	if (IsFakeClient(client))
+	{
+		Format(buffer, bufferSize, "BOT");
+	}
+	else
+	{
+		int latency = RoundToNearest(GetClientAvgLatency(client, NetFlow_Both) * 1000.0);
+		Format(buffer, bufferSize, "%ims", latency);
+	}
+}
+
 void FillSurvivorInfo(Panel hSpecHud)
 {
 	static char info[100];
 	static char name[MAX_NAME_LENGTH];
+	static char latency[8];
 
 	int SurvivorTeamIndex = GameRules_GetProp("m_bAreTeamsFlipped");
 
@@ -692,18 +715,18 @@ void FillSurvivorInfo(Panel hSpecHud)
 		case GAMEMODE_SCAVENGE:
 		{
 			int score = GetScavengeMatchScore(SurvivorTeamIndex);
-			FormatEx(info, sizeof(info), "->1. Survivors [%d of %d]", score, GetScavengeRoundLimit());
+			FormatEx(info, sizeof(info), "->1. Sur [%d of %d]", score, GetScavengeRoundLimit());
 		}
 		case GAMEMODE_VERSUS:
 		{
 			if (bRoundLive)
 			{
-				FormatEx(info, sizeof(info), "->1. Survivors [%d]",
+				FormatEx(info, sizeof(info), "->1. Sur [%d]",
 							L4D2Direct_GetVSCampaignScore(SurvivorTeamIndex) + GetVersusProgressDistance(SurvivorTeamIndex));
 			}
 			else
 			{
-				FormatEx(info, sizeof(info), "->1. Survivors [%d]",
+				FormatEx(info, sizeof(info), "->1. Sur [%d]",
 							L4D2Direct_GetVSCampaignScore(SurvivorTeamIndex));
 			}
 		}
@@ -729,23 +752,24 @@ void FillSurvivorInfo(Panel hSpecHud)
 		int client = clients[i];
 		
 		GetClientFixedName(client, name, sizeof(name));
+		GetClientPing(client, latency, sizeof(latency));
 		if (!IsPlayerAlive(client))
 		{
-			FormatEx(info, sizeof(info), "%s: Dead", name);
+			FormatEx(info, sizeof(info), "%s | %s: Dead", latency, name);
 		}
 		else
 		{
 			if (IsHangingFromLedge(client))
 			{
 				// Nick: <300HP@Hanging>
-				FormatEx(info, sizeof(info), "%s: <%iHP@Hanging>", name, GetClientHealth(client));
+				FormatEx(info, sizeof(info), "%s | %s: <%iHP@Hang>", latency, name, GetClientHealth(client));
 			}
 			else if (IsIncapacitated(client))
 			{
 				int activeWep = GetEntPropEnt(client, Prop_Send, "m_hActiveWeapon");
 				GetLongWeaponName(IdentifyWeapon(activeWep), info, sizeof(info));
 				// Nick: <300HP@1st> [Deagle 8]
-				Format(info, sizeof(info), "%s: <%iHP@%s> [%s %i]", name, GetClientHealth(client), (GetSurvivorIncapCount(client) == 1 ? "2nd" : "1st"), info, GetWeaponClipAmmo(activeWep));
+				Format(info, sizeof(info), "%s | %s: <%iHP@%s> [%s %i]", latency, name, GetClientHealth(client), (GetSurvivorIncapCount(client) == 1 ? "2nd" : "1st"), info, GetWeaponClipAmmo(activeWep));
 			}
 			else
 			{
@@ -758,13 +782,13 @@ void FillSurvivorInfo(Panel hSpecHud)
 				{
 					// "#" indicates that player is bleeding.
 					// Nick: 99HP# [Chrome 8/72]
-					Format(info, sizeof(info), "%s: %iHP%s [%s]", name, health, (tempHealth > 0 ? "#" : ""), info);
+					Format(info, sizeof(info), "%s | %s: %iHP%s [%s]", latency, name, health, (tempHealth > 0 ? "#" : ""), info);
 				}
 				else
 				{
 					// Player ever incapped should always be bleeding.
 					// Nick: 99HP (#1st) [Chrome 8/72]
-					Format(info, sizeof(info), "%s: %iHP (#%s) [%s]", name, health, (incapCount == 2 ? "2nd" : "1st"), info);
+					Format(info, sizeof(info), "%s | %s: %iHP (#%s) [%s]", latency, name, health, (incapCount == 2 ? "2nd" : "1st"), info);
 				}
 			}
 		}
@@ -815,22 +839,22 @@ void FillScoreInfo(Panel hSpecHud)
 				
 				DrawPanelText(hSpecHud, " ");
 				
-				// > HB: 100% | DB: 100% | Pills: 60 / 100%
-				// > Bonus: 860 <100.0%>
-				// > Distance: 400
+				// > HB: 860 <86%> | DB: 420 <84%> | Pills: 60 <60%>
+				// > Bonus: 1340 <83.8%>
+				// > Dist: 400
 				
 				FormatEx(	info,
 							sizeof(info),
-							"> HB: %.0f%% | DB: %.0f%% | Pills: %i / %.0f%%",
-							L4D2Util_IntToPercentFloat(healthBonus, maxHealthBonus),
-							L4D2Util_IntToPercentFloat(damageBonus, maxDamageBonus),
+							"> HB: %i <%.0f%%> | DB: %i <%.0f%%> | Pills: %i <%.0f%%>",
+							healthBonus, L4D2Util_IntToPercentFloat(healthBonus, maxHealthBonus),
+							damageBonus, L4D2Util_IntToPercentFloat(damageBonus, maxDamageBonus),
 							pillsBonus, L4D2Util_IntToPercentFloat(pillsBonus, maxPillsBonus));
 				DrawPanelText(hSpecHud, info);
 				
 				FormatEx(info, sizeof(info), "> Bonus: %i <%.1f%%>", totalBonus, L4D2Util_IntToPercentFloat(totalBonus, maxTotalBonus));
 				DrawPanelText(hSpecHud, info);
 				
-				FormatEx(info, sizeof(info), "> Distance: %i", iMaxDistance);
+				FormatEx(info, sizeof(info), "> Dist: %i", iMaxDistance);
 				//if (InSecondHalfOfRound())
 				//{
 				//	Format(info, sizeof(info), "%s | R#1: %i <%.1f%%>", info, iFirstHalfScore, L4D2Util_IntToPercentFloat(iFirstHalfScore, L4D_GetVersusMaxCompletionScore() + maxTotalBonus));
@@ -844,13 +868,13 @@ void FillScoreInfo(Panel hSpecHud)
 				
 				DrawPanelText(hSpecHud, " ");
 				
-				// > Health Bonus: 860
-				// > Distance: 400
+				// > HB: 860
+				// > Dist: 400
 				
-				FormatEx(info, sizeof(info), "> Health Bonus: %i", healthBonus);
+				FormatEx(info, sizeof(info), "> HB: %i", healthBonus);
 				DrawPanelText(hSpecHud, info);
 				
-				FormatEx(info, sizeof(info), "> Distance: %i", iMaxDistance);
+				FormatEx(info, sizeof(info), "> Dist: %i", iMaxDistance);
 				//if (InSecondHalfOfRound())
 				//{
 				//	Format(info, sizeof(info), "%s | R#1: %i", info, iFirstHalfScore);
@@ -871,7 +895,7 @@ void FillScoreInfo(Panel hSpecHud)
 				
 				// > Perm: 114 | Temp: 514 | Pills: 810
 				// > Bonus: 114514 <100.0%>
-				// > Distance: 191
+				// > Dist: 191
 				// never ever played on Next so take it easy.
 				
 				FormatEx(	info,
@@ -883,7 +907,7 @@ void FillScoreInfo(Panel hSpecHud)
 				FormatEx(info, sizeof(info), "> Bonus: %i <%.1f%%>", totalBonus, L4D2Util_IntToPercentFloat(totalBonus, maxTotalBonus));
 				DrawPanelText(hSpecHud, info);
 				
-				FormatEx(info, sizeof(info), "> Distance: %i", iMaxDistance);
+				FormatEx(info, sizeof(info), "> Dist: %i", iMaxDistance);
 				//if (InSecondHalfOfRound())
 				//{
 				//	Format(info, sizeof(info), "%s | R#1: %i <%.1f%%>", info, iFirstHalfScore, ToPercent(iFirstHalfScore, L4D_GetVersusMaxCompletionScore() + maxTotalBonus));
@@ -899,6 +923,7 @@ void FillInfectedInfo(Panel hSpecHud)
 	static char info[80];
 	static char buffer[16];
 	static char name[MAX_NAME_LENGTH];
+	static char latency[8];
 
 	int InfectedTeamIndex = !GameRules_GetProp("m_bAreTeamsFlipped");
 	
@@ -907,11 +932,11 @@ void FillInfectedInfo(Panel hSpecHud)
 		case GAMEMODE_SCAVENGE:
 		{
 			int score = GetScavengeMatchScore(InfectedTeamIndex);
-			FormatEx(info, sizeof(info), "->2. Infected [%d of %d]", score, GetScavengeRoundLimit());
+			FormatEx(info, sizeof(info), "->2. Inf [%d of %d]", score, GetScavengeRoundLimit());
 		}
 		case GAMEMODE_VERSUS:
 		{
-			FormatEx(info, sizeof(info), "->2. Infected [%d]",
+			FormatEx(info, sizeof(info), "->2. Inf [%d]",
 						L4D2Direct_GetVSCampaignScore(InfectedTeamIndex));
 		}
 	}
@@ -926,19 +951,20 @@ void FillInfectedInfo(Panel hSpecHud)
 			continue;
 		
 		GetClientFixedName(client, name, sizeof(name));
+		GetClientPing(client, latency, sizeof(latency));
 		if (!IsPlayerAlive(client))
 		{
 			int timeLeft = RoundToFloor(L4D_GetPlayerSpawnTime(client));
 			if (timeLeft < 0) // Deathcam
 			{
 				// verygood: Dead
-				FormatEx(info, sizeof(info), "%s: Dead", name);
+				FormatEx(info, sizeof(info), "%s | %s: Dead", latency, name);
 			}
 			else // Ghost Countdown
 			{
 				FormatEx(buffer, sizeof(buffer), "%is", timeLeft);
 				// verygood: Dead (15s)
-				FormatEx(info, sizeof(info), "%s: Dead (%s)", name, (timeLeft ? buffer : "Spawning..."));
+				FormatEx(info, sizeof(info), "%s | %s: Dead (%s)", latency, name, (timeLeft ? buffer : "S"));
 				
 				//char zClassName[10];
 				//GetInfectedClassName(storedClass[client], zClassName, sizeof zClassName);
@@ -965,13 +991,13 @@ void FillInfectedInfo(Panel hSpecHud)
 				// DONE: Handle a case of respawning chipped SI, show the ghost's health
 				if (iHP < iMaxHP)
 				{
-					// verygood: Charger (Ghost@1HP)
-					FormatEx(info, sizeof(info), "%s: %s (Ghost@%iHP)", name, zClassName, iHP);
+					// verygood: Charger (G@1HP)
+					FormatEx(info, sizeof(info), "%s | %s: %s (G@%iHP)", latency, name, zClassName, iHP);
 				}
 				else
 				{
-					// verygood: Charger (Ghost)
-					FormatEx(info, sizeof(info), "%s: %s (Ghost)", name, zClassName);
+					// verygood: Charger (G)
+					FormatEx(info, sizeof(info), "%s | %s: %s (G)", latency, name, zClassName);
 				}
 			}
 			else
@@ -995,12 +1021,12 @@ void FillInfectedInfo(Panel hSpecHud)
 				if (GetEntityFlags(client) & FL_ONFIRE)
 				{
 					// verygood: Charger (1HP) [On Fire] [6s]
-					FormatEx(info, sizeof(info), "%s: %s (%iHP) [On Fire]%s", name, zClassName, iHP, buffer);
+					FormatEx(info, sizeof(info), "%s | %s: %s (%iHP) [Fire]%s", latency, name, zClassName, iHP, buffer);
 				}
 				else
 				{
 					// verygood: Charger (1HP) [6s]
-					FormatEx(info, sizeof(info), "%s: %s (%iHP)%s", name, zClassName, iHP, buffer);
+					FormatEx(info, sizeof(info), "%s | %s: %s (%iHP)%s", latency, name, zClassName, iHP, buffer);
 				}
 			}
 		}
@@ -1011,7 +1037,7 @@ void FillInfectedInfo(Panel hSpecHud)
 	
 	if (!infectedCount)
 	{
-		DrawPanelText(hSpecHud, "There is no SI at this moment.");
+		DrawPanelText(hSpecHud, "No SI.");
 	}
 }
 
@@ -1054,11 +1080,11 @@ bool FillTankInfo(Panel hSpecHud, bool bTankHUD = false)
 	if (!IsFakeClient(tank))
 	{
 		GetClientFixedName(tank, name, sizeof(name));
-		Format(info, sizeof(info), "Control : %s (%s)", name, info);
+		Format(info, sizeof(info), "Ctrl: %s (%s)", name, info);
 	}
 	else
 	{
-		Format(info, sizeof(info), "Control : AI (%s)", info);
+		Format(info, sizeof(info), "Ctrl: AI (%s)", info);
 	}
 	DrawPanelText(hSpecHud, info);
 
@@ -1070,33 +1096,33 @@ bool FillTankInfo(Panel hSpecHud, bool bTankHUD = false)
 	
 	if (health <= 0 || isIncapacitated)
 	{
-		info = "Health  : Dead";
+		info = "HP: Dead";
 	}
 	else
 	{
-		FormatEx(info, sizeof(info), "Health  : %i / %i%%", health, L4D2Util_GetMax(1, RoundFloat(healthPercent)));
+		FormatEx(info, sizeof(info), "HP: %i / %i%%", health, L4D2Util_GetMax(1, RoundFloat(healthPercent)));
 	}
 	DrawPanelText(hSpecHud, info);
 
 	// Draw frustration
 	if (!IsFakeClient(tank))
 	{
-		FormatEx(info, sizeof(info), "Frustr.  : %d%%", GetTankFrustration(tank));
+		FormatEx(info, sizeof(info), "Frust: %d%%", GetTankFrustration(tank));
 	}
 	else
 	{
-		info = "Frustr.  : AI";
+		info = "Frust: AI";
 	}
 	DrawPanelText(hSpecHud, info);
 
 	// Draw network
 	if (!IsFakeClient(tank))
 	{
-		FormatEx(info, sizeof(info), "Network: %ims / %.1f", RoundToNearest(GetClientAvgLatency(tank, NetFlow_Both) * 1000.0), LM_GetLerpTime(tank) * 1000.0);
+		FormatEx(info, sizeof(info), "Net: %ims / %.1f", RoundToNearest(GetClientAvgLatency(tank, NetFlow_Both) * 1000.0), LM_GetLerpTime(tank) * 1000.0);
 	}
 	else
 	{
-		info = "Network: AI";
+		info = "Net: AI";
 	}
 	DrawPanelText(hSpecHud, info);
 
@@ -1104,7 +1130,7 @@ bool FillTankInfo(Panel hSpecHud, bool bTankHUD = false)
 	if (!isIncapacitated && GetEntityFlags(tank) & FL_ONFIRE)
 	{
 		int timeleft = RoundToCeil(healthPercent / 100.0 * fTankBurnDuration);
-		FormatEx(info, sizeof(info), "On Fire : %is", timeleft);
+		FormatEx(info, sizeof(info), "Fire: %is", timeleft);
 		DrawPanelText(hSpecHud, info);
 	}
 	
@@ -1189,7 +1215,7 @@ void FillGameInfo(Panel hSpecHud)
 				int tankClient = GetTankSelection();
 				if (tankClient > 0 && IsClientInGame(tankClient))
 				{
-					FormatEx(info, sizeof(info), "Tank -> %N", tankClient);
+					FormatEx(info, sizeof(info), "Tank: %N", tankClient);
 					DrawPanelText(hSpecHud, info);
 				}
 			}
@@ -1260,10 +1286,10 @@ stock void GetClientFixedName(int client, char[] name, int length)
 
 	ValvePanel_ShiftInvalidString(name, length);
 
-	if (strlen(name) > 18)
+	if (strlen(name) > 12)
 	{
-		name[15] = name[16] = name[17] = '.';
-		name[18] = 0;
+		name[9] = name[10] = name[11] = '.';
+		name[12] = '\0';
 	}
 }
 
