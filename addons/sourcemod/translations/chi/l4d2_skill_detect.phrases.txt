@@ -78,12 +78,12 @@
 	}
 	"Skeeted"
 	{
-        "#format"   "{1:N},{2:s},{3:N}" // 1:attacker 2:(bMelee) ? "melee-": ((bSniper) ? "headshot-" : ((bGL) ? "grenade-" : "") ) 3:victim
+        "#format"   "{1:N},{2:t},{3:N}" // 1:attacker 2:(bMelee) ? "melee-": ((bSniper) ? "headshot-" : ((bGL) ? "grenade-" : "") ) 3:victim
 		"chi"		"{olive}{1}{default} {blue}{2}空爆{default} 了 {olive}{3}{default}."
 	}
 	"SkeetedBot"
 	{
-        "#format"   "{1:N},{2:s}" // 1:attacker 2:(bMelee) ? "melee-": ((bSniper) ? "headshot-" : ((bGL) ? "grenade-" : "") )
+        "#format"   "{1:N},{2:t}" // 1:attacker 2:(bMelee) ? "melee-": ((bSniper) ? "headshot-" : ((bGL) ? "grenade-" : "") )
 		"chi"		"{olive}{1}{default} {blue}{2}空爆{default} 了 {olive}一只hunter{default}."
 	}
 	"Melee"
@@ -101,12 +101,12 @@
     // hurt skeet / non-skeet
 	"HurtSkeet"
 	{
-        "#format"   "{1:N},{2:i},{3:s}" // 1:victim 2:damage 3:(bOverKill) ? buffer : ""
+        "#format"   "{1:N},{2:i},{3:t}" // 1:victim 2:damage 3:(bOverKill) ? buffer : ""
 		"chi"		"{olive}{1}{default} 被 {green}残血空爆{default} ({blue}{2}{default} 伤害)."
 	}
 	"HurtSkeetBot"
 	{
-        "#format"   "{1:i},{2:s}" // 1:damage 2:(bOverKill) ? buffer : ""
+        "#format"   "{1:i},{2:t}" // 1:damage 2:(bOverKill) ? buffer : ""
 		"chi"		"{olive}Hunter{default} 被 {green}残血空爆{default} ({blue}{1}{default} 伤害)."
 	}
 	"Unchipped"
@@ -146,12 +146,12 @@
 	}
 	"SelfClearedTongue"
 	{
-        "#format"   "{1:N},{2:N},{3:s}" // 1:attacker 2:victim 3:(withShove) ? Buffer : ""
+        "#format"   "{1:N},{2:N},{3:t}" // 1:attacker 2:victim 3:(withShove) ? Buffer : ""
 		"chi"		"{olive}{1}{default} 从 {olive}{2}{default}的舌头下 {blue}{3}{default} {blue}自救{default} "
 	}
 	"SelfClearedTongueBot"
 	{
-        "#format"   "{1:N},{2:s}" // 1:attacker 2:(withShove) ? Buffer : ""
+        "#format"   "{1:N},{2:t}" // 1:attacker 2:(withShove) ? Buffer : ""
 		"chi"		"{olive}{1}{default} 从 {olive}smoker{default}的舌头下 {blue}{2}{default} {blue}自救{default} "
 	}
 	"Shoving"
@@ -192,12 +192,12 @@
     // deathcharges
 	"DeathCharged"
 	{
-        "#format"   "{1:N},{2:N},{3:s},{4:i}" // 1:attacker 2:victim 3:(bCarried) ? "" : Buffer 4:RoundFloat(height)
+        "#format"   "{1:N},{2:N},{3:t},{4:i}" // 1:attacker 2:victim 3:(bCarried) ? "" : Buffer 4:RoundFloat(height)
 		"chi"		"{olive}{1}{default} {red}冲锋{default} 造成 {olive}{2} 死亡{default} ({3})({red}高度{default}: {red}{4}{default})"
 	}
 	"DeathChargedBot"
 	{
-        "#format"   "{1:N},{2:s},{3:i}" // 1:victim 2:(bCarried) ? "" : Buffer 3:RoundFloat(height)
+        "#format"   "{1:N},{2:t},{3:i}" // 1:victim 2:(bCarried) ? "" : Buffer 3:RoundFloat(height)
 		"chi"		"{olive}Charger{default} {red}冲锋{default} 造成 {olive}{1}{default} 死亡({2})({red}高度{default}: {red}{3}{default})"
 	}
 	"Bowling"
@@ -228,10 +228,14 @@
     // bhaps
 	"BunnyHop"
 	{ 
-        "#format"   "{1:i},{2:s},{3:.1f}" // 1:streak 2:(streak > 1) ? "s" : "" 3:maxVelocity
+        "#format"   "{1:i},{2:t},{3:.1f}" // 1:streak 2:(streak > 1) ? "s" : "" 3:maxVelocity
 		"chi"		"{olive}你{default} 成功完成一次 {blue}{1} 连跳 ({blue}最高速度{default}: {olive}{3}{default})"
 	}
 	"PluralCount"
+	{
+		"chi"		""
+	}
+	"Empty"
 	{
 		"chi"		""
 	}
@@ -251,7 +255,7 @@
 	}
 	"CalarmTouchedJockey"
 	{	
-		"chi"		"{olive}Jockey{default} 让 {olive}%N{default} 触发警报
+		"chi"		"{olive}Jockey{default} 让 {olive}%N{default} 触发警报."
 	}
 	"CalarmTouchedCharger"
 	{
