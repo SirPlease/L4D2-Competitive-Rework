@@ -139,9 +139,3 @@
 		"#format"   "{1:i},{2:s}" // 1:p_iRequestedPercent 2:clientName
         "chi"        "Witch位置被管理员 {blue}{2}{default}设置为：{olive}{1}%{default}."
     }
-	"RoundNotReachLimit"
-    {
-		"#format"   "{1:i}" // 1:round_limit
-        "en"        "您这个难度就想马上逃课了？不行呢！(你还需要尝试{blue}{1}次{default}无法通过后才能使用{olive}boss投票功能{default})."
-    }
-}

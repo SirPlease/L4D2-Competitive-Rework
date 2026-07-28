@@ -208,22 +208,22 @@
 	"SIClear"
 	{
         "#format"   "{1:N},{2:N},{3:N},{4:s},{5:.2f}" // 1:attacker 2:pinVictim 3:victim 4:g_csSIClassName[zombieClass] 5:fClearTime
-		"chi"		"{olive}{1}{default} 只用了 {blue}{5}秒{default} 杀死了 {olive}{3}{default} 的 {4}， 解控了 {olive}{2}{default} "
+		"chi"		"{olive}{1}{default} 从 {olive}{3}{default}的 {4} 里 {blue}速救了{default} {olive}{2}{default} ({blue}{5} {default}秒)"
 	}
 	"SIClearTeammate"
 	{
         "#format"   "{1:N},{2:N},{3:s},{4:.2f}" // 1:attacker 2:victim 3:g_csSIClassName[zombieClass] 4:fClearTime
-		"chi"		"{olive}{1}{default} 只用了 {blue}{4}秒{default} 杀死了 {olive}{2}{default}的 {3}"
+		"chi"		"{olive}{1}{default} 从 {olive}{2}{default}的 {3} 里 {blue}速救了{default}{olive}一名队友{default} ({blue}{4} {default}秒)"
 	}
 	"SIClearBot"
 	{
         "#format"   "{1:N},{2:N},{3:s},{4:.2f}" // 1:attacker 2:pinVictim 3:g_csSIClassName[zombieClass] 4:fClearTime
-		"chi"		"{olive}{1}{default} 只用了 {blue}{4}秒{default} 杀死了 {olive}一只{3}{default}， 解控了 {olive}{2}{default} "
+		"chi"		"{olive}{1}{default} 从一个 {3} 里 {blue}速救了{default} {olive}{2}{default} ({blue}{4} {default}秒)"
 	}
 	"SIClearTeammateBot"
 	{
         "#format"   "{1:N},{2:s},{3:.2f}" // 1:attacker 2:g_csSIClassName[zombieClass] 3:fClearTime)
-		"chi"		"{olive}{1}{default} 只用了 {blue}{3}秒{default} 杀死了 {olive}一只{2}{default}"
+		"chi"		"{olive}{1}{default} 从一个 {2} 里 {blue}速救了{default} {olive}一名队友{default} ({blue}{3} {default}秒)"
 	}
     // bhaps
 	"BunnyHop"
@@ -251,7 +251,7 @@
 	}
 	"CalarmTouchedJockey"
 	{	
-		"chi"		"{olive}Jockey{default} 让 {olive}%N{default} 触发警报
+		"chi"		"{olive}Jockey{default} 让 {olive}%N{default} 触发警报."
 	}
 	"CalarmTouchedCharger"
 	{
