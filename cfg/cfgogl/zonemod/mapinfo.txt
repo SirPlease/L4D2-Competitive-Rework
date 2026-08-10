@@ -3061,6 +3061,14 @@
 		{
 			"pain_pills"	"3"
 		}
+			"tank_ban_flow"
+		{
+			"ROOF TO SAFEROOM landing an instant kill trigger the tank spawn after the staircase not landing it doesn't"
+			{
+					"min"		"38"
+					"max"		"70"
+			}
+		}
 	}
 	"dc2025_2"
 	{
