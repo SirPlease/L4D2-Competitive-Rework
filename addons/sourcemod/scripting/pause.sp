@@ -175,6 +175,16 @@ void FindServerNamer()
 // ======================================
 // Forwards
 // ======================================
+public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3], float angles[3], int &weapon, int &subtype, int &cmdnum, int &tickcount, int &seed, int mouse[2])
+{
+    if (isPaused && (buttons & IN_ATTACK) && GetClientTeam(client) == L4D2Team_Infected && IsInfectedGhost(client))
+    {
+        buttons &= ~IN_ATTACK;
+        return Plugin_Changed;
+    }
+    return Plugin_Continue;
+}
+
 public void OnClientPutInServer(int client)
 {
     if (isPaused)
