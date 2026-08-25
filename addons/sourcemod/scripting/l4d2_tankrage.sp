@@ -6,6 +6,7 @@
 
 ConVar convarRageFlowPercent;
 ConVar convarRageFreezeTime;
+ConVar convarAnnounce;
 ConVar convarDebug;
 ConVar g_hVsBossBuffer;
 
@@ -33,6 +34,7 @@ public void OnPluginStart()
     g_hVsBossBuffer = FindConVar("versus_boss_buffer");
     convarRageFlowPercent = CreateConVar("l4d2_tankrage_flowpercent", "7", "The percentage in flow the survival have to run back to grant frustration freeze (Furthest Survivor)");
     convarRageFreezeTime  = CreateConVar("l4d2_tankrage_freezetime", "4.0", "Time in seconds to freeze the Tank's frustration when survivors have ran back per <flowpercent>.");
+    convarAnnounce = CreateConVar("l4d2_tankrage_announce", "1", "Announce the frustration freeze mechanic in chat when the Tank spawns. 0:hide, 1:show", FCVAR_NONE, true, 0.0, true, 1.0);
     convarDebug = CreateConVar("l4d2_tankrage_debug", "0", "Are we debugging?");
     HookEvent("tank_spawn", Event_TankSpawn);
     HookEvent("round_start", Event_ResetTank, EventHookMode_PostNoCopy);
@@ -87,7 +89,8 @@ void Event_TankSpawn(Event hEvent, char[] sEventName, bool dontBroadcast)
 
     if (!IsFakeClient(iTank))
     {
-        CPrintToChatAll("%t %t", "Tag", "SurvivorsRunBack", convarRageFlowPercent.IntValue, convarRageFreezeTime.FloatValue);
+        if (convarAnnounce.BoolValue)
+            CPrintToChatAll("%t %t", "Tag", "SurvivorsRunBack", convarRageFlowPercent.IntValue, convarRageFreezeTime.FloatValue);
         hTankTimer = CreateTimer(0.1, timerTank, _, TIMER_REPEAT)
         bHaveHadFlowOrStaticTank = true;
     }

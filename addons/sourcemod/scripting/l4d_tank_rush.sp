@@ -20,6 +20,7 @@ int
 ConVar
 	cvar_noTankRush,
 	cvar_SpawnEnableSound,
+	cvar_Announce,
 	cvar_unfreezeSaferoom,
 	cvar_unfreezeAI;
 
@@ -40,6 +41,7 @@ public void OnPluginStart()
 	cvar_unfreezeSaferoom = CreateConVar("l4d_no_tank_rush_unfreeze_saferoom", "0", "Unfreezes Distance if a Survivor makes it to the end saferoom while the Tank is still up.", _, true, 0.0, true, 1.0);
 	cvar_unfreezeAI       = CreateConVar("l4d_no_tank_rush_unfreeze_ai", "0", "Unfreeze distance if the Tank goes AI", _, true, 0.0, true, 1.0);
 	cvar_SpawnEnableSound = CreateConVar("l4d_no_tank_rush_spawn_sound", "0", "Turn on the sound when spawning a tank", _, true, 0.0, true, 1.0);
+	cvar_Announce         = CreateConVar("l4d_no_tank_rush_announce", "1", "Announce in chat when distance points are frozen/unfrozen due to the Tank. 0:hide, 1:show", _, true, 0.0, true, 1.0);
 
 	// ChangeHook
 	cvar_noTankRush.AddChangeHook(NoTankRushChange);
@@ -177,7 +179,10 @@ void FreezePoints(bool show_message = false)
 		iDistance = L4D_GetVersusMaxCompletionScore();
 		if (show_message)
 		{
-			CPrintToChatAll("%t %t", "Tag", "freeze");
+			if (cvar_Announce.BoolValue)
+			{
+				CPrintToChatAll("%t %t", "Tag", "freeze");
+			}
 			if (cvar_SpawnEnableSound.BoolValue)
 			{
 				EmitSoundToAll("ui/pickup_secret01.wav");
@@ -193,7 +198,7 @@ void UnFreezePoints(bool show_message = false, int iMessage = 1)
 {
 	if (bTankAlive)
 	{
-		if (show_message)
+		if (show_message && cvar_Announce.BoolValue)
 		{
 			if (iMessage == 1)
 			{

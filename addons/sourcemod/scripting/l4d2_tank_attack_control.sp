@@ -20,6 +20,7 @@ int g_iQueuedThrow[MAXPLAYERS + 1];
 ConVar g_hBlockPunchRock;
 ConVar g_hBlockJumpRock;
 ConVar hOverhandOnly;
+ConVar g_hAnnounce;
 bool g_bBlockJumpRock;
 bool g_bOverhandOnly;
 
@@ -50,6 +51,7 @@ public void OnPluginStart()
 	g_hBlockPunchRock = CreateConVar("l4d2_block_punch_rock", "1", "Block tanks from punching and throwing a rock at the same time");
 	g_hBlockJumpRock = CreateConVar("l4d2_block_jump_rock", "0", "Block tanks from jumping and throwing a rock at the same time");
 	hOverhandOnly = CreateConVar("tank_overhand_only", "0", "Force tank to only throw overhand rocks.");
+	g_hAnnounce = CreateConVar("l4d2_tank_rock_selector_announce", "1", "Show the Tank Rock Selector controls to the Tank player on spawn. 0:hide, 1:show", _, true, 0.0, true, 1.0);
 
 	g_hBlockJumpRock.AddChangeHook(OnConVarChanged);
 	hOverhandOnly.AddChangeHook(OnConVarChanged);
@@ -113,7 +115,7 @@ void TankSpawn_Event(Event event, const char[] name, bool dontBroadcast)
 	int tank = GetClientOfUserId(event.GetInt("userid"));
 	if (!tank || !IsClientInGame(tank) || IsFakeClient(tank)) return;
 
-	if (g_bOverhandOnly == false)
+	if (g_bOverhandOnly == false && g_hAnnounce.BoolValue)
 	{
 		CPrintToChat(tank, "%t", "Title");
 		CPrintToChat(tank, "%t", "Reload");
