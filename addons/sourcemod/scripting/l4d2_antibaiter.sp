@@ -68,7 +68,7 @@ public Plugin myinfo =
 	name = "L4D2 Antibaiter",
 	author = "Visor, Sir (assisted by Devilesk), A1m`",
 	description = "Makes you think twice before attempting to bait that shit",
-	version = "1.3.6",
+	version = "1.4.0",
 	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 };
 
@@ -82,7 +82,7 @@ public void OnPluginStart()
 	hCvarStopTimerOnBile = CreateConVar("l4d2_antibaiter_bile_stop", "0", "Stop timer when a player is biled?");
 
 	HookEvent("round_start", Event_RoundStart, EventHookMode_PostNoCopy);
-	HookEvent("player_now_it", Event_PlayerBiled, EventHookMode_PostNoCopy);
+	HookEvent("player_now_it", Event_PlayerBiled, EventHookMode_Post);
 	HookEvent("round_end", Event_RoundEnd, EventHookMode_PostNoCopy);
 	HookEvent("player_left_start_area", Event_RoundGoesLive, EventHookMode_PostNoCopy);
 	
