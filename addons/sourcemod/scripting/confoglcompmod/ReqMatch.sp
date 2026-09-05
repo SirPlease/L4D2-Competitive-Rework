@@ -9,6 +9,8 @@
 #define MAPRESTARTTIME 3.0
 #define RESETMINTIME   60.0
 
+static int RM_iAutoloadGeneration;
+
 static bool
 	RM_bDebugEnabled = RM_DEBUG,
 	// RM_bMatchRequest[2] = {false, ...},
@@ -44,6 +46,8 @@ void RM_APL()
 
 void RM_OnModuleStart()
 {
+	HookEvent("player_connect_full", RM_Event_PlayerConnectFull, EventHookMode_Post);
+
 	RM_hDoRestart		   = CreateConVarEx("match_restart", "1", "Sets whether the plugin will restart the map upon match mode being forced or requested", _, true, 0.0, true, 1.0);
 	// RM_hAllowVoting = CreateConVarEx("match_allowvoting", "1", "Sets whether players can vote/request for match mode", _, true, 0.0, true, 1.0);
 	RM_hAutoLoad		   = CreateConVarEx("match_autoload", "0", "Has match mode start up automatically when a player connects and the server is not in match mode", _, true, 0.0, true, 1.0);
@@ -102,9 +106,46 @@ void RM_OnMapStart()
 	RM_Match_Load();
 }
 
-void RM_OnClientPutInServer()
+void RM_OnMapEnd()
+{
+	// A queued autoload must not survive a map transition.
+	RM_iAutoloadGeneration++;
+}
+
+static void RM_Event_PlayerConnectFull(Event event, const char[] name, bool dontBroadcast)
 {
 	if (!RM_hAutoLoad.BoolValue || RM_bIsAMatchActive)
+	{
+		return;
+	}
+
+	int client = GetClientOfUserId(event.GetInt("userid"));
+	if (client == 0 || !IsClientInGame(client) || IsFakeClient(client))
+	{
+		return;
+	}
+
+	// PutInServer is too early to reload mode plugins during initial sign-on.
+	// Wait for the final connection acknowledgement, then leave its callback.
+	DataPack data = new DataPack();
+	data.WriteCell(GetClientSerial(client));
+	data.WriteCell(RM_iAutoloadGeneration);
+	RequestFrame(RM_Frame_Autoload, data);
+}
+
+static void RM_Frame_Autoload(DataPack data)
+{
+	data.Reset();
+	int client = GetClientFromSerial(data.ReadCell());
+	int generation = data.ReadCell();
+	delete data;
+
+	if (generation != RM_iAutoloadGeneration || !RM_hAutoLoad.BoolValue || RM_bIsAMatchActive)
+	{
+		return;
+	}
+
+	if (client == 0 || !IsClientInGame(client) || IsFakeClient(client))
 	{
 		return;
 	}
@@ -218,6 +259,8 @@ static void RM_Match_Load()
 
 static void RM_Match_Unload(bool bForced = false)
 {
+	RM_iAutoloadGeneration++;
+
 	bool bIsHumansOnServer = IsHumansOnServer();
 
 	if (!bIsHumansOnServer || bForced)
