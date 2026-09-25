@@ -1,0 +1,598 @@
+"Phrases"
+{
+	// ------------------------------------------------------------------
+	// Prefix and menu titles
+	// ------------------------------------------------------------------
+	"Rescue Prefix"
+	{
+		"en"		"Rescue"
+		"zho"		"救援"
+		"chi"		"救援"
+	}
+
+	"Rescue Menu Title"
+	{
+		"en"		"Emergency Rescue"
+		"zho"		"紧急救援"
+		"chi"		"緊急救援"
+	}
+
+	"Rescue Menu Needs Player"
+	{
+		"en"		"This command needs to be run by an admin who is in the game."
+		"zho"		"该命令需要由游戏内的管理员执行。"
+		"chi"		"該命令需要由遊戲內的管理員執行。"
+	}
+
+	"Rescue Disabled"
+	{
+		"en"		"Emergency Rescue is disabled on this server."
+		"zho"		"本服务器的紧急救援功能已被禁用。"
+		"chi"		"本伺服器的緊急救援功能已被停用。"
+	}
+
+	"Rescue Target Invalid"
+	{
+		"en"		"The target must be a Survivor who is in the game."
+		"zho"		"目标必须是游戏内的生还者。"
+		"chi"		"目標必須是遊戲內的生還者。"
+	}
+
+	"Rescue No Survivor"
+	{
+		"en"		"There is no living Survivor to work on right now."
+		"zho"		"当前没有存活的生还者可供操作。"
+		"chi"		"當前沒有存活的生還者可供操作。"
+	}
+
+	"Rescue Target Dead"
+	{
+		"#format"	"{1:N}"
+		"en"		"{1} is dead. Reviving a dead Survivor is not this plugin's job - defibrillate or respawn them first."
+		"zho"		"{1} 已死亡。本插件不负责复活死亡生还者，请先用除颤器或重生。"
+		"chi"		"{1} 已死亡。本插件不負責復活死亡生還者，請先用電擊器或重生。"
+	}
+
+	"Rescue Target Pinned"
+	{
+		"#format"	"{1:N}"
+		"en"		"{1} is being held by a Special Infected. A pin is normal play, not an accident, so the teleport was refused."
+		"zho"		"{1} 正被特感控制。被控属于正常对抗而非意外，已拒绝传送。"
+		"chi"		"{1} 正被特感控制。被控屬於正常對抗而非意外，已拒絕傳送。"
+	}
+
+	"Rescue Select Teammate"
+	{
+		"en"		"Teleport next to which teammate?"
+		"zho"		"传送到哪位队友身旁？"
+		"chi"		"傳送到哪位隊友身旁？"
+	}
+
+	"Rescue No Teammate"
+	{
+		"en"		"There is no other living Survivor to teleport next to."
+		"zho"		"没有其他存活生还者可以作为传送目标。"
+		"chi"		"沒有其他存活生還者可以作為傳送目標。"
+	}
+
+	"Rescue Select Preset"
+	{
+		"en"		"Teleport to which preset point?"
+		"zho"		"传送到哪个预设点？"
+		"chi"		"傳送到哪個預設點？"
+	}
+
+	"Rescue Select Preset Slot"
+	{
+		"en"		"Save the aimed position into which slot?"
+		"zho"		"把准心处保存到哪个预设位？"
+		"chi"		"把準心處儲存到哪個預設位？"
+	}
+
+	"Rescue Preset Slot"
+	{
+		"#format"	"{1:d}"
+		"en"		"Preset {1}"
+		"zho"		"预设点 {1}"
+		"chi"		"預設點 {1}"
+	}
+
+	"Rescue Select Health"
+	{
+		"en"		"Set which health value?"
+		"zho"		"设置为多少血量？"
+		"chi"		"設定為多少血量？"
+	}
+
+	"Rescue Select Incap"
+	{
+		"en"		"Set which incap count?"
+		"zho"		"设置为多少次倒地？"
+		"chi"		"設定為多少次倒地？"
+	}
+
+	"Rescue Incap Item"
+	{
+		"#format"	"{1:d},{2:s}"
+		"en"		"{1}{2}"
+		"zho"		"{1}{2}"
+		"chi"		"{1}{2}"
+	}
+
+	"Rescue Incap Third Strike Mark"
+	{
+		"en"		"  (black and white)"
+		"zho"		"  (黑白)"
+		"chi"		"  (黑白)"
+	}
+
+	// ------------------------------------------------------------------
+	// Menu entries
+	// ------------------------------------------------------------------
+	"Rescue Target Item"
+	{
+		"#format"	"{1:N},{2:d},{3:d}"
+		"en"		"{1}  -  {2} HP / {3} incaps"
+		"zho"		"{1}  -  {2} 血 / 倒地 {3} 次"
+		"chi"		"{1}  -  {2} 血 / 倒地 {3} 次"
+	}
+
+	"Rescue Action Title"
+	{
+		"#format"	"{1:N}"
+		"en"		"Rescue actions for {1}"
+		"zho"		"救援操作：{1}"
+		"chi"		"救援操作：{1}"
+	}
+
+	"Rescue Action Aim"
+	{
+		"en"		"Teleport to where I am aiming"
+		"zho"		"传送到准心处"
+		"chi"		"傳送到準心處"
+	}
+
+	"Rescue Action Teammate"
+	{
+		"en"		"Teleport next to a teammate"
+		"zho"		"传送到队友身旁"
+		"chi"		"傳送到隊友身旁"
+	}
+
+	"Rescue Action Preset"
+	{
+		"en"		"Teleport to a preset point"
+		"zho"		"传送到预设点"
+		"chi"		"傳送到預設點"
+	}
+
+	"Rescue Action Health"
+	{
+		"en"		"Set health"
+		"zho"		"设置血量"
+		"chi"		"設定血量"
+	}
+
+	"Rescue Action Incap"
+	{
+		"en"		"Set incap count"
+		"zho"		"设置倒地次数"
+		"chi"		"設定倒地次數"
+	}
+
+	"Rescue Action Restore"
+	{
+		"en"		"Restore the pre-accident state"
+		"zho"		"恢复事故前状态"
+		"chi"		"恢復事故前狀態"
+	}
+
+	"Rescue Action Status"
+	{
+		"en"		"Show current and recorded state"
+		"zho"		"查看当前与记录状态"
+		"chi"		"查看當前與記錄狀態"
+	}
+
+	"Rescue Action Save"
+	{
+		"en"		"Save the aimed position as a preset"
+		"zho"		"保存准心处为预设点"
+		"chi"		"儲存準心處為預設點"
+	}
+
+	// ------------------------------------------------------------------
+	// Teleport feedback
+	// ------------------------------------------------------------------
+	"Rescue Aim Needs Player"
+	{
+		"en"		"This action needs an admin who is in the game to aim with."
+		"zho"		"该操作需要由游戏内的管理员来瞄准。"
+		"chi"		"該操作需要由遊戲內的管理員來瞄準。"
+	}
+
+	"Rescue Aim Failed"
+	{
+		"en"		"Could not read a position from where you are aiming. Look at the floor and try again."
+		"zho"		"无法获取准心处的位置，请对着地面重试。"
+		"chi"		"無法取得準心處的位置，請對著地面重試。"
+	}
+
+	"Rescue Unsafe Destination"
+	{
+		"#format"	"{1:s}"
+		"en"		"Destination rejected: {1}. Teleport cancelled."
+		"zho"		"目标位置不安全：{1}。已取消传送。"
+		"chi"		"目標位置不安全：{1}。已取消傳送。"
+	}
+
+	"Rescue Unsafe Reason Wall"
+	{
+		"en"		"a Survivor does not fit there"
+		"zho"		"该处放不下生还者"
+		"chi"		"該處放不下生還者"
+	}
+
+	"Rescue Unsafe Reason Void"
+	{
+		"en"		"there is no ground underneath"
+		"zho"		"下方没有地面"
+		"chi"		"下方沒有地面"
+	}
+
+	"Rescue Unsafe Reason Infected"
+	{
+		"#format"	"{1:d}"
+		"en"		"{1} Special Infected are too close"
+		"zho"		"附近有 {1} 个特感"
+		"chi"		"附近有 {1} 個特感"
+	}
+
+	"Rescue Unsafe Reason Unknown"
+	{
+		"en"		"the position could not be verified"
+		"zho"		"无法验证该位置"
+		"chi"		"無法驗證該位置"
+	}
+
+	"Rescue Unsafe Reason Occupied"
+	{
+		"en"		"every free spot around that teammate is already taken"
+		"zho"		"该队友周围可站的位置都已被占用"
+		"chi"		"該隊友周圍可站的位置都已被佔用"
+	}
+
+	"Rescue Unsafe Reason Level"
+	{
+		"en"		"the only free spots are on a different level than the teammate"
+		"zho"		"仅有的空位与队友不在同一层"
+		"chi"		"僅有的空位與隊友不在同一層"
+	}
+
+	"Rescue Destination Aim"
+	{
+		"en"		"the aimed position"
+		"zho"		"准心处"
+		"chi"		"準心處"
+	}
+
+	"Rescue Destination Teammate"
+	{
+		"#format"	"{1:N}"
+		"en"		"next to {1}"
+		"zho"		"{1} 身旁"
+		"chi"		"{1} 身旁"
+	}
+
+	"Rescue Destination Preset"
+	{
+		"#format"	"{1:s}"
+		"en"		"preset \"{1}\""
+		"zho"		"预设点「{1}」"
+		"chi"		"預設點「{1}」"
+	}
+
+	"Rescue Teleport Success"
+	{
+		"#format"	"{1:N},{2:s}"
+		"en"		"Teleported {1} to {2}."
+		"zho"		"已把 {1} 传送到 {2}。"
+		"chi"		"已把 {1} 傳送到 {2}。"
+	}
+
+	"Rescue Teammate Invalid"
+	{
+		"en"		"The teammate must be a living Survivor."
+		"zho"		"队友必须是存活的生还者。"
+		"chi"		"隊友必須是存活的生還者。"
+	}
+
+	"Rescue Teammate Is Target"
+	{
+		"#format"	"{1:N}"
+		"en"		"{1} cannot be teleported next to themselves."
+		"zho"		"不能把 {1} 传送到自己身旁。"
+		"chi"		"不能把 {1} 傳送到自己身旁。"
+	}
+
+	// ------------------------------------------------------------------
+	// Preset feedback
+	// ------------------------------------------------------------------
+	"Rescue Preset Empty"
+	{
+		"en"		"There are no preset points on this map yet. Use sm_rescue_save <name> to add one."
+		"zho"		"当前地图还没有预设点，可用 sm_rescue_save <名称> 添加。"
+		"chi"		"當前地圖還沒有預設點，可用 sm_rescue_save <名稱> 新增。"
+	}
+
+	"Rescue Preset Missing"
+	{
+		"#format"	"{1:s}"
+		"en"		"There is no preset point called \"{1}\" on this map."
+		"zho"		"当前地图没有名为「{1}」的预设点。"
+		"chi"		"當前地圖沒有名為「{1}」的預設點。"
+	}
+
+	"Rescue Preset Save Failed"
+	{
+		"en"		"Could not write the preset file. Check that SourceMod can write to configs/."
+		"zho"		"写入预设文件失败，请检查 SourceMod 是否有权限写入 configs/。"
+		"chi"		"寫入預設檔案失敗，請檢查 SourceMod 是否有權限寫入 configs/。"
+	}
+
+	"Rescue Preset Name Invalid"
+	{
+		"#format"	"{1:s}"
+		"en"		"\"{1}\" cannot be used as a preset name. Avoid quotes, backslashes and braces."
+		"zho"		"「{1}」不能用作预设点名称，请避免引号、反斜杠和花括号。"
+		"chi"		"「{1}」不能用作預設點名稱，請避免引號、反斜線和花括號。"
+	}
+
+	"Rescue Preset Saved"
+	{
+		"#format"	"{1:s},{2:.1f},{3:.1f},{4:.1f}"
+		"en"		"Saved preset \"{1}\" at {2} {3} {4}."
+		"zho"		"已保存预设点「{1}」：{2} {3} {4}。"
+		"chi"		"已儲存預設點「{1}」：{2} {3} {4}。"
+	}
+
+	// ------------------------------------------------------------------
+	// State feedback
+	// ------------------------------------------------------------------
+	"Rescue Health Too Low"
+	{
+		"#format"	"{1:d},{2:d}"
+		"en"		"{1} is below the minimum health of {2}; using {2}."
+		"zho"		"{1} 低于最小血量 {2}，已按 {2} 处理。"
+		"chi"		"{1} 低於最小血量 {2}，已按 {2} 處理。"
+	}
+
+	"Rescue Health Clamped"
+	{
+		"#format"	"{1:N},{2:d},{3:d}"
+		"en"		"{2} is above {1}'s maximum health of {3}; using {3}."
+		"zho"		"{2} 超过 {1} 的血量上限 {3}，已按 {3} 处理。"
+		"chi"		"{2} 超過 {1} 的血量上限 {3}，已按 {3} 處理。"
+	}
+
+	"Rescue Health Success"
+	{
+		"#format"	"{1:N},{2:d},{3:d}"
+		"en"		"Set {1}'s health to {2} (was {3})."
+		"zho"		"已把 {1} 的血量设为 {2}（原 {3}）。"
+		"chi"		"已把 {1} 的血量設為 {2}（原 {3}）。"
+	}
+
+	"Rescue Temp Health Success"
+	{
+		"#format"	"{1:N},{2:.0f},{3:.0f}"
+		"en"		"Set {1}'s temporary health to {2} (was {3})."
+		"zho"		"已把 {1} 的虚血设为 {2}（原 {3}）。"
+		"chi"		"已把 {1} 的虛血設為 {2}（原 {3}）。"
+	}
+
+	"Rescue Health WhileDown"
+	{
+		"#format"	"{1:N},{2:d},{3:d}"
+		"en"		"{1} is down, so {2} HP was stored as their pre-incap health (was {3}) and will apply when they are helped up."
+		"zho"		"{1} 正在倒地/挂边，{2} 血已写入倒地前血量（原 {3}），被扶起后生效。"
+		"chi"		"{1} 正在倒地/掛邊，{2} 血已寫入倒地前血量（原 {3}），被扶起後生效。"
+	}
+
+	"Rescue Incap Clamped"
+	{
+		"#format"	"{1:d},{2:d}"
+		"en"		"Incap count {1} is out of range; using {2}."
+		"zho"		"倒地次数 {1} 超出范围，已按 {2} 处理。"
+		"chi"		"倒地次數 {1} 超出範圍，已按 {2} 處理。"
+	}
+
+	"Rescue Incap Success"
+	{
+		"#format"	"{1:N},{2:d},{3:d}"
+		"en"		"Set {1}'s incap count to {2} (was {3})."
+		"zho"		"已把 {1} 的倒地次数设为 {2}（原 {3}）。"
+		"chi"		"已把 {1} 的倒地次數設為 {2}（原 {3}）。"
+	}
+
+	"Rescue Snapshot Missing"
+	{
+		"#format"	"{1:N}"
+		"en"		"There is no recorded pre-accident state for {1}."
+		"zho"		"{1} 没有可用的意外前状态记录。"
+		"chi"		"{1} 沒有可用的意外前狀態記錄。"
+	}
+
+	"Rescue Restore Success"
+	{
+		"#format"	"{1:N},{2:d},{3:d}"
+		"en"		"Restored {1} to the pre-accident state: {2} HP, {3} incaps."
+		"zho"		"已把 {1} 恢复到意外前状态：{2} 血，倒地 {3} 次。"
+		"chi"		"已把 {1} 恢復到意外前狀態：{2} 血，倒地 {3} 次。"
+	}
+
+	// ------------------------------------------------------------------
+	// Status
+	// ------------------------------------------------------------------
+	"Rescue State Normal"
+	{
+		"en"		"on their feet"
+		"zho"		"站立"
+		"chi"		"站立"
+	}
+
+	"Rescue State Incapped"
+	{
+		"en"		"incapacitated"
+		"zho"		"倒地"
+		"chi"		"倒地"
+	}
+
+	"Rescue State Hanging"
+	{
+		"en"		"hanging from a ledge"
+		"zho"		"挂边"
+		"chi"		"掛邊"
+	}
+
+	"Rescue State Dead"
+	{
+		"en"		"dead"
+		"zho"		"死亡"
+		"chi"		"死亡"
+	}
+
+	"Rescue Status Line"
+	{
+		"#format"	"{1:N},{2:d},{3:.0f},{4:d},{5:s}"
+		"en"		"{1}: {2} HP, {3} temporary HP, {4} incaps, {5}."
+		"zho"		"{1}：{2} 血，{3} 虚血，倒地 {4} 次，{5}。"
+		"chi"		"{1}：{2} 血，{3} 虛血，倒地 {4} 次，{5}。"
+	}
+
+	"Rescue Status Line Max"
+	{
+		"#format"	"{1:N},{2:d},{3:.0f},{4:d},{5:d},{6:s}"
+		"en"		"{1}: {2} HP, {3} temporary HP, {4}/{5} incaps, {6}."
+		"zho"		"{1}：{2} 血，{3} 虚血，倒地 {4}/{5} 次，{6}。"
+		"chi"		"{1}：{2} 血，{3} 虛血，倒地 {4}/{5} 次，{6}。"
+	}
+
+	"Rescue Status Snapshot"
+	{
+		"#format"	"{1:d},{2:.0f},{3:d}"
+		"en"		"Recorded before the last incap: {1} HP, {2} temporary HP, {3} incaps."
+		"zho"		"上次倒地前的记录：{1} 血，{2} 虚血，倒地 {3} 次。"
+		"chi"		"上次倒地前的記錄：{1} 血，{2} 虛血，倒地 {3} 次。"
+	}
+
+	"Rescue Status No Snapshot"
+	{
+		"#format"	"{1:N}"
+		"en"		"No pre-accident state has been recorded for {1} yet."
+		"zho"		"尚未记录 {1} 的意外前状态。"
+		"chi"		"尚未記錄 {1} 的意外前狀態。"
+	}
+
+	// ------------------------------------------------------------------
+	// Public announcements
+	// ------------------------------------------------------------------
+	"Rescue Announce Teleport"
+	{
+		"#format"	"{1:N},{2:s}"
+		"en"		"A referee teleported {1} to {2}."
+		"zho"		"裁判已把 {1} 传送到 {2}。"
+		"chi"		"裁判已把 {1} 傳送到 {2}。"
+	}
+
+	"Rescue Announce Health"
+	{
+		"#format"	"{1:N},{2:d}"
+		"en"		"A referee restored {1}'s health to {2}."
+		"zho"		"裁判已把 {1} 的血量恢复为 {2}。"
+		"chi"		"裁判已把 {1} 的血量恢復為 {2}。"
+	}
+
+	"Rescue Announce Health Down"
+	{
+		"#format"	"{1:N},{2:d}"
+		"en"		"A referee set {1}'s post-revive health to {2}."
+		"zho"		"裁判已把 {1} 被扶起后的血量设为 {2}。"
+		"chi"		"裁判已把 {1} 被扶起後的血量設為 {2}。"
+	}
+
+	"Rescue Announce Incap"
+	{
+		"#format"	"{1:N},{2:d}"
+		"en"		"A referee set {1}'s incap count to {2}."
+		"zho"		"裁判已把 {1} 的倒地次数设为 {2}。"
+		"chi"		"裁判已把 {1} 的倒地次數設為 {2}。"
+	}
+
+	"Rescue Announce Restore"
+	{
+		"#format"	"{1:N}"
+		"en"		"A referee restored {1} to their pre-accident state."
+		"zho"		"裁判已把 {1} 恢复到意外前状态。"
+		"chi"		"裁判已把 {1} 恢復到意外前狀態。"
+	}
+
+	// ------------------------------------------------------------------
+	// Usage
+	// ------------------------------------------------------------------
+	"Rescue Usage Here"
+	{
+		"en"		"Usage: sm_rescue_here <target>"
+		"zho"		"用法：sm_rescue_here <目标>"
+		"chi"		"用法：sm_rescue_here <目標>"
+	}
+
+	"Rescue Usage To"
+	{
+		"en"		"Usage: sm_rescue_to <target> <teammate>"
+		"zho"		"用法：sm_rescue_to <目标> <队友>"
+		"chi"		"用法：sm_rescue_to <目標> <隊友>"
+	}
+
+	"Rescue Usage Pos"
+	{
+		"en"		"Usage: sm_rescue_pos <target> <preset>"
+		"zho"		"用法：sm_rescue_pos <目标> <预设点>"
+		"chi"		"用法：sm_rescue_pos <目標> <預設點>"
+	}
+
+	"Rescue Usage Save"
+	{
+		"en"		"Usage: sm_rescue_save <preset name>"
+		"zho"		"用法：sm_rescue_save <预设点名称>"
+		"chi"		"用法：sm_rescue_save <預設點名稱>"
+	}
+
+	"Rescue Usage Health"
+	{
+		"en"		"Usage: sm_rescue_health <target> <amount> [temp]"
+		"zho"		"用法：sm_rescue_health <目标> <数值> [temp]"
+		"chi"		"用法：sm_rescue_health <目標> <數值> [temp]"
+	}
+
+	"Rescue Usage Incap"
+	{
+		"en"		"Usage: sm_rescue_incap <target> <count>"
+		"zho"		"用法：sm_rescue_incap <目标> <次数>"
+		"chi"		"用法：sm_rescue_incap <目標> <次數>"
+	}
+
+	"Rescue Usage Restore"
+	{
+		"en"		"Usage: sm_rescue_restore <target>"
+		"zho"		"用法：sm_rescue_restore <目标>"
+		"chi"		"用法：sm_rescue_restore <目標>"
+	}
+
+	"Rescue Usage Status"
+	{
+		"en"		"Usage: sm_rescue_status <target>"
+		"zho"		"用法：sm_rescue_status <目标>"
+		"chi"		"用法：sm_rescue_status <目標>"
+	}
+}
