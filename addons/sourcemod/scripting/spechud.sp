@@ -18,8 +18,9 @@
 #include <l4d_tank_control_eq>
 #include <lerpmonitor>
 #include <witch_and_tankifier>
+#include <caster_system>
 
-#define PLUGIN_VERSION "3.10.0"
+#define PLUGIN_VERSION "3.11.0"
 
 public Plugin myinfo =
 {
@@ -77,6 +78,9 @@ bool bTankSelection;
 // Witch and Tankifier
 bool bTankifier;
 bool bStaticTank, bStaticWitch;
+
+// Caster System
+bool bCasterSystem;
 
 // Hud Toggle & Hint Message
 bool bSpecHudActive[MAXPLAYERS+1], bTankHudActive[MAXPLAYERS+1];
@@ -208,6 +212,11 @@ void FindTankifier()
 	bTankifier = LibraryExists("witch_and_tankifier");
 }
 
+void FindCasterSystem()
+{
+	bCasterSystem = LibraryExists("caster_system");
+}
+
 void LoadPluginTranslations()
 {
 	char sPath[PLATFORM_MAX_PATH];
@@ -242,6 +251,7 @@ public void OnAllPluginsLoaded()
 	
 	FindTankSelection();
 	FindTankifier();
+	FindCasterSystem();
 }
 
 public void OnLibraryAdded(const char[] name)
@@ -249,6 +259,7 @@ public void OnLibraryAdded(const char[] name)
 	FindScoreMod();
 	FillBossPercents();
 	FindTankifier();
+	FindCasterSystem();
 }
 
 public void OnLibraryRemoved(const char[] name)
@@ -256,6 +267,7 @@ public void OnLibraryRemoved(const char[] name)
 	FindScoreMod();
 	FillBossPercents();
 	FindTankifier();
+	FindCasterSystem();
 }
 
 public void L4D_OnGameModeChange(int gamemode)
@@ -316,11 +328,22 @@ Action SetFinaleExceptionMap(int args)
 // ======================================================================
 //  Forwards
 // ======================================================================
+public void OnClientPutInServer(int client)
+{
+	if (bCasterSystem && !IsFakeClient(client) && IsClientCaster(client))
+		bSpecHudActive[client] = true;
+}
+
 public void OnClientDisconnect(int client)
 {
 	iPingCache[client] = -1;
 	bSpecHudHintShown[client] = false;
 	bTankHudHintShown[client] = false;
+}
+
+public void OnCasterRegistered(int client)
+{
+	bSpecHudActive[client] = true;
 }
 
 Action Timer_RespectateSpecs(Handle hTimer)
