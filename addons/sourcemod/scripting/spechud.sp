@@ -18,8 +18,9 @@
 #include <l4d_tank_control_eq>
 #include <lerpmonitor>
 #include <witch_and_tankifier>
+#include <caster_system>
 
-#define PLUGIN_VERSION "3.9.1"
+#define PLUGIN_VERSION "3.11.0"
 
 public Plugin myinfo =
 {
@@ -33,7 +34,8 @@ public Plugin myinfo =
 // ======================================================================
 //  Macros
 // ======================================================================
-#define SPECHUD_DRAW_INTERVAL 1.0
+#define SPECHUD_DRAW_INTERVAL 0.5
+#define PING_REFRESH_INTERVAL 2.0
 #define TRANSLATION_FILE "spechud.phrases"
 
 // ======================================================================
@@ -77,9 +79,15 @@ bool bTankSelection;
 bool bTankifier;
 bool bStaticTank, bStaticWitch;
 
+// Caster System
+bool bCasterSystem;
+
 // Hud Toggle & Hint Message
 bool bSpecHudActive[MAXPLAYERS+1], bTankHudActive[MAXPLAYERS+1];
 bool bSpecHudHintShown[MAXPLAYERS+1], bTankHudHintShown[MAXPLAYERS+1];
+
+// Ping Cache
+int iPingCache[MAXPLAYERS+1] = { -1, ... };
 
 /**********************************************************************************************/
 
@@ -121,6 +129,7 @@ public void OnPluginStart()
 	}
 	
 	CreateTimer(SPECHUD_DRAW_INTERVAL, HudDrawTimer, _, TIMER_REPEAT);
+	CreateTimer(PING_REFRESH_INTERVAL, PingRefreshTimer, _, TIMER_REPEAT);
 }
 
 /**********************************************************************************************/
@@ -203,6 +212,11 @@ void FindTankifier()
 	bTankifier = LibraryExists("witch_and_tankifier");
 }
 
+void FindCasterSystem()
+{
+	bCasterSystem = LibraryExists("caster_system");
+}
+
 void LoadPluginTranslations()
 {
 	char sPath[PLATFORM_MAX_PATH];
@@ -237,6 +251,7 @@ public void OnAllPluginsLoaded()
 	
 	FindTankSelection();
 	FindTankifier();
+	FindCasterSystem();
 }
 
 public void OnLibraryAdded(const char[] name)
@@ -244,6 +259,7 @@ public void OnLibraryAdded(const char[] name)
 	FindScoreMod();
 	FillBossPercents();
 	FindTankifier();
+	FindCasterSystem();
 }
 
 public void OnLibraryRemoved(const char[] name)
@@ -251,6 +267,7 @@ public void OnLibraryRemoved(const char[] name)
 	FindScoreMod();
 	FillBossPercents();
 	FindTankifier();
+	FindCasterSystem();
 }
 
 public void L4D_OnGameModeChange(int gamemode)
@@ -311,10 +328,22 @@ Action SetFinaleExceptionMap(int args)
 // ======================================================================
 //  Forwards
 // ======================================================================
+public void OnClientPutInServer(int client)
+{
+	if (bCasterSystem && !IsFakeClient(client) && IsClientCaster(client))
+		bSpecHudActive[client] = true;
+}
+
 public void OnClientDisconnect(int client)
 {
+	iPingCache[client] = -1;
 	bSpecHudHintShown[client] = false;
 	bTankHudHintShown[client] = false;
+}
+
+public void OnCasterRegistered(int client)
+{
+	bSpecHudActive[client] = true;
 }
 
 Action Timer_RespectateSpecs(Handle hTimer)
@@ -689,6 +718,32 @@ int SortSurvByCharacter(int elem1, int elem2, const int[] array, Handle hndl)
 	else { return 0; }
 }
 
+void RefreshClientPing(int client)
+{
+	iPingCache[client] = RoundToNearest(GetClientAvgLatency(client, NetFlow_Both) * 1000.0);
+}
+
+Action PingRefreshTimer(Handle hTimer)
+{
+	for (int i = 1; i <= MaxClients; i++)
+	{
+		if (!IsClientInGame(i) || IsFakeClient(i))
+			continue;
+
+		RefreshClientPing(i);
+	}
+
+	return Plugin_Continue;
+}
+
+int GetCachedPing(int client)
+{
+	if (iPingCache[client] == -1)
+		RefreshClientPing(client);
+
+	return iPingCache[client];
+}
+
 void GetClientPing(int client, char[] buffer, int bufferSize)
 {
 	if (IsFakeClient(client))
@@ -697,8 +752,7 @@ void GetClientPing(int client, char[] buffer, int bufferSize)
 	}
 	else
 	{
-		int latency = RoundToNearest(GetClientAvgLatency(client, NetFlow_Both) * 1000.0);
-		FormatEx(buffer, bufferSize, "%ims", latency);
+		FormatEx(buffer, bufferSize, "%ims", GetCachedPing(client));
 	}
 }
 
@@ -839,16 +893,16 @@ void FillScoreInfo(Panel hSpecHud)
 				
 				DrawPanelText(hSpecHud, " ");
 				
-				// > HB: 860 <86%> | DB: 420 <84%> | Pills: 60 <60%>
+				// > HB: 860 <86%> | DB: 420 <84%> | Pills: 60
 				// > Bonus: 1340 <83.8%>
 				// > Dist: 400
 				
 				FormatEx(	info,
 							sizeof(info),
-							"> HB: %i <%.0f%%> | DB: %i <%.0f%%> | Pills: %i <%.0f%%>",
+							"> HB: %i <%.0f%%> | DB: %i <%.0f%%> | Pills: %i",
 							healthBonus, L4D2Util_IntToPercentFloat(healthBonus, maxHealthBonus),
 							damageBonus, L4D2Util_IntToPercentFloat(damageBonus, maxDamageBonus),
-							pillsBonus, L4D2Util_IntToPercentFloat(pillsBonus, maxPillsBonus));
+							pillsBonus);
 				DrawPanelText(hSpecHud, info);
 				
 				FormatEx(info, sizeof(info), "> Bonus: %i <%.1f%%>", totalBonus, L4D2Util_IntToPercentFloat(totalBonus, maxTotalBonus));
@@ -1118,7 +1172,7 @@ bool FillTankInfo(Panel hSpecHud, bool bTankHUD = false)
 	// Draw network
 	if (!IsFakeClient(tank))
 	{
-		FormatEx(info, sizeof(info), "Net: %ims / %.1f", RoundToNearest(GetClientAvgLatency(tank, NetFlow_Both) * 1000.0), LM_GetLerpTime(tank) * 1000.0);
+		FormatEx(info, sizeof(info), "Net: %ims / %.1f", GetCachedPing(tank), LM_GetLerpTime(tank) * 1000.0);
 	}
 	else
 	{
