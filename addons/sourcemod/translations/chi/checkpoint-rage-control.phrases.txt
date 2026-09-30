@@ -1,0 +1,15 @@
+"Phrases"
+{
+	"Tag"
+	{
+		"chi"    "[{green}!{default}]"
+	}
+	"LoseFrustration"
+	{
+		"chi"	"{red}Tank{default} 当生还者都在 {olive}安全室{default}时 {green}依旧会逐渐失去{default} 控制权 ."
+	}
+	"KeepFrustration"
+	{
+		"chi"	"{red}Tank{default} 当生还者都在 {olive}安全室{default}时 {green}不会失去{default} 控制权."
+	}
+}
