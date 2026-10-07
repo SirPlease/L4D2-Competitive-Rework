@@ -35,7 +35,7 @@ public Plugin myinfo =
     name = "Pause plugin",
     author = "CanadaRox, Sir, Forgetest, A1m`",
     description = "Adds pause functionality without breaking pauses, also prevents SI from spawning because of the Pause.",
-    version = "6.8.2",
+    version = "6.9.0",
     url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 };
 
@@ -128,11 +128,15 @@ public void OnPluginStart()
     RegConsoleCmd("sm_pause", Pause_Cmd, "Pauses the game");
     RegConsoleCmd("sm_unpause", Unpause_Cmd, "Marks your team as ready for an unpause");
     RegConsoleCmd("sm_ready", Unpause_Cmd, "Marks your team as ready for an unpause");
+	RegConsoleCmd("sm_r", Unpause_Cmd, "Marks your team as ready for an unpause");
     RegConsoleCmd("sm_unready", Unready_Cmd, "Marks your team as ready for an unpause");
+	RegConsoleCmd("sm_nr", Unready_Cmd, "Marks your team as ready for an unpause");
     RegConsoleCmd("sm_toggleready", ToggleReady_Cmd, "Toggles your team's ready status");
 	
     RegAdminCmd("sm_forcepause", ForcePause_Cmd, ADMFLAG_BAN, "Pauses the game and only allows admins to unpause");
     RegAdminCmd("sm_forceunpause", ForceUnpause_Cmd, ADMFLAG_BAN, "Unpauses the game regardless of team ready status.  Must be used to unpause admin pauses");
+	RegAdminCmd("sm_forcestart", ForceUnpause_Cmd, ADMFLAG_BAN, "Unpauses the game regardless of team ready status.  Must be used to unpause admin pauses");
+	RegAdminCmd("sm_fs", ForceUnpause_Cmd, ADMFLAG_BAN, "Unpauses the game regardless of team ready status.  Must be used to unpause admin pauses");
 
     RegConsoleCmd("sm_show", Show_Cmd, "Hides the pause panel so other menus can be seen");
     RegConsoleCmd("sm_hide", Hide_Cmd, "Shows a hidden pause panel");

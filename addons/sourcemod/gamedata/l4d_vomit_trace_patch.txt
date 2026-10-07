@@ -1,0 +1,196 @@
+"Games"
+{
+	"#default"
+	{
+		"Functions"
+		{
+			"CBaseAbility::UpdateAbility"
+			{
+				"offset"		"CBaseAbility::UpdateAbility"
+				"hooktype"		"entity"
+				"return"		"void"
+				"this"			"entity"
+			}
+			
+			"CBaseEntity::PhysicsSolidMaskForEntity"
+			{
+				"offset"		"CBaseEntity::PhysicsSolidMaskForEntity"
+				"hooktype"		"entity"
+				"return"		"int"
+				"this"			"ignore"
+			}
+		}
+	}
+
+	"left4dead"
+	{
+		"MemPatches"
+		{
+			"ShouldHitEntity_MyInfectedPointer"
+			{
+				"signature"			"CTraceFilterSimpleListNoInfectedOrGhosts_ShouldHitEntity"
+				"linux"
+				{
+					"offset"		"101"
+					
+					/*
+					 *	8B 06					mov     eax, [esi]
+					 *	89 34 24				mov     [esp+2Ch+var_2C], esi	; IHandleEntity *
+					 *
+					 *	OUR_PATCH:
+					 *	FF 90 24 01 00 00		call    dword ptr [eax+124h]	; CBaseEntity::MyInfectedPointer(void)
+					 *	85 C0					test    eax, eax
+					 *	8B 54 24 0C				mov     edx, [esp+2Ch+var_20]
+					 *	75 CB					jnz     short loc_2A614C		; return 0 (no collision)
+					 */
+					"verify"		"\xFF\x90\x2A\x2A\x2A\x2A\x85\xC0\x2A\x2A\x2A\x2A\x75"
+
+					"preserve"		"\x00\x00\x00\x00\x00\x00\x00\x00\xFF\xFF\xFF\xFF\x00"
+					
+					/*
+					 *	E8  ?  ?  ?  ?			call    CBaseEntity::GetTeamNumber(void)
+					 *	83 F8 03				cmp     eax, 3
+					 *	8B 54 24 0C				mov     edx, [esp+2Ch+var_20]
+					 *	74 CB					jz      short loc_2A614C		; return 0 (no collision)
+					 */
+					"patch"			"\xE8\x00\x00\x00\x00\x83\xF8\x03\x90\x90\x90\x90\x74"
+				}
+				"windows"
+				{
+					"offset"		"46"
+					
+					/*
+					 *	8B 06					mov     eax, [esi]			; IHandleEntity *
+					 *	8B 90 20 01 00 00		mov     edx, [eax+120h]		; CBaseEntity::MyInfectedPointer(void)
+					 *	8B CE					mov     ecx, esi
+					 *	FF D2					call    edx
+					 *	85 C0					test    eax, eax
+					 *	75 0F					jnz     short loc_102CCC1D
+					 */
+					"verify"		"\x8B\x06\x8B\x2A\x2A\x2A\x2A\x2A\x8B\xCE\xFF\x2A\x85\xC0\x75"
+					
+					/*
+					 *	EB 02					jmp     short OUR_PATCH
+					 *	66 90					NOP
+					 *
+					 *	OUR_PATCH:
+					 *	8B CE					mov     ecx, esi			; IHandleEntity *
+					 *	E8  ?  ?  ?  ?			call    sub_1003FA90		; CBaseEntity::GetTeamNumber(void)
+					 *	83 F8 03				cmp     eax, 3
+					 *	74 0F					jz     short loc_102CCC1D
+					 */
+					"patch"			"\xEB\x02\x66\x90\x8B\xCE\xE8\x00\x00\x00\x00\x83\xF8\x03\x74"
+				}
+			}
+			
+			"OnVomitCollide__TraceRayMask_patch"
+			{
+				"signature"			"OnVomitCollide"
+				"linux"
+				{
+					"offset"		"16Eh"
+					"verify"		"\x0B\x40\x00\x46"
+					"patch"			"\x03\x40\x00\x46"
+				}
+				"windows"
+				{
+					"offset"		"5Ch"
+					"verify"		"\x0B\x40\x00\x46"
+					"patch"			"\x03\x40\x00\x46"
+				}
+			}
+			
+			"OnVomitCollide__ClipRayMask_patch"
+			{
+				"signature"			"OnVomitCollide"
+				"linux"
+				{
+					"offset"		"252h"
+					"verify"		"\x0B\x40\x00\x46"
+					"patch"			"\x03\x40\x00\x46"
+				}
+				"windows"
+				{
+					"offset"		"F1h"
+					"verify"		"\x0B\x40\x00\x46"
+					"patch"			"\x03\x40\x00\x46"
+				}
+			}
+		}
+
+		"Offsets"
+		{
+			"CBaseAbility::UpdateAbility"
+			{
+				"linux"		"190"
+				"windows"	"189"
+			}
+			
+			"PatchOffset"
+			{
+				"linux"		"1"
+				"windows"	"7"
+			}
+			
+			"CBaseEntity::PhysicsSolidMaskForEntity"
+			{
+				"linux"		"164"
+				"windows"	"163"
+			}
+		}
+		
+		"Addresses"
+		{
+			"CBaseEntity_GetTeamNumber"
+			{
+				"linux"
+				{
+					"signature"	"CBaseEntity_GetTeamNumber"
+				}
+				"windows"
+				{
+					"signature"	"CBaseEntity_GetTeamNumber"
+				}
+			}
+		}
+		
+		"Signatures"
+		{
+			"CTraceFilterSimpleListNoInfectedOrGhosts_ShouldHitEntity"
+			{
+				"library"		"server"
+				"linux"			"@_ZN40CTraceFilterSimpleListNoInfectedOrGhosts15ShouldHitEntityEP13IHandleEntityi"
+				"windows"		"\x53\x8B\x2A\x2A\x2A\x56\x8B\x2A\x2A\x2A\x57\x53\x56\x8B\x2A\xE8\x2A\x2A\x2A\x2A\x84\x2A\x74"
+				/* 53 8B ? ? ? 56 8B ? ? ? 57 53 56 8B ? E8 ? ? ? ? 84 ? 74 */
+			}
+			
+			"CBaseEntity_GetTeamNumber"
+			{
+				"library"		"server"
+				"linux"			"@_ZNK11CBaseEntity13GetTeamNumberEv"
+				"windows"		"\x8B\x81\xEC\x01\x00\x00\xC3"
+				/* 8B 81 EC 01 00 00 C3 */
+			}
+			
+			"OnVomitCollide"
+			{
+				"library"		"server"
+				"linux"			"@_Z14OnVomitCollideP13CTerrorPlayerP11CBaseEntityS2_i6VectorS3_"
+				"windows"		"\x81\xEC\x2A\x2A\x2A\x2A\x8B\x84\x24\x2A\x2A\x2A\x2A\x8B\x8C\x24\x2A\x2A\x2A\x2A\x8B\x94\x24"
+				/* 81 EC ? ? ? ? 8B 84 24 ? ? ? ? 8B 8C 24 ? ? ? ? 8B 94 24 */
+			}
+		}
+	}
+
+	"left4dead2"
+	{
+		"Offsets"
+		{
+			"CBaseEntity::PhysicsSolidMaskForEntity"
+			{
+				"linux"		"178"
+				"windows"	"177"
+			}
+		}
+	}
+}
