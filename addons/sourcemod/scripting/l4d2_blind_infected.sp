@@ -7,16 +7,12 @@
 #define L4D2UTIL_STOCKS_ONLY 1
 #include <l4d2util>
 
-#define ENT_CHECK_INTERVAL 1.0
-#define TRACE_TOLERANCE 75.0
+// The whole pending list is checked once every ENT_CHECK_SLICE * ENT_CHECK_SLICES seconds.
+#define ENT_CHECK_SLICE 0.1
+#define ENT_CHECK_SLICES 10
 
-enum
-{
-	eiEntRef = 0,
-	ebHasBeenSeen,
-	
-	eArray_Size
-};
+#define TRACE_TOLERANCE 75.0
+#define MAX_ENTS 2048
 
 static const int g_iIdsToBlock[] =
 {
@@ -52,74 +48,118 @@ static const int g_iIdsToBlock[] =
 	WEPID_SNIPER_AWP
 };
 
-ArrayList
-	g_hBlockedEntities = null;
+bool g_bBlocked[MAX_ENTS + 1];
+
+// Entity references not yet seen by survivors.
+ArrayList g_hPending = null;
+
+int g_iCursor = 0;
 
 public Plugin myinfo =
 {
 	name = "Blind Infected",
-	author = "CanadaRox, ProdigySim, A1m`",
+	author = "CanadaRox, ProdigySim, A1m`, Ferks-FK",
 	description = "Hides specified weapons from the infected team until they are (possibly) visible to one of the survivors to prevent SI scouting the map",
-	version = "1.2.2",
+	version = "1.2.3",
 	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 };
 
 public void OnPluginStart()
 {
 	L4D2Weapons_Init();
-	g_hBlockedEntities = new ArrayList(eArray_Size);
-	
+
+	g_hPending = new ArrayList();
+
 	HookEvent("round_start", RoundStart_Event, EventHookMode_PostNoCopy);
+	CreateTimer(ENT_CHECK_SLICE, Timer_EntCheck, _, TIMER_REPEAT);
 
-	CreateTimer(ENT_CHECK_INTERVAL, Timer_EntCheck, _, TIMER_REPEAT);
-}
-
-Action Timer_EntCheck(Handle hTimer)
-{
-	char sTmp[PLATFORM_MAX_PATH];
-	int iCurrentEnt[eArray_Size], iEntity, iSize = g_hBlockedEntities.Length;
-	
-	for (int i = 0; i < iSize; i++) {
-		g_hBlockedEntities.GetArray(i, iCurrentEnt[0], sizeof(iCurrentEnt));
-		iEntity = EntRefToEntIndex(iCurrentEnt[eiEntRef]);
-		
-		if (iEntity != INVALID_ENT_REFERENCE && !iCurrentEnt[ebHasBeenSeen] && IsVisibleToSurvivors(iEntity)) {
-			GetEntPropString(iEntity, Prop_Data, "m_ModelName", sTmp, sizeof(sTmp));
-			iCurrentEnt[ebHasBeenSeen] = true;
-			
-			g_hBlockedEntities.SetArray(i, iCurrentEnt[0], sizeof(iCurrentEnt));
+	// Late load.
+	for (int i = 1; i <= MaxClients; i++) {
+		if (IsClientInGame(i)) {
+			OnClientPutInServer(i);
 		}
 	}
+}
 
-	return Plugin_Continue;
+public void OnClientPutInServer(int iClient)
+{
+	SDKHook(iClient, SDKHook_WeaponEquipPost, OnWeaponEquipPost);
+}
+
+// Once equipped, a weapon is parented to the player and its m_vecOrigin becomes
+// relative, so the visibility trace would never reach it and it would stay hidden.
+void OnWeaponEquipPost(int iClient, int iWeapon)
+{
+	if (iWeapon > MaxClients && iWeapon <= MAX_ENTS && g_bBlocked[iWeapon]) {
+		UnblockEntity(iWeapon);
+	}
+}
+
+void UnblockEntity(int iEntity)
+{
+	SDKUnhook(iEntity, SDKHook_SetTransmit, OnTransmit);
+	g_bBlocked[iEntity] = false;
+}
+
+public void OnMapStart()
+{
+	ClearAll();
+}
+
+// Prevents a recycled entity index from inheriting the blocked state.
+public void OnEntityDestroyed(int iEntity)
+{
+	if (iEntity > 0 && iEntity <= MAX_ENTS) {
+		g_bBlocked[iEntity] = false;
+	}
+}
+
+void ClearAll()
+{
+	for (int i = 0; i <= MAX_ENTS; i++) {
+		g_bBlocked[i] = false;
+	}
+
+	if (g_hPending != null) {
+		g_hPending.Clear();
+	}
+
+	g_iCursor = 0;
 }
 
 void RoundStart_Event(Event hEvent, const char[] sEventName, bool bDontBroadcast)
 {
-	g_hBlockedEntities.Clear();
-	
+	ClearAll();
 	CreateTimer(1.2, RoundStartDelay_Timer, _, TIMER_FLAG_NO_MAPCHANGE);
 }
 
 Action RoundStartDelay_Timer(Handle hTimer)
 {
-	int iWeapon;
-	int iBhTemp[eArray_Size], iEntityCount = GetEntityCount();
+	// Entity indices can have gaps, so GetEntityCount() is not a valid upper bound.
+	int iMax = GetMaxEntities();
 
-	for (int i = (MaxClients + 1); i < iEntityCount; i++) {
-		iWeapon = IdentifyWeapon(i);
-		if (iWeapon) {
-			for (int j = 0; j < sizeof(g_iIdsToBlock); j++) {
-				if (iWeapon == g_iIdsToBlock[j]) {
-					SDKHook(i, SDKHook_SetTransmit, OnTransmit);
-					
-					iBhTemp[eiEntRef] = EntIndexToEntRef(i);
-					iBhTemp[ebHasBeenSeen] = false;
-					
-					g_hBlockedEntities.PushArray(iBhTemp[0], sizeof(iBhTemp));
-					
-					break;
-				}
+	for (int i = (MaxClients + 1); i < iMax; i++) {
+		if (!IsValidEntity(i)) {
+			continue;
+		}
+
+		int iWeapon = IdentifyWeapon(i);
+		if (!iWeapon) {
+			continue;
+		}
+
+		// Already equipped, e.g. the survivors' starting pistols.
+		int iOwner = GetEntPropEnt(i, Prop_Send, "m_hOwnerEntity");
+		if (iOwner > 0 && iOwner <= MaxClients) {
+			continue;
+		}
+
+		for (int j = 0; j < sizeof(g_iIdsToBlock); j++) {
+			if (iWeapon == g_iIdsToBlock[j]) {
+				SDKHook(i, SDKHook_SetTransmit, OnTransmit);
+				g_bBlocked[i] = true;
+				g_hPending.Push(EntIndexToEntRef(i));
+				break;
 			}
 		}
 	}
@@ -129,19 +169,53 @@ Action RoundStartDelay_Timer(Handle hTimer)
 
 Action OnTransmit(int iEntity, int iClient)
 {
+	if (iEntity < 0 || iEntity > MAX_ENTS || !g_bBlocked[iEntity]) {
+		return Plugin_Continue;
+	}
+
 	if (GetClientTeam(iClient) != L4D2Team_Infected) {
 		return Plugin_Continue;
 	}
-	
-	int iCurrentEnt[eArray_Size], iSize = g_hBlockedEntities.Length;
-	for (int i = 0; i < iSize; i++) {
-		g_hBlockedEntities.GetArray(i, iCurrentEnt[0], sizeof(iCurrentEnt));
-		
-		if (iEntity == EntRefToEntIndex(iCurrentEnt[eiEntRef])) {
-			return (iCurrentEnt[ebHasBeenSeen]) ? Plugin_Continue : Plugin_Handled;
-		}
+
+	return Plugin_Handled;
+}
+
+Action Timer_EntCheck(Handle hTimer)
+{
+	int iSize = g_hPending.Length;
+	if (iSize == 0) {
+		return Plugin_Continue;
 	}
-	
+
+	int iBatch = (iSize + ENT_CHECK_SLICES - 1) / ENT_CHECK_SLICES;
+
+	if (g_iCursor >= iSize) {
+		g_iCursor = 0;
+	}
+
+	int iProcessed = 0;
+
+	while (iProcessed < iBatch && g_iCursor < g_hPending.Length) {
+		int iRef = g_hPending.Get(g_iCursor);
+		int iEntity = EntRefToEntIndex(iRef);
+
+		if (iEntity == INVALID_ENT_REFERENCE || !g_bBlocked[iEntity]) {
+			g_hPending.Erase(g_iCursor);
+			iProcessed++;
+			continue;
+		}
+
+		if (IsVisibleToSurvivors(iEntity)) {
+			UnblockEntity(iEntity);
+			g_hPending.Erase(g_iCursor);
+			iProcessed++;
+			continue;
+		}
+
+		g_iCursor++;
+		iProcessed++;
+	}
+
 	return Plugin_Continue;
 }
 
