@@ -58,7 +58,7 @@ public Plugin myinfo =
 	name		= "Checkpoint Rage Control",
 	author		= "ProdigySim, Visor",
 	description = "Enable tank to lose rage while survivors are in saferoom",
-	version		= "0.3.1",
+	version		= "0.3.2",
 	url			= "https://github.com/Attano/L4D2-Competitive-Framework"
 
 }
@@ -348,7 +348,7 @@ void LoadTranslation(const char[] translation)
 		sPath[PLATFORM_MAX_PATH],
 		sName[64];
 
-	Format(sName, sizeof(sName), "translations/%s.txt", translation);
+	FormatEx(sName, sizeof(sName), "translations/%s.txt", translation);
 	BuildPath(Path_SM, sPath, sizeof(sPath), sName);
 	if (!FileExists(sPath))
 		SetFailState("Missing translation file %s.txt", translation);

@@ -17,7 +17,7 @@ public Plugin myinfo =
 	name        = "Slots?! Voter",
 	description = "Slots Voter",
 	author      = "Sir",
-	version     = "",
+	version     = "1.0",
 	url         = "https://github.com/SirPlease/L4D2-Competitive-Rework/"
 };
 
@@ -99,7 +99,7 @@ bool StartSlotVote(int client, char[] Slots)
 		}
 
 		char sBuffer[64];
-		Format(sBuffer, sizeof(sBuffer), "%T", "LimitSlots", LANG_SERVER, Slots);
+		FormatEx(sBuffer, sizeof(sBuffer), "%T", "LimitSlots", LANG_SERVER, Slots);
 
 		g_hVote = CreateBuiltinVote(VoteActionHandler, BuiltinVoteType_Custom_YesNo, BuiltinVoteAction_Cancel | BuiltinVoteAction_VoteEnd | BuiltinVoteAction_End);
 		SetBuiltinVoteArgument(g_hVote, sBuffer);
@@ -140,7 +140,7 @@ void SlotVoteResultHandler(Handle vote, int num_votes, int num_clients, const in
 
 				int Slots = StringToInt(g_sSlots, 10);
 				char Buffer[32];
-				Format(Buffer, sizeof(Buffer), "%T", "LimitingSlots", LANG_SERVER);
+				FormatEx(Buffer, sizeof(Buffer), "%T", "LimitingSlots", LANG_SERVER);
 				DisplayBuiltinVotePass(vote, Buffer);
 				SetConVarInt(FindConVar("sv_maxplayers"), Slots);
 				return;

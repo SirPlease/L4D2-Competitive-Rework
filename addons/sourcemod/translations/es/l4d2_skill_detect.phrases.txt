@@ -78,12 +78,12 @@
 	}
 	"Skeeted"
 	{
-        "#format"   "{1:N},{2:s},{3:N}" // 1:attacker 2:(bMelee) ? "melee-": ((bSniper) ? "headshot-" : ((bGL) ? "grenade-" : "") ) 3:victim
+        "#format"   "{1:N},{2:t},{3:N}" // 1:attacker 2:"Melee"/"HeadShot"/"Grenade"/"Empty" key 3:victim
 		"es"		"{olive}{1}{default} realizo un {blue}{2}skeet{default} a {olive}{3}{default}."
 	}
 	"SkeetedBot"
 	{
-        "#format"   "{1:N},{2:s}" // 1:attacker 2:(bMelee) ? "melee-": ((bSniper) ? "headshot-" : ((bGL) ? "grenade-" : "") )
+        "#format"   "{1:N},{2:t}" // 1:attacker 2:"Melee"/"HeadShot"/"Grenade"/"Empty" key
 		"es"		"{olive}{1}{default} realizo un {blue}{2}skeet{default} a un {olive}hunter{default}."
 	}
 	"Melee"
@@ -101,12 +101,12 @@
     // hurt skeet / non-skeet
 	"HurtSkeet"
 	{
-        "#format"   "{1:N},{2:i},{3:s}" // 1:victim 2:damage 3:(bOverKill) ? buffer : ""
+        "#format"   "{1:N},{2:i},{3:t}" // 1:victim 2:damage 3:"Unchipped"/"Empty" key
 		"es"		"{olive}{1}{default} fue {green}chip-skeet{default} ({blue}{2}{default} daño).{3}"
 	}
 	"HurtSkeetBot"
 	{
-        "#format"   "{1:i},{2:s}" // 1:damage 2:(bOverKill) ? buffer : ""
+        "#format"   "{1:i},{2:t}" // 1:damage 2:"Unchipped"/"Empty" key
 		"es"		"{olive}Hunter{default} fue {green}chip-skeet{default} ({blue}{1}{default} daño).{2}"
 	}
 	"Unchipped"
@@ -146,12 +146,12 @@
 	}
 	"SelfClearedTongue"
 	{
-        "#format"   "{1:N},{2:N},{3:s}" // 1:attacker 2:victim 3:(withShove) ? Buffer : ""
+        "#format"   "{1:N},{2:N},{3:t}" // 1:attacker 2:victim 3:"Shoving"/"Empty" key
 		"es"		"{olive}{1}{default} se {blue}autolimpio{default} la lengua de {olive}{2}{default} {blue}{3}{default}"
 	}
 	"SelfClearedTongueBot"
 	{
-        "#format"   "{1:N},{2:s}" // 1:attacker 2:(withShove) ? Buffer : ""
+        "#format"   "{1:N},{2:t}" // 1:attacker 2:"Shoving"/"Empty" key
 		"es"		"{olive}{1}{default} se {blue}autolimpio{default} la lengua de un Smoker {blue}{2}{default}"
 	}
 	"Shoving"
@@ -192,12 +192,12 @@
     // deathcharges
 	"DeathCharged"
 	{
-        "#format"   "{1:N},{2:N},{3:s},{4:i}" // 1:attacker 2:victim 3:(bCarried) ? "" : Buffer 4:RoundFloat(height)
+        "#format"   "{1:N},{2:N},{3:t},{4:i}" // 1:attacker 2:victim 3:"Empty"/"Bowling" key 4:RoundFloat(height)
 		"es"		"{olive}{1}{default} elimino a {olive}{2}{default} usando el {red}Charger{default} {3}({red}altura{default}: {red}{4}{default})"
 	}
 	"DeathChargedBot"
 	{
-        "#format"   "{1:N},{2:s},{3:i}" // 1:victim 2:(bCarried) ? "" : Buffer 3:RoundFloat(height)
+        "#format"   "{1:N},{2:t},{3:i}" // 1:victim 2:"Empty"/"Bowling" key 3:RoundFloat(height)
 		"es"		"Un {olive}charger{default} elimino a {olive}{1}{default} {2}({red}height{default}: {red}{3}{default})"
 	}
 	"Bowling"
@@ -228,12 +228,16 @@
     // bhaps
 	"BunnyHop"
 	{
-        "#format"   "{1:i},{2:s},{3:.1f}" // 1:streak 2:(streak > 1) ? "s" : "" 3:maxVelocity
+        "#format"   "{1:i},{2:t},{3:.1f}" // 1:streak 2:"PluralCount"/"Empty" key 3:maxVelocity
 		"es"		"{olive}Usted{default} obtuvo {blue}{1} BunnyHop{2}{default} consecutivos ({blue}velocidad máxima{default}: {olive}{3}{default})"
 	}
 	"PluralCount"
 	{
 		"es"		"s"
+	}
+	"Empty"
+	{
+		"es"		""
 	}
     // car alarms
 	"CalarmHit"

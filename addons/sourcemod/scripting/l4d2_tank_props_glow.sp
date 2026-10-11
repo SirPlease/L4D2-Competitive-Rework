@@ -45,7 +45,7 @@ public Plugin myinfo =
 {
 	name = "L4D2 Tank Hittable Glow",
 	author = "Harry Potter, Sir, A1m`, Derpduck",
-	version = "2.5",
+	version = "2.5.1",
 	description = "Stop tank props from fading whilst the tank is alive + add Hittable Glow."
 };
 
@@ -226,7 +226,7 @@ void PluginDisable()
 			iRef = g_iEntityList[iValue];
 
 			if (IsValidEntRef(iRef)) {
-				KillEntity(iRef);
+				RemoveEntity(iRef);
 			}
 		}
 	}
@@ -438,7 +438,7 @@ void HookTankProps()
 {
 	int iEntCount = GetMaxEntities();
 
-	for (int i = MaxClients; i < iEntCount; i++) {
+	for (int i = MaxClients+1; i <= iEntCount; i++) {
 		if (IsTankProp(i)) {
 			SDKHook(i, SDKHook_OnTakeDamagePost, PropDamaged);
 			g_hTankProps.Push(i);
@@ -462,7 +462,7 @@ void UnhookTankProps()
 		iValue = g_hTankPropsHit.Get(i);
 
 		if (iValue > 0 && IsValidEdict(iValue)) {
-			KillEntity(iValue);
+			RemoveEntity(iValue);
 			//PrintToChatAll("remove %d", iValue);
 		}
 	}
@@ -489,7 +489,7 @@ void PossibleTankPropCreated(int iEntity, const char[] sClassName)
 
 void Hook_PropSpawned(int iEntity)
 {
-	if (iEntity < MaxClients || !IsValidEntity(iEntity)) {
+	if (iEntity <= MaxClients || !IsValidEntity(iEntity)) {
 		return;
 	}
 
@@ -502,7 +502,7 @@ void Hook_PropSpawned(int iEntity)
 			g_hTankPropsHit.Push(iEntity);
 			CreateTankPropGlow(iEntity);
 		} else if (StrContains(sModelName, "forklift_brokenfork.mdl") != -1) {
-			KillEntity(iEntity);
+			RemoveEntity(iEntity);
 		}
 	}
 }
@@ -567,11 +567,3 @@ bool IsTank(int iClient)
 	return (GetEntProp(iClient, Prop_Send, "m_zombieClass") == Z_TANK && IsPlayerAlive(iClient));
 }
 
-void KillEntity(int iEntity)
-{
-#if SOURCEMOD_V_MINOR > 8
-	RemoveEntity(iEntity);
-#else
-	AcceptEntityInput(iEntity, "Kill");
-#endif
-}

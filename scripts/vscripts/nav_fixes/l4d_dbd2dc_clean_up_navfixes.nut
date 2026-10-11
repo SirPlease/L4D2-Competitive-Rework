@@ -30,12 +30,15 @@ function l4d_dbd2dc_clean_up_navfixes_fix2()
 {
 	//Get nav areas:
 	//Problematic nav areas (at the top left of the stairs)
+	local fix1_badNav_a = NavMesh.GetNavAreaByID(142)
 	local fix2_badNav_a = NavMesh.GetNavAreaByID(1154)
 	//Nav areas to disconnect
+	local fix1_nav_a = NavMesh.GetNavAreaByID(1689)
 	local fix2_nav_a = NavMesh.GetNavAreaByID(2130)
 	
 	//Disconnect the navs in climb direction
 	fix2_nav_a.Disconnect(fix2_badNav_a)
+	fix1_nav_a.ConnectTo(fix1_badNav_a, 0)
 	
 	printl("\n[NavFixes] Fix 2 applied\n")
 }

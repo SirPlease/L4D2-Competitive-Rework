@@ -11,7 +11,7 @@ public Plugin:myinfo =
 	name = "Config Description",
 	author = "Visor",
 	description = "Displays a descriptive MOTD on desire",
-	version = "0.2",
+	version = "0.2.1",
 	url = "https://github.com/Attano/smplugins"
 };
 
@@ -24,12 +24,16 @@ public OnPluginStart()
     RegConsoleCmd("sm_cfg", ShowMOTD, "Show a MOTD describing the current config");
 }
 
-Action:ShowMOTD(client, args) 
+Action:ShowMOTD(client, args)
 {
+    if (!client || !IsClientInGame(client))
+        return Plugin_Handled;
+
     decl String:title[64], String:url[192];
-    
+
     GetConVarString(hCvarMotdTitle, title, sizeof(title));
     GetConVarString(hCvarMotdUrl, url, sizeof(url));
-    
+
     ShowMOTDPanel(client, title, url, MOTDPANEL_TYPE_URL);
+    return Plugin_Handled;
 }

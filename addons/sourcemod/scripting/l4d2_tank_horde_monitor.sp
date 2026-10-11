@@ -43,7 +43,7 @@ public Plugin myinfo =
 	name = "L4D2 Tank Horde Monitor",
 	author = "Derpduck, Visor (l4d2_horde_equaliser)",
 	description = "Monitors and changes state of infinite hordes during tanks",
-	version = "1.3",
+	version = "1.3.1",
 	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 };
 
@@ -343,7 +343,7 @@ stock void LoadTranslation(const char[] translation)
 		sPath[PLATFORM_MAX_PATH],
 		sName[64];
 
-	Format(sName, sizeof(sName), "translations/%s.txt", translation);
+	FormatEx(sName, sizeof(sName), "translations/%s.txt", translation);
 	BuildPath(Path_SM, sPath, sizeof(sPath), sName);
 	if (!FileExists(sPath))
 		SetFailState("Missing translation file %s.txt", translation);

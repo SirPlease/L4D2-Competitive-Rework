@@ -41,7 +41,7 @@ public FS_ConVarChange(Handle:convar, const String:oldValue[], const String:newV
 	FS_bEnabled = GetConVarBool(FS_hEnabled);
 }
 
-public OnClientPostAdminCheck(client)
+public OnClientPutInServer(client)
 {
 	SDKHook(client, SDKHook_PreThinkPost, HookCallback);
 }

@@ -68,7 +68,7 @@
 					// 57					push	edi
 					// E8 63 FA FF FF		call	_Z12MovePropAwayP11CBaseEntityP11CBasePlayer ; MovePropAway(CBaseEntity *,CBasePlayer *)
 					// 83 C4 08				add		esp, 8
-					"verify"	"\x89\x5C\x24\x04\x89\x34\x24\xE8"
+					"verify"	"\x2A\x2A\xE8\x2A\x2A\x2A\x2A\x83\xC4\x08"
 
 					// B0 01				mov		al, 1
 					// EB 06				jmp		short after_call_to_MovePropAway
@@ -172,7 +172,7 @@
 					// 57					push	edi
 					// E8 E2 F8 FF FF		call	_Z12MovePropAwayP11CBaseEntityP11CBasePlayer ; MovePropAway(CBaseEntity *,CBasePlayer *)
 					// 83 C4 08				add		esp, 8
-					"verify"	"\x89\x5C\x24\x04\x89\x34\x24\xE8"
+					"verify"	"\x2A\x2A\xE8\x2A\x2A\x2A\x2A\x83\xC4\x08"
 
 					// B0 01				mov		al, 1
 					// EB 06				jmp		short after_call_to_MovePropAway

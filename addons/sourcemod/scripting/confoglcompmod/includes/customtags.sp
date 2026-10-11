@@ -42,7 +42,7 @@ stock void AddCustomServerTag(const char[] tag)
 	}
 
 	char new_tags[SV_TAG_SIZE];
-	Format(new_tags, sizeof(new_tags), "%s%s%s", current_tags, (current_tags[0] != 0) ? "," : "", tag);
+	FormatEx(new_tags, sizeof(new_tags), "%s%s%s", current_tags, (current_tags[0] != 0) ? "," : "", tag);
 
 	int flags = sv_tags.Flags;
 	sv_tags.Flags = flags & ~FCVAR_NOTIFY;

@@ -41,7 +41,7 @@ public Plugin myinfo =
 	name        = "L4D2 Realtime Stats",
 	author      = "Griffin, Philogl, Sir, A1m`",
 	description = "Display Skeets/Etc to Chat to clients",
-	version     = "1.2.3",
+	version     = "1.2.4",
 	url         = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 
 }
@@ -338,7 +338,7 @@ void Event_PlayerDeath(Event hEvent, const char[] sEventName, bool bDontBroadcas
 					GetClientName(g_iBoomerClient, Boomer, sizeof(Boomer));
 				}
 				else {
-					Format(Boomer, sizeof(Boomer), "AI");
+					strcopy(Boomer, sizeof(Boomer), "AI");
 				}
 			}
 			else {
@@ -347,7 +347,7 @@ void Event_PlayerDeath(Event hEvent, const char[] sEventName, bool bDontBroadcas
 					GetClientName(victim, Boomer, sizeof(Boomer));
 				}
 				else {
-					Format(Boomer, sizeof(Boomer), "AI");
+					strcopy(Boomer, sizeof(Boomer), "AI");
 				}
 			}
 			////////
@@ -424,13 +424,13 @@ void Event_PlayerDeath(Event hEvent, const char[] sEventName, bool bDontBroadcas
 				int  assist_shots = g_iShotsDealt[victim][assisters[0][0]];
 
 				// Construct assisters string
-				Format(assister_string, sizeof(assister_string), "%N (%d/%d shot%s)",
+				FormatEx(assister_string, sizeof(assister_string), "%N (%d/%d shot%s)",
 				       assisters[0][0], assisters[0][1], g_iShotsDealt[victim][assisters[0][0]], assist_shots == 1 ? "" : "s");
 
 				for (i = 1; i < assister_count; i++)
 				{
 					assist_shots = g_iShotsDealt[victim][assisters[i][0]];
-					Format(buf, sizeof(buf), ", %N (%d/%d shot%s)", assisters[i][0], assisters[i][1], assist_shots, assist_shots == 1 ? "" : "s");
+					FormatEx(buf, sizeof(buf), ", %N (%d/%d shot%s)", assisters[i][0], assisters[i][1], assist_shots, assist_shots == 1 ? "" : "s");
 
 					StrCat(assister_string, sizeof(assister_string), buf);
 				}

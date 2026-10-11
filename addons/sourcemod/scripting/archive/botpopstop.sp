@@ -6,7 +6,6 @@
 #define L4D2UTIL_STOCKS_ONLY 1
 #include <l4d2util>
 
-#define USE_GIVEPLAYERITEM 0 // Works correctly only in the latest version of sourcemod 1.11 (GivePlayerItem sourcemod native)
 
 enum
 {
@@ -24,7 +23,7 @@ public Plugin myinfo =
 	name = "Simplified Bot Pop Stop",
 	author = "Stabby & CanadaRox",
 	description = "Removes pills from bots if they try to use them and restores them when a human takes over.",
-	version = "1.4",
+	version = "1.4.1",
 	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 };
 
@@ -74,11 +73,7 @@ public void Event_WeaponFire(Event hEvent, const char[] sEventName, bool bDontBr
 	int iEntity = GetPlayerWeaponSlot(iClient, L4D2WeaponSlot_LightHealthItem);
 	RemovePlayerItem(iClient, iEntity);
 
-#if SOURCEMOD_V_MINOR > 8
 	RemoveEntity(iEntity);
-#else
-	AcceptEntityInput(iEntity, "Kill");
-#endif
 }
 
 // Give the human player the pills back when they join
@@ -103,7 +98,7 @@ void RestoreItems(int iClient, int iLeavingBot)
 		}
 
 		for (int i = 1; i <= g_iBotUsedCount[iLeavingBot][j]; i++) {
-			#if (SOURCEMOD_V_MINOR == 11) || USE_GIVEPLAYERITEM
+			#if SOURCEMOD_V_MINOR >= 11
 				if (iCurrentWeapon == -1) {
 					int iEntity = GivePlayerItem(iClient, (j == ePILL_INDEX) ? "weapon_pain_pills" : "weapon_adrenaline");
 					iCurrentWeapon = iEntity;

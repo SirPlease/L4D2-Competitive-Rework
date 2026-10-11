@@ -14,7 +14,7 @@ public Plugin myinfo =
     name = "Caster Assister",
     author = "CanadaRox, Sir, Forgetest",
     description = "Allows spectators to control their own specspeed and move vertically",
-    version = "2.3",
+    version = "2.3.1",
     url = ""
 };
 
@@ -74,7 +74,7 @@ void PlayerTeam_Event(Event event, const char[] name, bool dontBroadcast)
 
 Action SetSpecspeed_Cmd(int client, int args)
 {
-    if (GetClientTeam(client) != 1)
+    if (!IsValidClient(client) || GetClientTeam(client) != 1)
     {
         return Plugin_Handled;
     }
@@ -96,7 +96,7 @@ Action SetSpecspeed_Cmd(int client, int args)
 
 Action SetSpecspeedIncrement_Cmd(int client, int args)
 {
-    if (GetClientTeam(client) != 1)
+    if (!IsValidClient(client) || GetClientTeam(client) != 1)
     {
         return Plugin_Handled;
     }
@@ -114,7 +114,7 @@ Action SetSpecspeedIncrement_Cmd(int client, int args)
 
 Action IncreaseSpecspeed_Cmd(int client, int args)
 {
-    if (GetClientTeam(client) != 1)
+    if (!IsValidClient(client) || GetClientTeam(client) != 1)
     {
         return Plugin_Handled;
     }
@@ -125,7 +125,7 @@ Action IncreaseSpecspeed_Cmd(int client, int args)
 
 Action DecreaseSpecspeed_Cmd(int client, int args)
 {
-    if (GetClientTeam(client) != 1)
+    if (!IsValidClient(client) || GetClientTeam(client) != 1)
     {
         return Plugin_Handled;
     }
@@ -145,7 +145,7 @@ stock void IncreaseSpecspeed(int client, float difference)
 
 Action SetVerticalIncrement_Cmd(int client, int args)
 {
-    if (GetClientTeam(client) != 1)
+    if (!IsValidClient(client) || GetClientTeam(client) != 1)
     {
         return Plugin_Handled;
     }

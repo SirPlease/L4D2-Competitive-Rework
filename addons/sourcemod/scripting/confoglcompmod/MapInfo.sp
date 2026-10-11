@@ -100,6 +100,12 @@ static Action MI_KV_CmdSave(int client, int args)
 
 static Action MI_KV_CmdSaveLoc(int client, int args)
 {
+	// This command saves the caller's own position, so it needs an in-game caller.
+	if (!client || !IsClientInGame(client)) {
+		ReplyToCommand(client, "This command can only be used by an in-game player.");
+		return Plugin_Handled;
+	}
+
 	bool updateinfo = false;
 	char sCurMap[128];
 	GetCurrentMap(sCurMap, sizeof(sCurMap));
@@ -432,11 +438,7 @@ static int _native_GetMapValueInt(Handle plugin, int numParams)
 	return GetMapValueInt(sKey, iDefVal);
 }
 
-#if SOURCEMOD_V_MINOR > 9
 static any _native_GetMapValueFloat(Handle plugin, int numParams)
-#else
-static int _native_GetMapValueFloat(Handle plugin, int numParams)
-#endif
 {
 	int iLen = 0;
 	GetNativeStringLength(1, iLen);
@@ -447,11 +449,7 @@ static int _native_GetMapValueFloat(Handle plugin, int numParams)
 
 	float iDefVal = GetNativeCell(2);
 
-#if SOURCEMOD_V_MINOR > 9
 	return GetMapValueFloat(sKey, iDefVal);
-#else
-	return view_as<int>(GetMapValueFloat(sKey, iDefVal));
-#endif
 }
 
 static int _native_GetMapValueVector(Handle plugin, int numParams)

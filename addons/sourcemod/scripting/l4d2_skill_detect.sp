@@ -61,7 +61,7 @@
 #include <sdktools>
 #include <sourcemod>
 
-#define PLUGIN_VERSION		 "1.1.1"
+#define PLUGIN_VERSION		 "1.1.3"
 
 #define SHOTGUN_BLAST_TIME	 0.1
 #define POUNCE_CHECK_TIME	 0.1
@@ -559,7 +559,7 @@ public void OnPluginStart()
 	g_hCarTrie	 = CreateTrie();
 
 	static char logFile[PLATFORM_MAX_PATH];
-	Format(logFile, sizeof(logFile), "/logs/l4d2_skill_detect.log");
+	strcopy(logFile, sizeof(logFile), "/logs/l4d2_skill_detect.log");
 	BuildPath(Path_SM, g_sDebugFile, PLATFORM_MAX_PATH, logFile);	
 
 	if (g_bLateLoad)
@@ -615,7 +615,7 @@ void CvarChange_PounceInterrupt(Handle convar, const char[] oldValue, const char
 	g_iPounceInterrupt = GetConVarInt(convar);
 }
 
-public void OnClientPostAdminCheck(int client)
+public void OnClientPutInServer(int client)
 {
 	SDKHook(client, SDKHook_OnTakeDamage, OnTakeDamageByWitch);
 }
@@ -761,7 +761,7 @@ stock void LoadTranslation(const char[] translation)
 		sPath[PLATFORM_MAX_PATH],
 		sName[64];
 
-	Format(sName, sizeof(sName), "translations/%s.txt", translation);
+	FormatEx(sName, sizeof(sName), "translations/%s.txt", translation);
 	BuildPath(Path_SM, sPath, sizeof(sPath), sName);
 	if (!FileExists(sPath))
 	{

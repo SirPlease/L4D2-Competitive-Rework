@@ -1,0 +1,27 @@
+"Games"
+{
+	"left4dead2"
+	{
+		"Functions"
+		{
+			"CBasePlayer::ShouldAutoaim"
+			{
+				"signature"		"CBasePlayer::ShouldAutoaim"
+				"callconv"		"thiscall"
+				"return"		"bool"
+				"this"			"entity"
+			}
+		}
+
+		"Signatures"
+		{
+			"CBasePlayer::ShouldAutoaim"
+			{
+				"library"	"server"
+				"linux"		"@_ZN11CBasePlayer13ShouldAutoaimEv"
+				"windows"	"\x56\x8B\xF1\x8B\x06\x8B\x90\x74\x07\x00\x00\xFF\xD2\x84\xC0\x74\x2A\x32\xC0"
+							/* 56 8B F1 8B 06 8B 90 74 07 00 00 FF D2 84 C0 74 ?? 32 C0 */
+			}
+		}
+	}
+}

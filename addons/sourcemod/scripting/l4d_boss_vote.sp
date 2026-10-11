@@ -11,7 +11,7 @@
 #include <l4d2_boss_percents>
 #include <witch_and_tankifier>
 
-#define PLUGIN_VERSION "3.2.6"
+#define PLUGIN_VERSION "3.2.8"
 
 public Plugin myinfo =
 {
@@ -82,6 +82,12 @@ bool RunVoteChecks(int client)
 
 Action VoteBossCmd(int client, int args)
 {
+	if (!client || !IsClientInGame(client))
+	{
+		ReplyToCommand(client, "[Boss Vote] This command can only be used by an in-game player.");
+		return Plugin_Handled;
+	}
+
 	if (!GetConVarBool(g_hCvarBossVoting)) {
 		return Plugin_Handled;
 	}
@@ -164,43 +170,43 @@ Action VoteBossCmd(int client, int args)
 	// Set vote title
 	if (bv_bTank && bv_bWitch)	// Both Tank and Witch can be changed 
 	{
-		Format(bv_voteTitle, 64, "%T", "SetBosses", LANG_SERVER, bv_sTank, bv_sWitch);
+		FormatEx(bv_voteTitle, 64, "%T", "SetBosses", LANG_SERVER, bv_sTank, bv_sWitch);
 	}
 	else if (bv_bTank)	// Only Tank can be changed
 	{
 		if (bv_iWitch == 0)
 		{
-			Format(bv_voteTitle, 64, "%T", "SetTank", LANG_SERVER, bv_sTank);
+			FormatEx(bv_voteTitle, 64, "%T", "SetTank", LANG_SERVER, bv_sTank);
 		}
 		else
 		{
-			Format(bv_voteTitle, 64, "%T", "SetOnlyTank", LANG_SERVER, bv_sTank);
+			FormatEx(bv_voteTitle, 64, "%T", "SetOnlyTank", LANG_SERVER, bv_sTank);
 		}
 	}
 	else if (bv_bWitch) // Only Witch can be changed
 	{
 		if (bv_iTank == 0)
 		{
-			Format(bv_voteTitle, 64, "%T", "SetWitch", LANG_SERVER, bv_sWitch);
+			FormatEx(bv_voteTitle, 64, "%T", "SetWitch", LANG_SERVER, bv_sWitch);
 		}
 		else
 		{
-			Format(bv_voteTitle, 64, "%T", "SetOnlyWitch", LANG_SERVER, bv_sWitch);
+			FormatEx(bv_voteTitle, 64, "%T", "SetOnlyWitch", LANG_SERVER, bv_sWitch);
 		}
 	}
 	else // Neither can be changed... ok...
 	{
 		if (bv_iTank == 0 && bv_iWitch == 0)
 		{
-			Format(bv_voteTitle, 64, "%T", "SetBossesDisabled", LANG_SERVER);
+			FormatEx(bv_voteTitle, 64, "%T", "SetBossesDisabled", LANG_SERVER);
 		}
 		else if (bv_iTank == 0)
 		{
-			Format(bv_voteTitle, 64, "%T", "SetTankDisabled", LANG_SERVER);
+			FormatEx(bv_voteTitle, 64, "%T", "SetTankDisabled", LANG_SERVER);
 		}
 		else if (bv_iWitch == 0)
 		{
-			Format(bv_voteTitle, 64, "%T", "SetWitchDisabled", LANG_SERVER);
+			FormatEx(bv_voteTitle, 64, "%T", "SetWitchDisabled", LANG_SERVER);
 		}
 		else // Probably not.
 		{
@@ -253,25 +259,25 @@ void BossVoteResultHandler(Handle vote, int num_votes, int num_clients, const in
 				if (bv_bTank && bv_bWitch)	// Both Tank and Witch can be changed 
 				{
 					char buffer[64];
-					Format(buffer, sizeof(buffer), "%T", "SettingBoss", LANG_SERVER);
+					FormatEx(buffer, sizeof(buffer), "%T", "SettingBoss", LANG_SERVER);
 					DisplayBuiltinVotePass(vote, buffer);
 				}
 				else if (bv_bTank)	// Only Tank can be changed -- Witch must be static
 				{
 					char buffer[64];
-					Format(buffer, sizeof(buffer), "%T", "SettingTank", LANG_SERVER);
+					FormatEx(buffer, sizeof(buffer), "%T", "SettingTank", LANG_SERVER);
 					DisplayBuiltinVotePass(vote, buffer);
 				}
 				else if (bv_bWitch) // Only Witch can be changed -- Tank must be static
 				{
 					char buffer[64];
-					Format(buffer, sizeof(buffer), "%T", "SettingWitch", LANG_SERVER);
+					FormatEx(buffer, sizeof(buffer), "%T", "SettingWitch", LANG_SERVER);
 					DisplayBuiltinVotePass(vote, buffer);
 				}
 				else // Neither can be changed... ok...
 				{
 					char buffer[64];
-					Format(buffer, sizeof(buffer), "%T", "SettingBossDisabled", LANG_SERVER);
+					FormatEx(buffer, sizeof(buffer), "%T", "SettingBossDisabled", LANG_SERVER);
 					DisplayBuiltinVotePass(vote, buffer);
 				}
 				
@@ -334,49 +340,52 @@ bool IsInteger(const char[] buffer)
 
 Action ForceTankCommand(int client, int args)
 {
+	if (client && !IsClientInGame(client))
+		return Plugin_Handled;
+
 	if (!GetConVarBool(g_hCvarBossVoting)) {
 		return Plugin_Handled;
 	}
 	
 	if (IsDarkCarniRemix())
 	{
-		CPrintToChat(client, "%t", "CommandNotAvailable");
+		CReplyToCommand(client, "%t", "CommandNotAvailable");
 		return Plugin_Handled;
 	}
-	
+
 	if (IsStaticTankMap())
 	{
-		CPrintToChat(client, "%t", "TankSpawnStatic");
+		CReplyToCommand(client, "%t", "TankSpawnStatic");
 		return Plugin_Handled;
 	}
-	
+
 	if (!IsInReady())
 	{
-		CPrintToChat(client, "%t", "OnlyReadyUp");
+		CReplyToCommand(client, "%t", "OnlyReadyUp");
 		return Plugin_Handled;
 	}
-	
+
 	// Get Requested Tank Percent
 	char bv_sTank[32];
 	GetCmdArg(1, bv_sTank, 32);
-	
+
 	// Make sure the cmd argument is a number
 	if (!IsInteger(bv_sTank))
 		return Plugin_Handled;
-	
+
 	// Convert it to in int boy
 	int p_iRequestedPercent = StringToInt(bv_sTank);
-	
+
 	if (p_iRequestedPercent < 0)
 	{
-		CPrintToChat(client, "%t", "PercentageInvalid");
+		CReplyToCommand(client, "%t", "PercentageInvalid");
 		return Plugin_Handled;
 	}
-	
+
 	// Check if percent is within limits
 	if (!IsTankPercentValid(p_iRequestedPercent))
 	{
-		CPrintToChat(client, "%t", "Percentagebanned");
+		CReplyToCommand(client, "%t", "Percentagebanned");
 		return Plugin_Handled;
 	}
 	
@@ -402,49 +411,52 @@ Action ForceTankCommand(int client, int args)
 
 Action ForceWitchCommand(int client, int args)
 {
+	if (client && !IsClientInGame(client))
+		return Plugin_Handled;
+
 	if (!GetConVarBool(g_hCvarBossVoting)) {
 		return Plugin_Handled;
 	}
 	
 	if (IsDarkCarniRemix())
 	{
-		CPrintToChat(client, "%t", "CommandNotAvailable");
+		CReplyToCommand(client, "%t", "CommandNotAvailable");
 		return Plugin_Handled;
 	}
-	
+
 	if (IsStaticWitchMap())
 	{
-		CPrintToChat(client, "%t", "WitchSpawnStatic");
+		CReplyToCommand(client, "%t", "WitchSpawnStatic");
 		return Plugin_Handled;
 	}
-	
+
 	if (!IsInReady())
 	{
-		CPrintToChat(client, "%t", "OnlyReadyUp");
+		CReplyToCommand(client, "%t", "OnlyReadyUp");
 		return Plugin_Handled;
 	}
-	
+
 	// Get Requested Witch Percent
 	char bv_sWitch[32];
 	GetCmdArg(1, bv_sWitch, 32);
-	
+
 	// Make sure the cmd argument is a number
 	if (!IsInteger(bv_sWitch))
 		return Plugin_Handled;
-	
+
 	// Convert it to in int boy
 	int p_iRequestedPercent = StringToInt(bv_sWitch);
-	
+
 	if (p_iRequestedPercent < 0)
 	{
-		CPrintToChat(client, "%t", "PercentageInvalid");
+		CReplyToCommand(client, "%t", "PercentageInvalid");
 		return Plugin_Handled;
 	}
-	
+
 	// Check if percent is within limits
 	if (!IsWitchPercentValid(p_iRequestedPercent))
 	{
-		CPrintToChat(client, "%t", "Percentagebanned");
+		CReplyToCommand(client, "%t", "Percentagebanned");
 		return Plugin_Handled;
 	}
 	

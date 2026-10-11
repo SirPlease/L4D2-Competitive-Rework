@@ -214,7 +214,7 @@ public Plugin myinfo =
 {
     name = "L4D2 Weapon Attributes",
     author = "Jahze, A1m`, Forgetest",
-    version = "3.0.1",
+    version = "3.1.0",
     description = "Allowing tweaking of the attributes of all weapons"
 };
 
@@ -272,9 +272,19 @@ public void OnConfigsExecuted()
     // Weapon info may get reloaded, and supported melees
     // are different between campaigns.
     // Here we are reloading all the attributes set by our own.
-    
     ResetWeaponAttributes(false);
     ResetMeleeAttributes(false);
+}
+
+/*
+    Fired by confoglcompmod before confogl_off.cfg runs and before any plugin
+    (including left4dhooks, whose natives we need for the reset) gets unloaded.
+    Without this, on !chmatch the engine-side weapon info keeps the previous
+    matchmode's values
+*/
+public void LGO_OnMatchModeUnloaded()
+{
+    ResetAllAttributes(false);
 }
 
 void OnTankDamageEnableAttriChanged(bool newValue)
@@ -507,37 +517,43 @@ Action Cmd_WeaponAttributes(int client, int args)
 
 Action Cmd_WeaponAttributesReset(int args)
 {
+    ResetAllAttributes(true);
+    return Plugin_Handled;
+}
+
+void ResetAllAttributes(bool bVerbose)
+{
     OnTankDamageEnableAttriChanged(false);
-    
+
     bool IsReset = (hTankDamageAttri.Size > 0);
     hTankDamageAttri.Clear();
-    
-    if (IsReset) {
+
+    if (bVerbose && IsReset) {
         PrintToServer("Tank Damage Multiplier (tankdamagemult) attribute reset for all weapons!");
     }
-    
+
+    OnReloadDurationEnableAttriChanged(false);
+
     IsReset = (hReloadDurationAttri.Size > 0);
     hReloadDurationAttri.Clear();
-    
-    if (IsReset) {
+
+    if (bVerbose && IsReset) {
         PrintToServer("Reload Duration Multiplier (reloaddurationmult) attribute reset for all shotguns!");
     }
-    
+
     int iWeaponAttrCount = ResetWeaponAttributes(true);
-    if (iWeaponAttrCount == 0) {
+    if (bVerbose && iWeaponAttrCount == 0) {
         PrintToServer("Weapon attributes were not reset, because no weapon attributes were saved!");
     }
-    
+
     int iMeleeAttrCount = ResetMeleeAttributes(true);
-    if (iMeleeAttrCount == 0) {
+    if (bVerbose && iMeleeAttrCount == 0) {
         PrintToServer("Melee attributes were not reset, because no melee attributes were saved!");
     }
-    
-    if (iWeaponAttrCount || iMeleeAttrCount) {
+
+    if (bVerbose && (iWeaponAttrCount || iMeleeAttrCount)) {
         PrintToServer("The weapon attributes for all saved weapons have been reset successfully. Number of reset weapon attributes: %d!", iWeaponAttrCount + iMeleeAttrCount);
     }
-    
-    return Plugin_Handled;
 }
 
 /*

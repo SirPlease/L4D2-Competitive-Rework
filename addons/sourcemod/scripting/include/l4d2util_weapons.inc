@@ -344,7 +344,7 @@ stock int ConvertWeaponSpawn(int entity, int wepid, int count = 5, const char[] 
 		SetEntityModel(entity, model);
 	} else {
 		GetWeaponModel(wepid, buf, sizeof(buf));
-		Format(modelName, sizeof(modelName), "models%s", buf);
+		FormatEx(modelName, sizeof(modelName), "models%s", buf);
 		SetEntityModel(entity, modelName);
 	}
 	

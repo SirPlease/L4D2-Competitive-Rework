@@ -82,7 +82,7 @@ static void WC_PlayerUse_Event(Event hEvent, const char[] sEventName, bool bDont
 					SetCommandFlags("give", flags ^ FCVAR_CHEAT);
 
 					char sTemp[64];
-					Format(sTemp, sizeof(sTemp), "give %s", WC_sLastWeapon);
+					FormatEx(sTemp, sizeof(sTemp), "give %s", WC_sLastWeapon);
 					FakeClientCommand(client, sTemp);
 
 					SetCommandFlags("give", flags);

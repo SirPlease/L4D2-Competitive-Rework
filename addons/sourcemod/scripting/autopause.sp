@@ -39,7 +39,7 @@ public Plugin myinfo =
     name = "L4D2 Auto-pause",
     author = "Darkid, Griffin, StarterX4, Forgetest, J.",
     description = "When a player disconnects due to crash, automatically pause the game. When they rejoin, give them a correct spawn timer.",
-    version = "2.3",
+    version = "2.4.1",
     url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 }
 
@@ -118,7 +118,7 @@ public void OnClientPutInServer(int client)
 
     if (convarDebug.BoolValue)
     {
-        Format(sDebugMessage, sizeof(sDebugMessage), "[Autopause (OnClientPutInServer)] Crashed Player %s rejoined.", sAuthId);
+        FormatEx(sDebugMessage, sizeof(sDebugMessage), "[Autopause (OnClientPutInServer)] Crashed Player %s rejoined.", sAuthId);
         DebugLog(sDebugMessage);
     }
 
@@ -131,7 +131,7 @@ public void OnClientPutInServer(int client)
 
             if (convarDebug.BoolValue)
             {
-                Format(sDebugMessage, sizeof(sDebugMessage), "[Autopause (OnClientPutInServer)] All crashed players rejoined. Force Unpause was triggered.");
+                strcopy(sDebugMessage, sizeof(sDebugMessage), "[Autopause (OnClientPutInServer)] All crashed players rejoined. Force Unpause was triggered.");
                 DebugLog(sDebugMessage);
             }
         }
@@ -186,32 +186,31 @@ void Event_PlayerTeam(Event hEvent, char[] sEventName, bool dontBroadcast)
 
         if (convarDebug.BoolValue)
         {
-            Format(sDebugMessage, sizeof(sDebugMessage), "[AutoPause (%s)] Added player %s to the survivor team.", sEventName, sAuthId);
+            FormatEx(sDebugMessage, sizeof(sDebugMessage), "[AutoPause (%s)] Added player %s to the survivor team.", sEventName, sAuthId);
             DebugLog(sDebugMessage);
         }
     }
-    else if (newTeam == L4D_TEAM_INFECTED) 
+    else if (newTeam == L4D_TEAM_INFECTED)
     {
         float fSpawnTime;
 
-        if (crashedPlayers.GetValue(sAuthId, fSpawnTime)) 
+        if (crashedPlayers.GetValue(sAuthId, fSpawnTime))
         {
-            CountdownTimer CTimer_SpawnTimer = L4D2Direct_GetSpawnTimer(client);
-            CTimer_Start(CTimer_SpawnTimer, fSpawnTime);
+            L4D_SetPlayerSpawnTime(client, fSpawnTime, true);
             crashedPlayers.Remove(sAuthId);
 
             if (convarDebug.BoolValue)
             {
-                Format(sDebugMessage, sizeof(sDebugMessage), "[AutoPause (%s)] Player %s rejoined the infected, set spawn timer to %f.", sEventName, sAuthId, fSpawnTime);
+                FormatEx(sDebugMessage, sizeof(sDebugMessage), "[AutoPause (%s)] Player %s rejoined the infected, set spawn timer to %f.", sEventName, sAuthId, fSpawnTime);
                 DebugLog(sDebugMessage);
             }
-        } 
-        
+        }
+
         teamPlayers.SetValue(sAuthId, newTeam);
 
         if (convarDebug.BoolValue)
         {
-            Format(sDebugMessage, sizeof(sDebugMessage), "[AutoPause (%s)] Added player %s to the infected team.", sEventName, sAuthId);
+            FormatEx(sDebugMessage, sizeof(sDebugMessage), "[AutoPause (%s)] Added player %s to the infected team.", sEventName, sAuthId);
             DebugLog(sDebugMessage);
         }
     }
@@ -221,7 +220,7 @@ void Event_PlayerTeam(Event hEvent, char[] sEventName, bool dontBroadcast)
 
         if (convarDebug.BoolValue)
         {
-            Format(sDebugMessage, sizeof(sDebugMessage), "[AutoPause (%s)] Removed player %s from the %s team.", sEventName, sAuthId, newTeam == L4D_TEAM_SURVIVOR ? "survivor" : "infected");
+            FormatEx(sDebugMessage, sizeof(sDebugMessage), "[AutoPause (%s)] Removed player %s from the %s team.", sEventName, sAuthId, newTeam == L4D_TEAM_SURVIVOR ? "survivor" : "infected");
             DebugLog(sDebugMessage);
         }
     }
@@ -247,7 +246,7 @@ void Event_PlayerDisconnect(Event hEvent, char[] sEventName, bool dontBroadcast)
     {
         if (convarDebug.BoolValue)
         {
-            Format(sDebugMessage, sizeof(sDebugMessage), "[AutoPause (%s)] Player %N left the game but is a dead Survivor", sEventName, client);
+            FormatEx(sDebugMessage, sizeof(sDebugMessage), "[AutoPause (%s)] Player %N left the game but is a dead Survivor", sEventName, client);
             DebugLog(sDebugMessage);
         }
         return;
@@ -257,11 +256,11 @@ void Event_PlayerDisconnect(Event hEvent, char[] sEventName, bool dontBroadcast)
     hEvent.GetString("reason", sReason, sizeof(sReason));
 
     char sTimedOut[64];
-    Format(sTimedOut, sizeof(sTimedOut), "%N timed out", client);
+    FormatEx(sTimedOut, sizeof(sTimedOut), "%N timed out", client);
 
     if (convarDebug.BoolValue)
     {
-        Format(sDebugMessage, sizeof(sDebugMessage), "[AutoPause (%s)] Player %N (%s) left the game: %s", sEventName, client, sAuthId, sReason);
+        FormatEx(sDebugMessage, sizeof(sDebugMessage), "[AutoPause (%s)] Player %N (%s) left the game: %s", sEventName, client, sAuthId, sReason);
         DebugLog(sDebugMessage);
     }
 
@@ -282,16 +281,15 @@ void Event_PlayerDisconnect(Event hEvent, char[] sEventName, bool dontBroadcast)
     }
 
     int team;
-    if (teamPlayers.GetValue(sAuthId, team) && team == L4D_TEAM_INFECTED) 
+    if (teamPlayers.GetValue(sAuthId, team) && team == L4D_TEAM_INFECTED)
     {
-        CountdownTimer CTimer_SpawnTimer = L4D2Direct_GetSpawnTimer(client);
-        if (CTimer_SpawnTimer != CTimer_Null) 
-        {
-            float fTimeLeft = CTimer_GetRemainingTime(CTimer_SpawnTimer);
+        float fTimeLeft = L4D_GetPlayerSpawnTime(client);
 
+        if (fTimeLeft > 0.0)
+        {
             if (convarDebug.BoolValue)
             {
-                Format(sDebugMessage, sizeof(sDebugMessage), "[AutoPause (%s)] Player %s left the game with %f time until spawn.", sEventName, sAuthId, fTimeLeft);
+                FormatEx(sDebugMessage, sizeof(sDebugMessage), "[AutoPause (%s)] Player %s left the game with %f time until spawn.", sEventName, sAuthId, fTimeLeft);
                 DebugLog(sDebugMessage);
             }
 

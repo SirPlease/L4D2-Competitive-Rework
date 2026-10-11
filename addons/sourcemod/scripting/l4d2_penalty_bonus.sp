@@ -86,7 +86,7 @@ public Plugin myinfo =
 	name = "Penalty bonus system",
 	author = "Tabun, A1m`",
 	description = "Allows other plugins to set bonuses for a round that will be given even if the saferoom is not reached.",
-	version = "2.1",
+	version = "2.1.1",
 	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 };
 
@@ -326,12 +326,12 @@ void DisplayBonus(int iClient = -1)
 
 	for (int iRound = 0; iRound <= iRoundNum; iRound++) {
 		if (g_bRoundOver[iRound]) {
-			Format(sMsgPartHdr, sizeof(sMsgPartHdr), "Round \x05%i\x01 extra bonus", iRound + 1);
+			FormatEx(sMsgPartHdr, sizeof(sMsgPartHdr), "Round \x05%i\x01 extra bonus", iRound + 1);
 		} else {
-			Format(sMsgPartHdr, sizeof(sMsgPartHdr), "Current extra bonus");
+			strcopy(sMsgPartHdr, sizeof(sMsgPartHdr), "Current extra bonus");
 		}
 
-		Format(sMsgPartBon, sizeof(sMsgPartBon), "\x04%4d\x01", g_iBonus[iRound]);
+		FormatEx(sMsgPartBon, sizeof(sMsgPartBon), "\x04%4d\x01", g_iBonus[iRound]);
 
 		if (g_iDefibsUsed[iRound]) {
 			Format(sMsgPartBon, sizeof(sMsgPartBon), "%s (- \x04%d\x01 defib penalty)", sMsgPartBon, g_iOriginalPenalty * g_iDefibsUsed[iRound]);
@@ -354,9 +354,9 @@ void ReportChange(int iBonusChange, int iClient = -1, bool bAbsoluteSet = false)
 	// report bonus to all
 	char sMsgPartBon[48];
 	if (bAbsoluteSet) { // set to a specific value
-		Format(sMsgPartBon, sizeof(sMsgPartBon), "Extra bonus set to: \x04%i\x01", g_iBonus[RoundNum()]);
+		FormatEx(sMsgPartBon, sizeof(sMsgPartBon), "Extra bonus set to: \x04%i\x01", g_iBonus[RoundNum()]);
 	} else {
-		Format(sMsgPartBon, sizeof(sMsgPartBon), "Extra bonus change: %s\x04%i\x01", (iBonusChange > 0) ? "\x04+\x01" : "\x03-\x01", RoundFloat(FloatAbs(float(iBonusChange))));
+		FormatEx(sMsgPartBon, sizeof(sMsgPartBon), "Extra bonus change: %s\x04%i\x01", (iBonusChange > 0) ? "\x04+\x01" : "\x03-\x01", RoundFloat(FloatAbs(float(iBonusChange))));
 	}
 
 	if (iClient == -1) {

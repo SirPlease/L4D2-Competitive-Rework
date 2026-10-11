@@ -18,7 +18,7 @@
 
 
 
-#define PLUGIN_VERSION 		"1.3b"
+#define PLUGIN_VERSION 		"1.3c"
 
 /*======================================================================================
 	Plugin Info:
@@ -105,7 +105,7 @@ public void OnPluginStart()
 
 		while( loop <= MAX_PATCHES )
 		{
-			Format(sTemp, sizeof(sTemp), "SpamPatch_Sig%d", loop);
+			FormatEx(sTemp, sizeof(sTemp), "SpamPatch_Sig%d", loop);
 			patchAddr = GameConfGetAddress(hGameData, sTemp);
 
 			if( patchAddr )

@@ -54,7 +54,7 @@ public Plugin:myinfo =
 	name = "L4D2 Scoremod+",
 	author = "Visor, Sir",
 	description = "The next generation scoring mod",
-	version = "2.2.6",
+	version = "2.2.7",
 	url = "https://github.com/Attano/L4D2-Competitive-Framework"
 };
 
@@ -406,7 +406,7 @@ public Action:L4D2_OnEndVersusModeRound(bool:countSurvivors)
 	{
 		SetConVarInt(hCvarValveSurvivalBonus, RoundToFloor(fSurvivorBonus[team] / iSurvivalMultiplier));
 		fSurvivorBonus[team] = float(GetConVarInt(hCvarValveSurvivalBonus) * iSurvivalMultiplier);    // workaround for the discrepancy caused by RoundToFloor()
-		Format(sSurvivorState[team], 32, "%s%i\x01/\x05%i\x01", (iSurvivalMultiplier == iTeamSize ? "\x05" : "\x04"), iSurvivalMultiplier, iTeamSize);
+		FormatEx(sSurvivorState[team], 32, "%s%i\x01/\x05%i\x01", (iSurvivalMultiplier == iTeamSize ? "\x05" : "\x04"), iSurvivalMultiplier, iTeamSize);
 	#if SM2_DEBUG
 		PrintToChatAll("\x01Survival bonus cvar updated. Value: \x05%i\x01 [multiplier: \x05%i\x01]", GetConVarInt(hCvarValveSurvivalBonus), iSurvivalMultiplier);
 	#endif
@@ -415,7 +415,7 @@ public Action:L4D2_OnEndVersusModeRound(bool:countSurvivors)
 	{
 		fSurvivorBonus[team] = 0.0;
 		SetConVarInt(hCvarValveSurvivalBonus, 0);
-		Format(sSurvivorState[team], 32, "\x04%s\x01", (iSurvivalMultiplier == 0 ? "wiped out" : "bonus depleted"));
+		FormatEx(sSurvivorState[team], 32, "\x04%s\x01", (iSurvivalMultiplier == 0 ? "wiped out" : "bonus depleted"));
 		bTiebreakerEligibility[team] = (iSurvivalMultiplier == iTeamSize);
 	}
 

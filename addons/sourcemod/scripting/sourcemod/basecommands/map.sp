@@ -116,7 +116,7 @@ public Action Command_Map(int client, int args)
 
 	DataPack dp;
 	CreateDataTimer(3.0, Timer_ChangeMap, dp);
-	dp.WriteString(displayName);
+	dp.WriteString(map);
 
 	return Plugin_Handled;
 }
@@ -128,8 +128,7 @@ public Action Timer_ChangeMap(Handle timer, DataPack dp)
 	dp.Reset();
 	dp.ReadString(map, sizeof(map));
 
-	if (L4D2ChangeLevelActive) L4D2_ChangeLevel(map);
-	else ForceChangeLevel(map, "sm_map Command");
+	ForceChangeLevel(map, "sm_map Command");
 
 	return Plugin_Stop;
 }

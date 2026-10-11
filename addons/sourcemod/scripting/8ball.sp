@@ -9,7 +9,7 @@ public Plugin myinfo =
 	name        = "8Ball",
 	description = "Simple 8Ball Game Plugin. Works the same as Coinflip / Dice Roll.",
 	author      = "spoon",
-	version     = "1.3",
+	version     = "1.3.1",
 	url         = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 };
 
@@ -21,6 +21,9 @@ public void OnPluginStart()
 
 Action Command_8ball(int iClient, int iArgs)
 {
+	if (!iClient || !IsClientInGame(iClient))
+		return Plugin_Handled;
+
 	if (iArgs == 0)
 	{
 		CPrintToChat(iClient, "%t %t", "Tag", "Usage");

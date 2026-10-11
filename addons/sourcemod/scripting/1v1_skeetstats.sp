@@ -81,6 +81,8 @@
     Changelog
     ---------
 
+		0.1g
+		    - fixed translations issues
         0.1f
             - fixed more error spam in error logs
         0.1e
@@ -94,7 +96,7 @@ public Plugin myinfo =
 	name        = "1v1 SkeetStats",
 	author      = "Tabun",
 	description = "Shows 1v1-relevant info at end of round.",
-	version     = "0.1f",
+	version     = "0.1g",
 	url         = "nope"
 };
 
@@ -864,131 +866,84 @@ void WeaponFire_Event(Handle event, const char[] name, bool dontBroadcast)
 
 void PrintSkeetStats(int toClient)
 {
-	char printBuffer[512];
-	char tmpBuffer[256];
-
-	printBuffer = "";
-
 	if (iClientPlaying <= 0)
 	{
 		return;
 	}
 
-	/*
-	//decl String:tmpName[64];
-	if (!IsClientConnected(iClientPlaying)) {
-	    tmpName = sClientName[iClientPlaying];
-	} else {
-	    Format(tmpName, sizeof(tmpName),"%N", iClientPlaying);
-	} */
+	if (toClient)
+	{
+		if (IsClientAndInGame(toClient))
+			PrintSkeetStatsTo(toClient);
+	}
+	else
+	{
+		for (int i = 1; i <= MaxClients; i++)
+		{
+			if (IsClientInGame(i) && !IsFakeClient(i))
+				PrintSkeetStatsTo(i);
+		}
+	}
+}
 
-	// no need to calculate, show stats
-	//  1. SI damage & SI kills
-	//  2. skeets
-	//  3. accuracy
-	//  4. common kills
-
-	/*
-	    TODO: make it so:
-	    1v1Stat - Kills: (934 Dmg, 4 Kills) (23 Common)
-	    1v1Stat - Skeet: (1 Normal, 3 Injured) (5 Deadstops)
-	    1v1Stat - Acc. : (Total [72%], Per Pellet [25%]) (3 Headshots)
-	*/
-
-	// report
-	// 1
+static void PrintSkeetStatsTo(int target)
+{
+	// 1. SI damage & SI kills
 	if (!(iBrevityFlags & BREV_SI))
 	{
 		if (!(iBrevityFlags & BREV_DMG))
 		{
 			if (!(iBrevityFlags & BREV_CI))
-			{
-				Format(tmpBuffer, sizeof(tmpBuffer), "%t %t", "TagKills", "SI_DMG_CI", iDidDamageAll[iClientPlaying], iGotKills[iClientPlaying], iGotCommon[iClientPlaying]);
-			}
+				CPrintToChat(target, "%t %t", "TagKills", "SI_DMG_CI", iDidDamageAll[iClientPlaying], iGotKills[iClientPlaying], iGotCommon[iClientPlaying]);
 			else
-			{
-				Format(tmpBuffer, sizeof(tmpBuffer), "%t %t", "TagKills", "SI_DMG", iDidDamageAll[iClientPlaying], iGotKills[iClientPlaying]);
-			}
+				CPrintToChat(target, "%t %t", "TagKills", "SI_DMG", iDidDamageAll[iClientPlaying], iGotKills[iClientPlaying]);
 		}
 		else
 		{
 			if (!(iBrevityFlags & BREV_CI))
-			{
-				Format(tmpBuffer, sizeof(tmpBuffer), "%t %t", "TagKills", "SI_CI", iGotKills[iClientPlaying], iGotCommon[iClientPlaying]);
-			}
+				CPrintToChat(target, "%t %t", "TagKills", "SI_CI", iGotKills[iClientPlaying], iGotCommon[iClientPlaying]);
 			else
-			{
-				Format(tmpBuffer, sizeof(tmpBuffer), "%t %t", "TagKills", "SI", iGotKills[iClientPlaying]);
-			}
+				CPrintToChat(target, "%t %t", "TagKills", "SI", iGotKills[iClientPlaying]);
 		}
-		StrCat(printBuffer, sizeof(printBuffer), tmpBuffer);
-
-		if (!toClient)
-		{
-			CPrintToChatAll("%s", printBuffer);
-		}
-		else if (IsClientAndInGame(toClient))
-		{
-			CPrintToChat(toClient, "%s", printBuffer);
-		}
-		printBuffer = "";
 	}
 
+	// 2. skeets
 	if (!(iBrevityFlags & BREV_SKEET))
-	{
-		Format(tmpBuffer, sizeof(tmpBuffer), "%t %t", "TagSkeet", "SKEET", iHuntSkeets[iClientPlaying], iHuntSkeetsInj[iClientPlaying], iDeadStops[iClientPlaying]);
-		StrCat(printBuffer, sizeof(printBuffer), tmpBuffer);
+		CPrintToChat(target, "%t %t", "TagSkeet", "SKEET", iHuntSkeets[iClientPlaying], iHuntSkeetsInj[iClientPlaying], iDeadStops[iClientPlaying]);
 
-		if (!toClient)
-		{
-			CPrintToChatAll("%s", printBuffer);
-		}
-		else if (IsClientAndInGame(toClient))
-		{
-			CPrintToChat(toClient, "%s", printBuffer);
-		}
-		printBuffer = "";
-	}
-
+	// 3. accuracy
 	if (!(iBrevityFlags & BREV_ACC))
 	{
+		char printBuffer[512];
+		char tmpBuffer[256];
+		printBuffer = "";
+
 		if (iShotsFired[iClientPlaying] || (iMeleesFired[iClientPlaying] && !(iBrevityFlags & BREV_MELEE)))
 		{
 			if (iShotsFired[iClientPlaying])
-			{
-				Format(tmpBuffer, sizeof(tmpBuffer), "%t %t", "TagAcc", "ACC_AllShots", float(iShotsHit[iClientPlaying]) / float(iShotsFired[iClientPlaying]) * 100);
-			}
-			else {
-				Format(tmpBuffer, sizeof(tmpBuffer), "%t %t", "TagAcc", "ACC_AllShots", 0.0);
-			}
+				FormatEx(tmpBuffer, sizeof(tmpBuffer), "%T %T", "TagAcc", target, "ACC_AllShots", target, float(iShotsHit[iClientPlaying]) / float(iShotsFired[iClientPlaying]) * 100);
+			else
+				FormatEx(tmpBuffer, sizeof(tmpBuffer), "%T %T", "TagAcc", target, "ACC_AllShots", target, 0.0);
+
 			if (iPelletsFired[iClientPlaying])
 			{
 				StrCat(printBuffer, sizeof(printBuffer), tmpBuffer);
-				Format(tmpBuffer, sizeof(tmpBuffer), "%t", "ACC_BuckShot", float(iPelletsHit[iClientPlaying]) / float(iPelletsFired[iClientPlaying]) * 100);
+				FormatEx(tmpBuffer, sizeof(tmpBuffer), "%T", "ACC_BuckShot", target, float(iPelletsHit[iClientPlaying]) / float(iPelletsFired[iClientPlaying]) * 100);
 			}
 			if (iMeleesFired[iClientPlaying] && !(iBrevityFlags & BREV_MELEE))
 			{
 				StrCat(printBuffer, sizeof(printBuffer), tmpBuffer);
-				Format(tmpBuffer, sizeof(tmpBuffer), "%t", "ACC_Melee", float(iMeleesHit[iClientPlaying]) / float(iMeleesFired[iClientPlaying]) * 100);
+				FormatEx(tmpBuffer, sizeof(tmpBuffer), "%T", "ACC_Melee", target, float(iMeleesHit[iClientPlaying]) / float(iMeleesFired[iClientPlaying]) * 100);
 			}
 			StrCat(printBuffer, sizeof(printBuffer), tmpBuffer);
-			Format(tmpBuffer, sizeof(tmpBuffer), "\n");
+			strcopy(tmpBuffer, sizeof(tmpBuffer), "\n");
 		}
 		else
 		{
-			Format(tmpBuffer, sizeof(tmpBuffer), "%t %t", "TagAcc", "ACC_NoShotsFired");
+			FormatEx(tmpBuffer, sizeof(tmpBuffer), "%T %T", "TagAcc", target, "ACC_NoShotsFired", target);
 		}
 		StrCat(printBuffer, sizeof(printBuffer), tmpBuffer);
-
-		if (!toClient)
-		{
-			CPrintToChatAll("%s", printBuffer);
-		}
-		else if (IsClientAndInGame(toClient))
-		{
-			CPrintToChat(toClient, "%s", printBuffer);
-		}
-		printBuffer = "";
+		CPrintToChat(target, "%s", printBuffer);
 	}
 }
 

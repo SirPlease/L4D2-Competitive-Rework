@@ -12,7 +12,7 @@ public Plugin myinfo =
 {
 	name = "Character Fix",
 	author = "someone",
-	version = "0.2",
+	version = "0.2.1",
 	description = "Fixes character change exploit in 1v1, 2v2, 3v3",
 	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 };
@@ -26,7 +26,7 @@ public void OnPluginStart()
 
 Action TeamCmd(int iClient, const char[] sCommand, int iArgc)
 {
-	if (iClient == 0 || iArgc < 1) {
+	if (!iClient || !IsClientInGame(iClient) || iArgc < 1) {
 		return Plugin_Continue;
 	}
 

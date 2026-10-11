@@ -6,7 +6,7 @@
 #pragma semicolon 1
 #pragma newdecls required
 
-#define PLUGIN_VERSION "1.0"
+#define PLUGIN_VERSION "1.0.1"
 
 public Plugin myinfo = 
 {
@@ -29,10 +29,16 @@ bool forbidSelfRegister;
 
 ConVar g_hDisableAddons;
 
+GlobalForward g_hFWD_CasterRegistered;
+GlobalForward g_hFWD_CasterUnregistered;
+
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
 	CreateNative("IsClientCaster", Native_IsClientCaster);
 	CreateNative("IsIDCaster", Native_IsIDCaster);
+
+	g_hFWD_CasterRegistered = new GlobalForward("OnCasterRegistered", ET_Ignore, Param_Cell);
+	g_hFWD_CasterUnregistered = new GlobalForward("OnCasterUnregistered", ET_Ignore, Param_Cell);
 
 	RegPluginLibrary("caster_system");
 	return APLRes_Success;
@@ -208,7 +214,7 @@ Action CasterCheck(Handle timer, int userid)
 
 Action Cast_Cmd(int client, int args)
 {
-	if (!client) return Plugin_Continue;
+	if (!client || !IsClientInGame(client)) return Plugin_Continue;
 	
  	char buffer[64];
 	GetClientAuthId(client, AuthId_Steam2, buffer, sizeof(buffer));
@@ -232,6 +238,10 @@ Action Cast_Cmd(int client, int args)
 		casterTrie.SetValue(buffer, true);
 		CPrintToChat(client, "%t", "SelfCast1");
 		CPrintToChat(client, "%t", "SelfCast2");
+
+		Call_StartForward(g_hFWD_CasterRegistered);
+		Call_PushCell(client);
+		Call_Finish();
 	}
 	
 	return Plugin_Handled;
@@ -257,6 +267,10 @@ Action Caster_Cmd(int client, int args)
 			ReplyToCommand(client, "\x01%t", "RegCasterReply", target);
 			CPrintToChat(target, "%t", "RegCasterTarget", client);
 			CPrintToChat(target, "%t", "SelfCast2");
+
+			Call_StartForward(g_hFWD_CasterRegistered);
+			Call_PushCell(target);
+			Call_Finish();
 		}
 		else
 		{
@@ -269,16 +283,25 @@ Action Caster_Cmd(int client, int args)
 
 Action NotCasting_Cmd(int client, int args)
 {
+	if (!client) return Plugin_Continue;
+
 	char buffer[64];
-	
+
 	if (args < 1) // If no target is specified, assumes self-uncasting
 	{
 		GetClientAuthId(client, AuthId_Steam2, buffer, sizeof(buffer));
 		if (casterTrie.Remove(buffer))
 		{
-			CPrintToChat(client, "%t", "Reconnect1");
-			CPrintToChat(client, "%t", "Reconnect2");
+			if (IsClientInGame(client))
+			{
+				CPrintToChat(client, "%t", "Reconnect1");
+				CPrintToChat(client, "%t", "Reconnect2");
+			}
 			
+			Call_StartForward(g_hFWD_CasterUnregistered);
+			Call_PushCell(client);
+			Call_Finish();
+
 			// Reconnection to disable their addons
 			CreateTimer(3.0, Reconnect, client);
 		}
@@ -303,6 +326,10 @@ Action NotCasting_Cmd(int client, int args)
 				{
 					CPrintToChat(target, "%t", "UnregCasterTarget", client);
 					NotCasting_Cmd(target, 0);
+
+					Call_StartForward(g_hFWD_CasterUnregistered);
+					Call_PushCell(target);
+					Call_Finish();
 				}
 				ReplyToCommand(client, "\x01%t", "UnregCasterSuccess", target);
 			}
@@ -398,14 +425,14 @@ Action PrintCasters_Cmd(int client, int args)
 
 Action KickSpecs_Cmd(int client, int args)
 {
-	AdminId id = GetUserAdmin(client);
-	if (id != INVALID_ADMIN_ID && GetAdminFlag(id, Admin_Ban)) // Check for specific admin flag
+	AdminId id = client ? GetUserAdmin(client) : INVALID_ADMIN_ID;
+	if (!client || (id != INVALID_ADMIN_ID && GetAdminFlag(id, Admin_Ban))) // Console (client 0) has full authority; otherwise check for specific admin flag
 	{
 		CreateTimer(2.0, Timer_KickSpecs);
 		CPrintToChatAll("%t", "KickSpecsAdmin", client);
 		return Plugin_Handled;
 	}
-	
+
 	// Filter spectator
 	if (GetClientTeam(client) == L4D2Team_Spectator)
 	{

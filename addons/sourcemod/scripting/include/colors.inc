@@ -137,7 +137,7 @@ stock void CPrintToChat(int client, const char[] szMessage, any ...)
 
 	SetGlobalTransTarget(client);
 
-	Format(szBuffer, sizeof(szBuffer), "\x01%s", szMessage);
+	FormatEx(szBuffer, sizeof(szBuffer), "\x01%s", szMessage);
 	VFormat(szCMessage, sizeof(szCMessage), szBuffer, 3);
 
 	int index = CFormat(szCMessage, sizeof(szCMessage));
@@ -284,7 +284,7 @@ stock void CPrintToChatEx(int client, int author, const char[] szMessage, any ..
 
 	SetGlobalTransTarget(client);
 
-	Format(szBuffer, sizeof(szBuffer), "\x01%s", szMessage);
+	FormatEx(szBuffer, sizeof(szBuffer), "\x01%s", szMessage);
 	VFormat(szCMessage, sizeof(szCMessage), szBuffer, 4);
 
 	int index = CFormat(szCMessage, sizeof(szCMessage), author);

@@ -18,7 +18,7 @@
 
 
 
-#define PLUGIN_VERSION 		"2.9"
+#define PLUGIN_VERSION 		"2.9.1"
 
 /*======================================================================================
 	Plugin Info:
@@ -146,7 +146,7 @@ public void OnPluginStart()
 		char cvar[64];
 		for( int i = 0; i < MAX_CVARS; i++ )
 		{
-			Format(cvar, sizeof(cvar), "sm_cvar_test_%d", i);
+			FormatEx(cvar, sizeof(cvar), "sm_cvar_test_%d", i);
 			CreateConVar(cvar, "0");
 		}
 		AutoExecConfig(true, "sm_cvar_test");
@@ -162,7 +162,7 @@ Action sm_cvar_test(int client, int args)
 	char temp[64];
 	for( int i = 0; i < MAX_CVARS; i++ )
 	{
-		Format(temp, sizeof(temp), "sm_cvar_test_%d", i);
+		FormatEx(temp, sizeof(temp), "sm_cvar_test_%d", i);
 		cvar = FindConVar(temp);
 		if( cvar != null && cvar.IntValue != 1 ) cv++;
 	}

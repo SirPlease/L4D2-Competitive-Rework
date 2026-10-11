@@ -31,14 +31,20 @@
  */
 
 #if defined _builtinvotes_included
- #endinput
+	#endinput
 #endif
 #define _builtinvotes_included
+
+#include "builtinvotes_stocks.inc"
+
+/* Source: https://github.com/L4D-Community/builtinvotes/blob/master/extra/include/builtinvotes.inc */
 
 #define BUILTINVOTES_EXTEND 			"Extend current Map" /** Defined in TF2, but doesn't appear to be localized */
 
 #define BUILTINVOTES_ALL_TEAMS			-1 // Defined by TF2, may be the same in L4D/L4D2
 #define BUILTINVOTES_SERVER_INDEX 		99 // Defined by TF2, may be the same in L4D/L4D2
+
+#define BV_DATA_HNDL_CLOSE				(1 << 0)
 
 /**
  * Reasons a vote can end.
@@ -70,7 +76,6 @@ enum BuiltinVoteType
 	BuiltinVoteType_ScrambleEnd = 13,	/**< TF2: Yes/No, argument ignored */
 	BuiltinVoteType_Custom_Mult = 14,	/**< TF2: Multiple-choice, argument is vote text. */
 	BuiltinVoteType_Alltalk = 15,		/**< L4D2: Yes/No, argument ignored (handled internally by extension) */
-
 }
 
 /**
@@ -169,8 +174,37 @@ enum BuiltinVoteFailReason
 {
 	BuiltinVoteFail_Generic = 0,		/**< Vote was generically cancelled. */
 	BuiltinVoteFail_Loses = 3,			/**< No votes outnumbered Yes votes */
-	BuiltinVoteFail_NotEnoughVotes = 4,	/**< Vote did not receive enough votes. */
+	BuiltinVoteFail_NotEnoughVotes = 4,	/**< Vote did not receive enough votes. */	
 }
+
+enum eBuiltinVoteCreateError
+{
+	eBuiltinVoteErrorNone = 0, // Vote was created
+	eBlockedWithForward, // Vote blocked with forward 'OnBuiltinVoteCreated'
+	eInvalidParamBuiltinVoteType // Invalid parameter 'BuiltinVoteType' passed to native 'CreateBuiltinVote' or not available in this game
+};
+
+/**
+ * Called at the start of creating a vote, at this moment information such as argument, initiator, etc. is not available.
+ * NOTE: When using this forward, you need to add a check to the plugin for the vote handle, 
+ * otherwise there will be errors in the logs of the sourcemod, because the vote handle will not be set after blocking the forward.
+ *
+ * @param hPlugin			Handle to the plugin from which the vote was created.
+ * @param sPluginName		The name of the plugin from which the vote was created.
+ * @return					'Plugin_Continue' to allow voting, otherwise voting will be blocked.
+ */
+forward Action OnBuiltinVoteCreate(Handle hPlugin, const char[] sPluginName);
+
+/**
+ * Called when a vote is created and the vote panel has not yet been sent to the players,
+ * at this moment information such as argument, initiator, etc. is available.
+ *
+ * @param hVote				Vote Handle.
+ * @param hPlugin			Handle to the plugin from which the vote was created.
+ * @param sPluginName		The saved name of the plugin from which the vote was created.
+ * @return					'Plugin_Continue' to allow voting, otherwise voting will be blocked.
+ */
+forward Action OnBuiltinVoteStart(Handle hVote, Handle hPlugin, const char[] sPluginName);
 
 /**
  * Called when a vote action is completed.
@@ -193,9 +227,25 @@ typedef BuiltinVoteActionHandler = function void(Handle vote, BuiltinVoteAction 
  *							Cancel, and End will always be received regardless
  *							of whether they are set or not.  They are also
  *							the only default actions.
- * @return					A new vote Handle.
+ *
+ * @return					A new vote Handle or null if vote was not created.
  */
-native Handle CreateBuiltinVote(BuiltinVoteActionHandler handler, BuiltinVoteType voteType, BuiltinVoteAction actions=BUILTINVOTE_ACTIONS_DEFAULT);
+native Handle CreateBuiltinVote(BuiltinVoteActionHandler handler, BuiltinVoteType voteType, BuiltinVoteAction actions = BUILTINVOTE_ACTIONS_DEFAULT);
+
+/**
+ * Creates a new, empty vote.
+ *
+ * @param handler			Function which will receive vote actions.
+ * @param voteType			Vote type, cannot be changed after set
+ * @param actions			Optionally set which actions to receive.  Start,
+ *							Cancel, and End will always be received regardless
+ *							of whether they are set or not.  They are also
+ *							the only default actions.
+ * @param error				The reason why the vote was not created.
+ *
+ * @return					A new vote Handle or null if vote was not created.
+ */
+native Handle CreateBuiltinVoteEx(BuiltinVoteActionHandler handler, BuiltinVoteType voteType, BuiltinVoteAction actions = BUILTINVOTE_ACTIONS_DEFAULT, eBuiltinVoteCreateError &error);
 
 /**
  * Broadcasts a vote to a list of clients.  The most selected item will be
@@ -213,31 +263,6 @@ native Handle CreateBuiltinVote(BuiltinVoteActionHandler handler, BuiltinVoteTyp
  * @error					Invalid Handle, or a vote is already in progress.
  */
 native bool DisplayBuiltinVote(Handle vote, int[] clients, int numClients, int time);
-
-/**
- * Sends a vote menu to all clients.  See DisplayBuiltinVote() for more information.
- *
- * @param vote				Vote Handle.
- * @param time				Maximum time to leave menu on the screen.
- * @return					True on success, false if this menu already has a vote session
- *							in progress.
- * @error					Invalid Handle.
- */
-stock bool DisplayBuiltinVoteToAll(Handle vote, int time)
-{
-	int iNumPlayers;
-	int[] iPlayers = new int[MaxClients];
-
-	for (int i = 1; i <= MaxClients; i++) {
-		if (!IsClientInGame(i) || IsFakeClient(i)) {
-			continue;
-		}
-		
-		iPlayers[iNumPlayers++] = i;
-	}
-
-	return DisplayBuiltinVote(vote, iPlayers, iNumPlayers, time);
-}
 
 /**
  * Appends a new item to the end of a vote.  Only valid for Multiple Choice votes
@@ -383,8 +408,11 @@ native void CancelBuiltinVote();
  *							defines.
  * @noreturn
  */
-typedef BuiltinVoteHandler = function void(Handle vote, int num_votes, int num_clients, const int[][] client_info, int num_items, const int[][] item_info);
-//typedef BuiltinVoteHandler = function void(Handle vote, int num_votes, int num_clients, const int[][2] client_info, int num_items, const int[][2] item_info);
+typeset BuiltinVoteHandler
+{
+	function void(Handle vote, int num_votes, int num_clients, const int[][] client_info, int num_items, const int[][] item_info);
+	function void(Handle vote, int num_votes, int num_clients, const int[][] client_info, int num_items, const int[][] item_info, any data);
+};
 
 /**
  * Sets an advanced vote handling callback.  If this callback is set,
@@ -392,10 +420,16 @@ typedef BuiltinVoteHandler = function void(Handle vote, int num_votes, int num_c
  *
  * @param vote				BuiltinVote Handle.
  * @param callback			Callback function.
+ * @param data				Handle or value to pass through to the BuiltinVoteHandler callback function.
+ * @param dataFlags			'BV_DATA_HNDL_CLOSE' for the data handle to be destroyed after the vote or 0.
+ *							If you are passing in parameter 'data' a handle (for example - DataPack) here that was supposed to be closed,
+ *							you must pass the constant 'BV_DATA_HNDL_CLOSE' to parameter 'dataFlags'.
+ *							If you pass a constant 'BV_DATA_HNDL_CLOSE' to parameter 'dataFlags',
+ *							then extension will destroy it or you have to close it yourself to avoid getting a memory leak.
  * @noreturn
  * @error					Invalid Handle or callback.
  */
-native void SetBuiltinVoteResultCallback(Handle vote, BuiltinVoteHandler callback);
+native void SetBuiltinVoteResultCallback(Handle vote, BuiltinVoteHandler callback, any data = 0, int dataFlags = 0);
 
 /**
  * Returns the number of seconds you should "wait" before displaying
@@ -509,22 +543,8 @@ native void DisplayBuiltinVotePass2(Handle vote, char[] translation, char[] para
 native void DisplayBuiltinVoteFail(Handle vote, BuiltinVoteFailReason reason=BuiltinVoteFail_Generic);
 
 /**
- * Quick stock to determine whether voting is allowed.  This doesn't let you
- * fine-tune a reason for not voting, so it's not recommended for lazily
- * telling clients that voting isn't allowed.
- * Checks if a game or builtinvote vote is in progress
- *
- * @return				True if voting is allowed, false if voting is in progress
- *						or the cooldown is active.
- */
-stock bool IsNewBuiltinVoteAllowed()
-{
-	return (!(IsBuiltinVoteInProgress() || CheckBuiltinVoteDelay() != 0));
-}
-
-/**
  * Checks if the BuiltinVote is in progress
- * By default this is already built into the native IsBuiltinVoteInProgress(), 
+ * By default this is already built into the native IsBuiltinVoteInProgress(),
  * you can use this for something else
  *
  * @return				True if BuiltinVote vote in progress, otherwise false
@@ -533,7 +553,7 @@ native bool BuiltinVote_IsVoteInProgress();
 
 /**
  * Checks if the in-game voting is in progress
- * By default this is already built into the native IsBuiltinVoteInProgress(), 
+ * By default this is already built into the native IsBuiltinVoteInProgress(),
  * you can use this for something else
  *
  * @return				True if game vote in progress, otherwise false
@@ -545,148 +565,17 @@ native bool Game_IsVoteInProgress();
  * @remarks		Team number: 1 - spectators, 2 - survivors, 3 - infected
  * @remarks		It hardly works for a team of spectators
  *
- * @returns		-1 if no vote in progress or vote is for everyone, 
+ * @returns		-1 if no vote in progress or vote is for everyone,
  *					otherwise the command number
  */
 native int Game_GetVoteTeam();
 
 /**
- * Retrieves voting information from BuiltinVoteAction_VoteEnd.
+ * Return entity index 'CVoteController'
  *
- * @param param2		Second parameter of BuiltinVoteAction_VoteEnd.
- * @param winningVotes	Number of votes received by the winning option.
- * @param totalVotes	Number of total votes received.
- * @noreturn
+ * @return int				-1 if 'CVoteController' not found, otherwise entity index
  */
-stock void GetBuiltinVoteInfo(int param2, int &winningVotes, int &totalVotes)
-{
-	winningVotes = param2 & 0xFFFF;
-	totalVotes = param2 >> 16;
-}
-
-/**
- * Sends a vote menu to a single team.  See DisplayBuiltinVote() for more information.
- *
- * @param vote				Vote Handle.
- * @param team				Team to send vote to. 1 = spectators, 2 = RED/Survivors, 3 = BLU/Infected
- * @param time				Maximum time to leave menu on the screen.
- * @return					True on success, false if this menu already has a vote session
- *							in progress.
- * @error					Invalid Handle.
- */
-stock bool DisplayBuiltinVoteToTeam(Handle vote, int team, int time)
-{
-	SetBuiltinVoteTeam(vote, team);
-	
-	int iNumPlayers;
-	int[] iPlayers = new int[MaxClients];
-
-	for (int i = 1; i <= MaxClients; i++) {
-		if (!IsClientInGame(i) || IsFakeClient(i) || (GetClientTeam(i) != team)) {
-			continue;
-		}
-		
-		iPlayers[iNumPlayers++] = i;
-	}
-
-	return DisplayBuiltinVote(vote, iPlayers, iNumPlayers, time);
-}
-
-/**
- * Sends a vote menu to all clients except one.  See DisplayBuiltinVote() for more information.
- * Useful for kick/ban votes
- *
- * @param vote				Vote Handle.
- * @param client			Client index not to send vote to
- * @param time				Maximum time to leave menu on the screen.
- * @return					True on success, false if this menu already has a vote session
- *							in progress or if the client isn't in the game.
- * @error					Invalid Handle.
- */
-stock bool DisplayBuiltinVoteToAllButOne(Handle vote, int client, int time)
-{
-	if (!IsClientInGame(client)) {
-		return false;
-	}
-	
-	int iNumPlayers;
-	int[] iPlayers = new int[MaxClients];
-
-	for (int i = 1; i <= MaxClients; i++) {
-		if (!IsClientInGame(i) || IsFakeClient(i) || (i == client)) {
-			continue;
-		}
-		
-		iPlayers[iNumPlayers++] = i;
-	}
-
-	return DisplayBuiltinVote(vote, iPlayers, iNumPlayers, time);
-}
-
-/**
- * Sends a vote menu to a single team except one player.  See DisplayBuiltinVote() for more information.
- *
- * @param vote				Vote Handle.
- * @param client			Client index not to send vote to.  Team is derived from this client.
- * @param time				Maximum time to leave menu on the screen.
- * @return					True on success, false if this menu already has a vote session
- *							in progress or the client isn't in the game.
- * @error					Invalid Handle.
- */
-stock bool DisplayBuiltinVoteToTeamButOne(Handle vote, int client, int time)
-{
-	if (!IsClientInGame(client)) {
-		return false;
-	}
-
-	int team = GetClientTeam(client);
-
-#if 0
-	if (team < 2) {
-		return false;
-	}
-#endif
-
-	SetBuiltinVoteTeam(vote, team);
-	
-	int iNumPlayers;
-	int[] iPlayers = new int[MaxClients];
-
-	for (int i = 1; i <= MaxClients; i++) {
-		if (!IsClientInGame(i) || IsFakeClient(i) || (i == client) || (GetClientTeam(i) != team)) {
-			continue;
-		}
-		
-		iPlayers[iNumPlayers++] = i;
-	}
-	
-	return DisplayBuiltinVote(vote, iPlayers, iNumPlayers, time);
-}
-
-/**
- * Sends a vote menu to all clients who are not spectators or waiting to choose a team.  See DisplayBuiltinVote() for more information.
- *
- * @param vote				Vote Handle.
- * @param time				Maximum time to leave menu on the screen.
- * @return					True on success, false if this menu already has a vote session
- *							in progress.
- * @error					Invalid Handle.
- */
-stock bool DisplayBuiltinVoteToAllNonSpectators(Handle vote, int time)
-{
-	int iNumPlayers;
-	int[] iPlayers = new int[MaxClients];
-
-	for (int i = 1; i <= MaxClients; i++) {
-		if (!IsClientInGame(i) || IsFakeClient(i) || (GetClientTeam(i) < 2)) {
-			continue;
-		}
-		
-		iPlayers[iNumPlayers++] = i;
-	}
-
-	return DisplayBuiltinVote(vote, iPlayers, iNumPlayers, time);
-}
+native int Game_GetVoteController();
 
 /**
  * Do not edit below this line!
@@ -711,6 +600,7 @@ public Extension __ext_builtinvotes =
 public void __ext_builtinvotes_SetNTVOptional()
 {
 	MarkNativeAsOptional("CreateBuiltinVote");
+	MarkNativeAsOptional("CreateBuiltinVoteEx");
 	MarkNativeAsOptional("DisplayBuiltinVote");
 	MarkNativeAsOptional("AddBuiltinVoteItem");
 	MarkNativeAsOptional("InsertBuiltinVoteItem");
@@ -739,5 +629,6 @@ public void __ext_builtinvotes_SetNTVOptional()
 	MarkNativeAsOptional("BuiltinVote_IsVoteInProgress");
 	MarkNativeAsOptional("Game_IsVoteInProgress");
 	MarkNativeAsOptional("Game_GetVoteTeam");
+	MarkNativeAsOptional("Game_GetVoteController");
 }
 #endif

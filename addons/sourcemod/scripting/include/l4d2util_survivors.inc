@@ -11,29 +11,29 @@
 // Much faster than searching by model in the StringMap.
 stock const int g_iGenderToSurvivorIndex[L4D2Gender_MaxSize] =
 {
-	SurvivorCharacter_Invalid, // L4D2Gender_Neutral = 0,
-	SurvivorCharacter_Invalid, // L4D2Gender_Male = 1,
-	SurvivorCharacter_Invalid, // L4D2Gender_Female = 2,
-	SurvivorCharacter_Bill, // L4D2Gender_Nanvet = 3, // Bill
-	SurvivorCharacter_Zoey, // L4D2Gender_TeenGirl = 4, // Zoey
-	SurvivorCharacter_Francis, // L4D2Gender_Biker = 5, // Francis
-	SurvivorCharacter_Louis, // L4D2Gender_Manager = 6, // Louis
-	SurvivorCharacter_Nick, // L4D2Gender_Gambler = 7, // Nick
-	SurvivorCharacter_Rochelle, // L4D2Gender_Producer = 8, // Rochelle
-	SurvivorCharacter_Coach, // L4D2Gender_Coach = 9, // Coach
-	SurvivorCharacter_Ellis, // L4D2Gender_Mechanic = 10, // Ellis
-	SurvivorCharacter_Invalid, // L4D2Gender_Ceda = 11,
-	SurvivorCharacter_Invalid, // L4D2Gender_Crawler = 12, // Mudman
-	SurvivorCharacter_Invalid, // L4D2Gender_Undistractable = 13, // Workman (class not reacting to the pipe bomb)
-	SurvivorCharacter_Invalid, // L4D2Gender_Fallen = 14,
-	SurvivorCharacter_Invalid, // L4D2Gender_Riot_Control = 15, // RiotCop
-	SurvivorCharacter_Invalid, // L4D2Gender_Clown = 16,
-	SurvivorCharacter_Invalid, // L4D2Gender_Jimmy = 17, // JimmyGibbs
-	SurvivorCharacter_Invalid, // L4D2Gender_Hospital_Patient = 18,
-	SurvivorCharacter_Invalid, // L4D2Gender_Witch_Bride = 19,
-	SurvivorCharacter_Invalid, // L4D2Gender_Police = 20, // l4d1 RiotCop (was removed from the game)
-	SurvivorCharacter_Invalid, // L4D2Gender_Male_L4D1 = 21,
-	SurvivorCharacter_Invalid, // L4D2Gender_Female_L4D1 = 22
+	L4D2Util_SurvivorCharacter_Invalid, // L4D2Gender_Neutral = 0,
+	L4D2Util_SurvivorCharacter_Invalid, // L4D2Gender_Male = 1,
+	L4D2Util_SurvivorCharacter_Invalid, // L4D2Gender_Female = 2,
+	L4D2Util_SurvivorCharacter_Bill, // L4D2Gender_Nanvet = 3, // Bill
+	L4D2Util_SurvivorCharacter_Zoey, // L4D2Gender_TeenGirl = 4, // Zoey
+	L4D2Util_SurvivorCharacter_Francis, // L4D2Gender_Biker = 5, // Francis
+	L4D2Util_SurvivorCharacter_Louis, // L4D2Gender_Manager = 6, // Louis
+	L4D2Util_SurvivorCharacter_Nick, // L4D2Gender_Gambler = 7, // Nick
+	L4D2Util_SurvivorCharacter_Rochelle, // L4D2Gender_Producer = 8, // Rochelle
+	L4D2Util_SurvivorCharacter_Coach, // L4D2Gender_Coach = 9, // Coach
+	L4D2Util_SurvivorCharacter_Ellis, // L4D2Gender_Mechanic = 10, // Ellis
+	L4D2Util_SurvivorCharacter_Invalid, // L4D2Gender_Ceda = 11,
+	L4D2Util_SurvivorCharacter_Invalid, // L4D2Gender_Crawler = 12, // Mudman
+	L4D2Util_SurvivorCharacter_Invalid, // L4D2Gender_Undistractable = 13, // Workman (class not reacting to the pipe bomb)
+	L4D2Util_SurvivorCharacter_Invalid, // L4D2Gender_Fallen = 14,
+	L4D2Util_SurvivorCharacter_Invalid, // L4D2Gender_Riot_Control = 15, // RiotCop
+	L4D2Util_SurvivorCharacter_Invalid, // L4D2Gender_Clown = 16,
+	L4D2Util_SurvivorCharacter_Invalid, // L4D2Gender_Jimmy = 17, // JimmyGibbs
+	L4D2Util_SurvivorCharacter_Invalid, // L4D2Gender_Hospital_Patient = 18,
+	L4D2Util_SurvivorCharacter_Invalid, // L4D2Gender_Witch_Bride = 19,
+	L4D2Util_SurvivorCharacter_Invalid, // L4D2Gender_Police = 20, // l4d1 RiotCop (was removed from the game)
+	L4D2Util_SurvivorCharacter_Invalid, // L4D2Gender_Male_L4D1 = 21,
+	L4D2Util_SurvivorCharacter_Invalid, // L4D2Gender_Female_L4D1 = 22
 };
 
 stock const char L4D2_AttackerNetProps[][] =
@@ -159,16 +159,16 @@ stock bool IsHangingFromLedge(int client)
  * Identifies the survivor character based on netprop 'm_Gender'.
  * Contains checks for a valid player.
  *
- * @remark SurvivorCharacter_Invalid on errors
+ * @remark L4D2Util_SurvivorCharacter_Invalid on errors
  *
  * @param client				Survivor client to identify
  *
- * @return int					index identifying the survivor, or SurvivorCharacter_Invalid if not identified.
+ * @return int					index identifying the survivor, or L4D2Util_SurvivorCharacter_Invalid if not identified.
  */
 stock int IdentifySurvivor(int iClient)
 {
 	if (iClient < 1 || iClient > MaxClients || !IsClientInGame(iClient)) {
-		return SurvivorCharacter_Invalid;
+		return L4D2Util_SurvivorCharacter_Invalid;
 	}
 
 	int iGender = GetEntProp(iClient, Prop_Send, "m_Gender");
@@ -179,11 +179,11 @@ stock int IdentifySurvivor(int iClient)
  * Identifies the survivor character based on netprop 'm_Gender'.
  * Does not contain checks for a valid player.
  *
- * @remark SurvivorCharacter_Invalid on errors
+ * @remark L4D2Util_SurvivorCharacter_Invalid on errors
  *
  * @param client				Survivor client to identify
  *
- * @return int					index identifying the survivor, or SurvivorCharacter_Invalid if not identified.
+ * @return int					index identifying the survivor, or L4D2Util_SurvivorCharacter_Invalid if not identified.
  */
 stock int IdentifySurvivorFast(int iClient)
 {
@@ -200,12 +200,12 @@ stock int IdentifySurvivorFast(int iClient)
  * @param buffer        buffer to store name
  * @param length        length of buffer
  *
- * @return bool         false if SurvivorCharacter_Invalid, otherwise true
+ * @return bool         false if L4D2Util_SurvivorCharacter_Invalid, otherwise true
  */
 stock bool GetSurvivorDisplayNameByIndex(int iCharacter, char[] sBuffer, const int iLength)
 {
-	if (iCharacter < SurvivorCharacter_Nick || iCharacter > SurvivorCharacter_Invalid) {
-		strcopy(sBuffer, iLength, g_sSurvivorDisplayName[SurvivorCharacter_Invalid]);
+	if (iCharacter < L4D2Util_SurvivorCharacter_Nick || iCharacter > L4D2Util_SurvivorCharacter_Invalid) {
+		strcopy(sBuffer, iLength, g_sSurvivorDisplayName[L4D2Util_SurvivorCharacter_Invalid]);
 
 		//LogError("[GetSurvivorDisplayNameByIndex] Invalid survivor character index passed!");
 
@@ -214,7 +214,7 @@ stock bool GetSurvivorDisplayNameByIndex(int iCharacter, char[] sBuffer, const i
 
 	strcopy(sBuffer, iLength, g_sSurvivorDisplayName[iCharacter]);
 
-	return (iCharacter == SurvivorCharacter_Invalid) ? false : true;
+	return (iCharacter == L4D2Util_SurvivorCharacter_Invalid) ? false : true;
 }
 
 /**
@@ -242,12 +242,12 @@ stock void GetSurvivorDisplayNameByIndexFast(int iCharacter, char[] sBuffer, con
  * @param buffer        buffer to store name
  * @param length        length of buffer
  *
- * @return bool         false if SurvivorCharacter_Invalid, otherwise true
+ * @return bool         false if L4D2Util_SurvivorCharacter_Invalid, otherwise true
  */
 stock bool GetSurvivorNameByIndex(int iCharacter, char[] sBuffer, const int iLength)
 {
-	if (iCharacter < SurvivorCharacter_Nick || iCharacter > SurvivorCharacter_Invalid) {
-		strcopy(sBuffer, iLength, g_sSurvivorName[SurvivorCharacter_Invalid]);
+	if (iCharacter < L4D2Util_SurvivorCharacter_Nick || iCharacter > L4D2Util_SurvivorCharacter_Invalid) {
+		strcopy(sBuffer, iLength, g_sSurvivorName[L4D2Util_SurvivorCharacter_Invalid]);
 
 		//LogError("[GetSurvivorNameByIndex] Invalid survivor character index passed!");
 
@@ -256,7 +256,7 @@ stock bool GetSurvivorNameByIndex(int iCharacter, char[] sBuffer, const int iLen
 
 	strcopy(sBuffer, iLength, g_sSurvivorName[iCharacter]);
 
-	return (iCharacter == SurvivorCharacter_Invalid) ? false : true;
+	return (iCharacter == L4D2Util_SurvivorCharacter_Invalid) ? false : true;
 }
 
 /**
@@ -284,7 +284,7 @@ stock void GetSurvivorNameByIndexFast(int iCharacter, char[] sBuffer, const int 
  * @param buffer        buffer to store name
  * @param length        length of buffer
  *
- * @return bool         false if SurvivorCharacter_Invalid, otherwise true
+ * @return bool         false if L4D2Util_SurvivorCharacter_Invalid, otherwise true
  */
 stock bool GetSurvivorDisplayName(int iClient, char[] sBuffer, const int iLength)
 {
@@ -296,7 +296,7 @@ stock bool GetSurvivorDisplayName(int iClient, char[] sBuffer, const int iLength
 
 	strcopy(sBuffer, iLength, g_sSurvivorDisplayName[iCharacter]);
 
-	return (iCharacter == SurvivorCharacter_Invalid) ? false : true;
+	return (iCharacter == L4D2Util_SurvivorCharacter_Invalid) ? false : true;
 }
 
 /**
@@ -326,7 +326,7 @@ stock void GetSurvivorDisplayNameFast(int iClient, char[] sBuffer, const int iLe
  * @param buffer        buffer to store name
  * @param length        length of buffer
  *
- * @return bool         false if SurvivorCharacter_Invalid, otherwise true
+ * @return bool         false if L4D2Util_SurvivorCharacter_Invalid, otherwise true
  */
 stock bool GetSurvivorName(int iClient, char[] sBuffer, const int iLength)
 {
@@ -338,7 +338,7 @@ stock bool GetSurvivorName(int iClient, char[] sBuffer, const int iLength)
 
 	strcopy(sBuffer, iLength, g_sSurvivorName[iCharacter]);
 
-	return (iCharacter == SurvivorCharacter_Invalid) ? false : true;
+	return (iCharacter == L4D2Util_SurvivorCharacter_Invalid) ? false : true;
 }
 
 /**

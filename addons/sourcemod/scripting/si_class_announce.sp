@@ -7,7 +7,7 @@
 #pragma semicolon 1
 #pragma newdecls required
 
-#define PLUGIN_VERSION "1.0.5"
+#define PLUGIN_VERSION "1.0.6"
 
 public Plugin myinfo =
 {
@@ -199,12 +199,12 @@ bool ProcessSIString(char[] msg, int maxlength, bool footer = false)
 
 	if(footer)
 	{
-		Format(translate, sizeof(translate), "%T", "SI", LANG_SERVER);
+		FormatEx(translate, sizeof(translate), "%T", "SI", LANG_SERVER);
 		strcopy(msg, maxlength, translate);
 	}
 	else
 	{
-		Format(translate, sizeof(translate), "%T", "SpecialInfected", LANG_SERVER);
+		FormatEx(translate, sizeof(translate), "%T", "SpecialInfected", LANG_SERVER);
 		strcopy(msg, maxlength, translate);
 	}
 	
@@ -269,7 +269,7 @@ stock void LoadTranslation(const char[] translation)
 		sPath[PLATFORM_MAX_PATH],
 		sName[64];
 
-	Format(sName, sizeof(sName), "translations/%s.txt", translation);
+	FormatEx(sName, sizeof(sName), "translations/%s.txt", translation);
 	BuildPath(Path_SM, sPath, sizeof(sPath), sName);
 	if (!FileExists(sPath))
 		SetFailState("Missing translation file %s.txt", translation);

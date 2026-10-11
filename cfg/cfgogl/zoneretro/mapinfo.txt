@@ -291,7 +291,7 @@
 		{
 			"Field"
 			{
-				"min"		"80"
+				"min"		"77"
 				"max"		"100"
 			}
 		}
@@ -299,7 +299,7 @@
 		{
 			"Field"
 			{
-				"min"		"80"
+				"min"		"77"
 				"max"		"100"
 			}
 		}
@@ -1113,9 +1113,9 @@
 		"end_dist"			"245.495361"
 		"tank_ban_flow"
 		{
-			"During sewers"
+			"During sewers + double ladder drop"
 			{
-				"min"		"60"
+				"min"		"52"
 				"max"		"79"
 			}
 		}
@@ -2347,7 +2347,6 @@
 		"start_dist"		"100.000000"
 		"start_extra_dist"	"150.000000"
 		"end_dist"			"100.000000"
-		"max_distance"		"500"
 		"max_distance"		"500"
 	}
 	"l4d2_fallindeath02"

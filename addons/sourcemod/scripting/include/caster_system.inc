@@ -18,6 +18,24 @@ native bool IsClientCaster(int client);
  */
 native bool IsIDCaster(const char[] AuthID);
 
+/**
+ * Called when a client is registered as a caster
+ * 
+ * @param		Client index
+ * 
+ * @noreturn
+*/
+forward void OnCasterRegistered(int client);
+
+/**
+ * Called when a client is unregistered as a caster
+ * 
+ * @param		Client index
+ * 
+ * @noreturn
+*/
+forward void OnCasterUnregistered(int client);
+
 public SharedPlugin __pl_caster_system =
 {
 	name = "caster_system",

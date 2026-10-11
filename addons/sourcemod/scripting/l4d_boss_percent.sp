@@ -26,7 +26,7 @@ out what's going on :D Kinda makes my other plugins look bad huh :/
 #include <readyup>
 #include <witch_and_tankifier>
 
-#define PLUGIN_VERSION "3.2.5"
+#define PLUGIN_VERSION "3.2.8"
 
 public Plugin myinfo =
 {
@@ -83,8 +83,8 @@ int  g_fDKRFirstRoundWitchPercent;    // Stores the Witch percent from the first
 // Percent Variables
 int  g_fWitchPercent;    // Stores current Witch Percent
 int  g_fTankPercent;     // Stores current Tank Percent
-char g_sWitchString[80];
-char g_sTankString[80];
+char g_sWitchString[32]; // Stores current Witch "State"
+char g_sTankString[32];  // Stores current Tank "State"
 
 public void OnPluginStart()
 {
@@ -344,26 +344,21 @@ int GetPercentageFromText(const char[] text)
 	// Check to see if text contains '%' - Store the index if it does
 	int index = StrContains(text, "%", false);
 
-	// If the index isn't -1 (No '%' found) then find the percentage
-	if (index > -1)
+	// Walk back over the digits before our '%' symbol
+	int start = index;
+	while (start > 0 && IsCharNumeric(text[start - 1]))
+		start--;
+
+	int digits = index - start;
+	if (digits >= 1 && digits <= 3)
 	{
-		char sBuffer[12];    // Where our percentage will be kept.
+		char sBuffer[4];
+		strcopy(sBuffer, digits + 1, text[start]);
 
-		// If the 3rd character before the '%' symbol is a number it's 100%.
-		if (IsCharNumeric(text[index - 3]))
-		{
-			return 100;
-		}
-
-		// Check to see if the characters that are 1 and 2 characters before our '%' symbol are numbers
-		if (IsCharNumeric(text[index - 2]) && IsCharNumeric(text[index - 1]))
-		{
-			// If both characters are numbers combine them into 1 string
-			Format(sBuffer, sizeof(sBuffer), "%c%c", text[index - 2], text[index - 1]);
-
-			// Convert our string to an int
-			return StringToInt(sBuffer);
-		}
+		// Convert our string to an int
+		int percentage = StringToInt(sBuffer);
+		if (percentage <= 100)
+			return percentage;
 	}
 
 	// Couldn't find a percentage
@@ -621,51 +616,51 @@ Action Timer_UpdateReadyUpFooter(Handle timer)
 		// Format our Tank String
 		if (g_fTankPercent > 0)    // If Tank percent is not 0
 		{
-			Format(p_sTankString, sizeof(p_sTankString), "%T", "TankOn", LANG_SERVER, g_fTankPercent);
+			FormatEx(p_sTankString, sizeof(p_sTankString), "%T", "TankOn", LANG_SERVER, g_fTankPercent);
 		}
 		else if (g_bTankDisabled)    // If another plugin has disabled the tank
 		{
-			Format(p_sTankString, sizeof(p_sTankString), "%T", "TankDisabled", LANG_SERVER);
+			FormatEx(p_sTankString, sizeof(p_sTankString), "%T", "TankDisabled", LANG_SERVER);
 		}
 		else if (p_bStaticTank)    // If current map contains static Tank
 		{
-			Format(p_sTankString, sizeof(p_sTankString), "%T", "TankStatic", LANG_SERVER);
+			FormatEx(p_sTankString, sizeof(p_sTankString), "%T", "TankStatic", LANG_SERVER);
 		}
 		else    // There is no Tank (Flow = 0)
 		{
-			Format(p_sTankString, sizeof(p_sTankString), "%T", "TankNone", LANG_SERVER);
+			FormatEx(p_sTankString, sizeof(p_sTankString), "%T", "TankNone", LANG_SERVER);
 		}
 
 		// Format our Witch String
 		if (g_fWitchPercent > 0)    // If Witch percent is not 0
 		{
-			Format(p_sWitchString, sizeof(p_sWitchString), "%T", "WitchOn", LANG_SERVER, g_fWitchPercent);
+			FormatEx(p_sWitchString, sizeof(p_sWitchString), "%T", "WitchOn", LANG_SERVER, g_fWitchPercent);
 		}
 		else if (g_bWitchDisabled)    // If another plugin has disabled the witch
 		{
-			Format(p_sWitchString, sizeof(p_sWitchString), "%T", "WitchDisabled", LANG_SERVER);
+			FormatEx(p_sWitchString, sizeof(p_sWitchString), "%T", "WitchDisabled", LANG_SERVER);
 		}
 		else if (p_bStaticWitch)    // If current map contains static Witch
 		{
-			Format(p_sWitchString, sizeof(p_sWitchString), "%T", "WitchStatic", LANG_SERVER);
+			FormatEx(p_sWitchString, sizeof(p_sWitchString), "%T", "WitchStatic", LANG_SERVER);
 		}
 		else    // There is no Witch (Flow = 0)
 		{
-			Format(p_sWitchString, sizeof(p_sWitchString), "%T", "WitchNone", LANG_SERVER);
+			FormatEx(p_sWitchString, sizeof(p_sWitchString), "%T", "WitchNone", LANG_SERVER);
 		}
 
 		// Combine our Tank and Witch strings together
 		if (g_bCvarWitchPercent && g_bCvarTankPercent)    // Display Both Tank and Witch Percent
 		{
-			Format(p_sNewFooter, sizeof(p_sNewFooter), "%s, %s", p_sTankString, p_sWitchString);
+			FormatEx(p_sNewFooter, sizeof(p_sNewFooter), "%s, %s", p_sTankString, p_sWitchString);
 		}
 		else if (g_bCvarWitchPercent)    // Display just Witch Percent
 		{
-			Format(p_sNewFooter, sizeof(p_sNewFooter), "%s", p_sWitchString);
+			strcopy(p_sNewFooter, sizeof(p_sNewFooter), p_sWitchString);
 		}
 		else if (g_bCvarTankPercent)    // Display just Tank Percent
 		{
-			Format(p_sNewFooter, sizeof(p_sNewFooter), "%s", p_sTankString);
+			strcopy(p_sNewFooter, sizeof(p_sNewFooter), p_sTankString);
 		}
 
 		// Check to see if the Ready Up footer has already been added
@@ -709,7 +704,7 @@ Action BossCmd(int client, int args)
 void PrintCurrent(int userid)
 {
 	int client = GetClientOfUserId(userid);
-	if (client) FakeClientCommand(client, "say /current");
+	if (client) FakeClientCommand(client, "sm_current");
 }
 
 void ProcessBossString()
@@ -726,41 +721,24 @@ void ProcessBossString()
 		p_bStaticWitch = IsStaticWitchMap();
 	}
 
-	// Format String For Tank
-	if (g_fTankPercent > 0)    // If Tank percent is not equal to 0
-	{
-		Format(g_sTankString, sizeof(g_sTankString), "%t {red}%d%%", "TagTank", g_fTankPercent);
-	}
-	else if (g_bTankDisabled)    // If another plugin has disabled the tank
-	{
-		Format(g_sTankString, sizeof(g_sTankString), "%t {red}%t", "TagTank", "Disabled");
-	}
-	else if (p_bStaticTank)    // If current map has static Tank spawn
-	{
-		Format(g_sTankString, sizeof(g_sTankString), "%t {red}%t", "TagTank", "StaticSpawn");
-	}
-	else    // There is no Tank
-	{
-		Format(g_sTankString, sizeof(g_sTankString), "%t {red}%t", "TagTank", "None");
-	}
+	// Store the second translation key
+	if (g_fTankPercent > 0)
+		g_sTankString[0] = '\0';
+	else if (g_bTankDisabled)
+		strcopy(g_sTankString, sizeof(g_sTankString), "Disabled");
+	else if (p_bStaticTank)
+		strcopy(g_sTankString, sizeof(g_sTankString), "StaticSpawn");
+	else
+		strcopy(g_sTankString, sizeof(g_sTankString), "None");
 
-	// Format String For Witch
-	if (g_fWitchPercent > 0)    // If Witch percent is not equal to 0
-	{
-		Format(g_sWitchString, sizeof(g_sWitchString), "%t {red}%d%%", "TagWitch", g_fWitchPercent);
-	}
-	else if (g_bWitchDisabled)    // If another plugin has disabled the witch
-	{
-		Format(g_sWitchString, sizeof(g_sWitchString), "%t {red}%t", "TagWitch", "Disabled");
-	}
-	else if (p_bStaticWitch)    // If current map has static Witch spawn
-	{
-		Format(g_sWitchString, sizeof(g_sWitchString), "%t {red}%t", "TagWitch", "StaticSpawn");
-	}
-	else    // There is no Witch
-	{
-		Format(g_sWitchString, sizeof(g_sWitchString), "%t {red}%t", "TagWitch", "None");
-	}
+	if (g_fWitchPercent > 0)
+		g_sWitchString[0] = '\0';
+	else if (g_bWitchDisabled)
+		strcopy(g_sWitchString, sizeof(g_sWitchString), "Disabled");
+	else if (p_bStaticWitch)
+		strcopy(g_sWitchString, sizeof(g_sWitchString), "StaticSpawn");
+	else
+		strcopy(g_sWitchString, sizeof(g_sWitchString), "None");
 }
 
 void PrintBossPercents(int client = 0)
@@ -787,12 +765,20 @@ void PrintBossPercents(int client = 0)
 			for (int i = 1; i <= MaxClients; i++)
 			{
 				if (IsClientInGame(i) && !IsFakeClient(i) && (teamflag & (1 << GetClientTeam(i))))
-					CPrintToChat(i, g_sTankString);
+				{
+					if (g_sTankString[0] == '\0')
+						CPrintToChat(i, "%t {red}%d%%", "TagTank", g_fTankPercent);
+					else
+						CPrintToChat(i, "%t {red}%t", "TagTank", g_sTankString);
+				}
 			}
 		}
 		else
 		{
-			CPrintToChat(client, g_sTankString);
+			if (g_sTankString[0] == '\0')
+				CPrintToChat(client, "%t {red}%d%%", "TagTank", g_fTankPercent);
+			else
+				CPrintToChat(client, "%t {red}%t", "TagTank", g_sTankString);
 		}
 	}
 	if (g_bCvarWitchPercent)
@@ -802,12 +788,20 @@ void PrintBossPercents(int client = 0)
 			for (int i = 1; i <= MaxClients; i++)
 			{
 				if (IsClientInGame(i) && !IsFakeClient(i) && (teamflag & (1 << GetClientTeam(i))))
-					CPrintToChat(i, g_sWitchString);
+				{
+					if (g_sWitchString[0] == '\0')
+						CPrintToChat(i, "%t {red}%d%%", "TagWitch", g_fWitchPercent);
+					else
+						CPrintToChat(i, "%t {red}%t", "TagWitch", g_sWitchString);
+				}
 			}
 		}
 		else
 		{
-			CPrintToChat(client, g_sWitchString);
+			if (g_sWitchString[0] == '\0')
+				CPrintToChat(client, "%t {red}%d%%", "TagWitch", g_fWitchPercent);
+			else
+				CPrintToChat(client, "%t {red}%t", "TagWitch", g_sWitchString);
 		}
 	}
 }

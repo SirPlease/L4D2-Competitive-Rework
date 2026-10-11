@@ -96,7 +96,7 @@ public Plugin myinfo =
 	name = "Holdout Bonus",
 	author = "Tabun",
 	description = "Gives bonus for (partially) surviving holdout/camping events. (Requires penalty_bonus.)",
-	version = "0.1.1",
+	version = "0.1.2",
 	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 };
 
@@ -571,14 +571,14 @@ Action Cmd_DisplayBonus(int client, int args)
 
 	// build message: current / round's bonus
 	if (!g_bHoldoutThisRound) {
-		Format(sMsg, sizeof(sMsg), "no holdout event this round.");
+		strcopy(sMsg, sizeof(sMsg), "no holdout event this round.");
 	} else {
 		if (g_bHoldoutActive) {
-			Format(sMsg, sizeof(sMsg), "\x04%i\x01 out of \x05%i\x01 [\x04%i\x01/\x05%i\x01 sec].", CalculateHoldOutBonus(), g_iPointsBonus, g_iProgress, g_iHoldoutTime);
+			FormatEx(sMsg, sizeof(sMsg), "\x04%i\x01 out of \x05%i\x01 [\x04%i\x01/\x05%i\x01 sec].", CalculateHoldOutBonus(), g_iPointsBonus, g_iProgress, g_iHoldoutTime);
 		} else if (g_iActualBonus) {
-			Format(sMsg, sizeof(sMsg), "\x04%i\x01 out of \x05%i\x01 [event over].", g_iActualBonus, g_iPointsBonus);
+			FormatEx(sMsg, sizeof(sMsg), "\x04%i\x01 out of \x05%i\x01 [event over].", g_iActualBonus, g_iPointsBonus);
 		} else {
-			Format(sMsg, sizeof(sMsg), "\x04%i\x01 out of \x05%i\x01 [not started yet].", g_iActualBonus, g_iPointsBonus);
+			FormatEx(sMsg, sizeof(sMsg), "\x04%i\x01 out of \x05%i\x01 [not started yet].", g_iActualBonus, g_iPointsBonus);
 		}
 	}
 

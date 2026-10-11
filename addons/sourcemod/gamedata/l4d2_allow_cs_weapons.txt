@@ -1,0 +1,26 @@
+"Games"
+{
+	"left4dead2"
+	{
+		"Functions"
+		{
+			"CDirectorItemManager::AreCSWeaponsAllowed"
+			{
+				"signature"	"CDirectorItemManager::AreCSWeaponsAllowed"
+				"callconv"	"cdecl"
+				"return"	"bool"
+				"this"		"ignore"
+			}
+		}
+
+		"Signatures"
+		{
+			"CDirectorItemManager::AreCSWeaponsAllowed"
+			{
+				"library"		"server"
+				"linux"			"@_ZN20CDirectorItemManager19AreCSWeaponsAllowedEv"
+				"windows"		"\xE8\x2A\x2A\x2A\x2A\x85\xC0\x74\x15\x6A\x00\x68\x2A\x2A\x2A\x2A\x8B\xC8\xE8\x2A\x2A\x2A\x2A\x85\xC0\x74\x03\x32\xC0\xC3\xB0\x01\xC3"
+			}
+		}
+	}
+}

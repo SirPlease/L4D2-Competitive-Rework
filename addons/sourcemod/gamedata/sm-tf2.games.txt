@@ -20,7 +20,7 @@
 				/* CTFPlayerShared::Burn (No clone.)*/
 				/* String : -> "afterburn_immunity"*/
 				"library"	"server"
-				"windows"	"\x55\x8B\xEC\x83\xEC\x08\x56\x8B\xF1\x8B\x8E\x8C\x01\x00\x00\x8B\x01"
+				"windows"	"\x55\x8B\xEC\x51\x56\x8B\xF1\x8B\x8E\x2A\x2A\x2A\x2A\x8B\x01\x8B"
 				"windows64"	"\x40\x53\x41\x54\x41\x56\x48\x83\xEC\x60"
 				"linux"		"@_ZN15CTFPlayerShared4BurnEP9CTFPlayerP13CTFWeaponBasef"
 				"linux64"	"@_ZN15CTFPlayerShared4BurnEP9CTFPlayerP13CTFWeaponBasef"
@@ -31,7 +31,7 @@
 				/* String : "reveal_disguised_victim_on_hit", follow the xref, RemoveDisguise is the subroutine that's called if the return value of CALL_ATTRIB_HOOK_INT( iRevealDisguisedSpyOnHit, reveal_disguised_victim_on_hit ); was true */
 				
 				"library"	"server"
-				"windows"	"\x55\x8B\xEC\x51\x56\x8B\xF1\x57\xF7\x86\xD0\x00\x00\x00\x00\x00\x02\x00"
+				"windows"	"\x56\x8B\xF1\x57\xF7\x86\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x74\x17\x8B"
 				"windows64"	"\x48\x89\x5C\x24\x10\x57\x48\x83\xEC\x40\xF7\x81\xF0\x00\x00\x00\x00\x00\x02\x00"
 				"linux"		"@_ZN15CTFPlayerShared14RemoveDisguiseEv"
 				"linux64"	"@_ZN15CTFPlayerShared14RemoveDisguiseEv"
@@ -41,7 +41,7 @@
 				/* CTFPlayerShared::Disguise */
 				/* String : "mod_disguise_consumes_cloak" */
 				"library"	"server"
-				"windows"	"\x55\x8B\xEC\x83\xEC\x24\x56\x57\x8B\xF9\x8B\x8F\x8C\x01\x00\x00"
+				"windows"	"\x55\x8B\xEC\x83\xEC\x2A\x56\x57\x8B\xF9\x8B\x8F\x8C\x01\x00\x00"
 				"windows64"	"\x40\x53\x55\x56\x57\x41\x54\x48\x81\xEC\x80\x00\x00\x00"
 				"linux"		"@_ZN15CTFPlayerShared8DisguiseEiiP9CTFPlayerb"
 				"linux64"	"@_ZN15CTFPlayerShared8DisguiseEiiP9CTFPlayerb"
@@ -61,7 +61,7 @@
 				/* CTFPlayerShared::AddCond */
 				/* String: "#TF_HALLOWEEN_MERASMUS_YOU_ARE_BOMB" -> walk back the graph, right before there should two subroutines call (CTFPlayerShared::AddCond) with 0x20 & 0x35 as parameter */
 				"library"	"server"
-				"windows"	"\x55\x8B\xEC\x83\xEC\x08\x56\x8B\xF1\x8B\x8E\x8C\x01\x00\x00\x85\xC9"
+				"windows"	"\x55\x8B\xEC\x83\xEC\x2A\x57\x8B\xF9\x8B\x8F\x2A\x2A\x2A\x2A\x85\xC9\x0F\x84\x2A\x2A\x2A\x2A\x8B\x01\x8B"
 				"windows64"	"\x48\x89\x5C\x24\x18\x48\x89\x7C\x24\x20\x41\x56\x48\x83\xEC\x40"
 				"linux"		"@_ZN15CTFPlayerShared7AddCondE7ETFCondfP11CBaseEntity"
 				"linux64"	"@_ZN15CTFPlayerShared7AddCondE7ETFCondfP11CBaseEntity"
@@ -71,7 +71,7 @@
 				/* CTFPlayerShared::RemoveCond */
 				/* String: "damage_prevented" */
 				"library"	"server"
-				"windows"	"\x55\x8B\xEC\x83\xEC\x08\x53\x8B\x5D\x08\x56\x53"
+				"windows"	"\x55\x8B\xEC\x83\xEC\x2A\x53\x8B\x5D\x2A\x57\x53\x8B\xF9\xE8"
 				"windows64"	"\x40\x53\x57\x41\x56\x48\x83\xEC\x20\x45\x0F\xB6\xF0"
 				"linux"		"@_ZN15CTFPlayerShared10RemoveCondE7ETFCondb"
 				"linux64"	"@_ZN15CTFPlayerShared10RemoveCondE7ETFCondb"
@@ -101,7 +101,7 @@
 				/* CTFPlayerShared::StunPlayer */
 				/* String: "player_stunned" */
 				"library"	"server"
-				"windows"	"\x55\x8B\xEC\x83\xEC\x24\x57\x8B\xF9\x8B\x87\xDC\x04\x00\x00"
+				"windows"	"\x55\x8B\xEC\x83\xEC\x2A\x57\x8B\xF9\x8B\x87\x2A\x2A\x2A\x2A\x40\x3D"
 				"windows64"	"\x40\x57\x41\x57\x48\x81\xEC\x98\x00\x00\x00"
 				"linux"		"@_ZN15CTFPlayerShared10StunPlayerEffiP9CTFPlayer"
 				"linux64"	"@_ZN15CTFPlayerShared10StunPlayerEffiP9CTFPlayer"
@@ -121,8 +121,8 @@
 				/* DuelMiniGame_IsInDuel */
 				/* String: "CTFPlayer::ForceChangeTeam( %d ) - invalid team index.\n", follow the xref, go back to the top of the subroutine, DuelMiniGame_IsInDuel is the subroutine that is called with 3 arguments and a constant value of 1.*/
 				"library"	"server"
-				"windows"	"\x55\x8B\xEC\x83\xEC\x10\x81\x65\xF4\xFF\xFF\x0F\xFF\x8D\x45\xF0\x8B\x4D\x08\xC6\x45\xF7\x00\x81\x65\xF4\x00\x00\xF0\xFF\x50\xC7\x45\xF0\x00\x00\x00\x00\xE8\x2A\x2A\x2A\x2A\x84\xC0\x0F\x84\x2A\x2A\x2A\x2A\x8D\x45\xF0\x57\x50\xE8\x2A\x2A\x2A\x2A\x8B\xF8\x83\xC4\x04\x85\xFF\x0F\x84\x2A\x2A\x2A\x2A\x81\x65\xFC\xFF\xFF\x0F\xFF\x8B\x0D\x2A\x2A\x2A\x2A\x53\xC6\x45\xFF\x00\xBB\x01\x00\x00\x00\x81\x65\xFC\x00\x00\xF0\xFF\xC7\x45\xF8\x00\x00\x00\x00\x39\x59\x14\x0F\x8C\x2A\x2A\x2A\x2A\x56\x8D\xA4\x24\x00\x00\x00\x00\x53\xE8\x2A\x2A\x2A\x2A\x8B\xF0\x83\xC4\x04\x85\xF6\x74\x2A\x8B\x16\x8B\xCE\x8B\x92\x48\x01\x00\x00\xFF\xD2\x84\xC0\x74\x2A\x3B\x75\x08\x74\x2A\x8D\x45\xF8\x8B\xCE\x50\xE8\x2A\x2A\x2A\x2A\x84\xC0\x74\x2A\x8B\x4D\xF8\x8B\x45\xFC\x3B\x0F\x75\x2A\x3B\x47\x04\x74\x2A\x3B\x4F\x08\x75\x2A\x3B\x47\x0C\x74\x2A\xA1\x2A\x2A\x2A\x2A\x43\x3B\x58\x14\x7E\x2A\x5E\x5B\x5F\x8B\xE5\x5D\xC3\x8B\x5D\x0C"
-				"windows64"	"\x48\x89\x5C\x24\x18\x55\x41\x56\x41\x57\x48\x83\xEC\x30\x81\x64\x24\x24\xFF\xFF\x0F\xFF"
+				"windows"	"\x55\x8B\xEC\x83\xEC\x08\x81\x65\xFC\xFF\xFF\x0F\xFF\x8D\x45\xF8\x8B\x4D\x08\xC6\x45\xFF\x00\x81\x65\xFC\x00\x00\xF0\xFF\x50\xC7\x45\xF8\x00\x00\x00\x00\xE8\x2A\x2A\x2A\x2A\x84\xC0\x75\x2A"
+				"windows64"	"\x48\x83\xEC\x28\x81\x64\x24\x3C\xFF\xFF\x0F\xFF"
 				"linux"		"@_Z21DuelMiniGame_IsInDuelP9CTFPlayer"
 				"linux64"	"@_Z21DuelMiniGame_IsInDuelP9CTFPlayer"
 			}
@@ -160,26 +160,36 @@
 		}
 		"Offsets"
 		{
+			// CBasePlayer
 			"ForceRespawn"
 			{
-				"windows"	"336"
-				"windows64"	"336"
-				"linux"		"337"
-				"linux64"	"337"
+				"windows"	"337"
+				"windows64"	"337"
+				"linux"		"338"
+				"linux64"	"338"
 			}
+			"RemoveWearable"
+			{
+				"windows"	"440"
+				"windows64"	"440"
+				"linux"		"441"
+				"linux64"	"441"
+			}
+
+			// CTFWeaponBase
 			"CalcIsAttackCriticalHelper"
 			{
-				"windows"	"398"
-				"windows64"	"398"
-				"linux"		"405"
-				"linux64"	"405"
+				"windows"	"401"
+				"windows64"	"401"
+				"linux"		"408"
+				"linux64"	"408"
 			}
 			"CalcIsAttackCriticalHelperNoCrits"
 			{
-				"windows"	"399"
-				"windows64"	"399"
-				"linux"		"406"
-				"linux64"	"406"
+				"windows"	"402"
+				"windows64"	"402"
+				"linux"		"409"
+				"linux64"	"409"
 			}
 			
 			// CTFGameRules::IsHolidayActive
@@ -189,14 +199,6 @@
 				"windows64"	"139"
 				"linux"		"140"
 				"linux64"	"140"
-			}
-
-			"RemoveWearable"
-			{
-				"windows"	"439"
-				"windows64"	"439"
-				"linux"		"440"
-				"linux64"	"440"
 			}
 		}
 	}
@@ -220,6 +222,7 @@
 			"TFHoliday_HalloweenOrFullMoonOrValentines"	"10"
 			"TFHoliday_AprilFools"		"11"
 			"TFHoliday_Soldier"			"12"
+			"TFHoliday_Summer"			"13"
 		}
 	}
 }

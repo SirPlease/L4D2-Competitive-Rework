@@ -1,0 +1,82 @@
+"Games"
+{
+	"left4dead2"
+	{
+		"MemPatches"
+		{
+			/**
+				A1m`:
+					_ZN13CBaseBeltItem15SecondaryAttackEv + offset
+
+					.text:0051566F E8 BC 5E 48 00                                call    _ZNK13CTerrorPlayer10IsInCombatEb ; CTerrorPlayer::IsInCombat(bool)
+					.text:00515674 84 C0                                         test    al, al
+					.text:00515676 0F 85 8C 00 00 00                             jnz     loc_515708
+
+					.text:00515620                               ; _DWORD __cdecl CBaseBeltItem::SecondaryAttack(CBaseBeltItem *__hidden this)
+					.text:00515620                               _ZN13CBaseBeltItem15SecondaryAttackEv proc near
+
+					00515676  - jnz
+					00515620 - address function
+					00515676 - 00515620
+				A1m`:
+					you need to overwrite the jz instruction and jump address
+					00515676 - 00515620 = 86 offset
+					_ZN13CBaseBeltItem15SecondaryAttackEv  + 86
+					check bytes = 0F 85
+					patch bytes
+					0F 85 8C 00 00 00 = change to 90 90 90 90 90 90
+					nop instructons
+					I think a different code is used for bots, it ends with name = actions (function name)
+			**/
+			"IsInCombatPillPass"
+			{
+				"signature"		"CBaseBeltItem::SecondaryAttack"
+				"linux"
+				{
+					"offset"	"86"
+					"verify"	"\x0F\x85"
+					"patch"		"\x90\x90\x90\x90\x90\x90"
+				}
+			}
+
+			/**
+				IA-NanaNana
+			**/
+			"ItemGiveDistance"
+			{
+				"signature"						"CBaseBeltItem::SecondaryAttack"
+				"linux"
+				{
+					"offset"					"129"
+					"verify"					"\xC7\x44"
+					"patch"						"\xC7\x44\x24\x04\x00\x00\x80\x43"
+				}
+			}
+		}
+
+		"Functions"
+		{
+			"CBaseBeltItem::SecondaryAttack"
+			{
+				"signature"	"CBaseBeltItem::SecondaryAttack"
+				"callconv"	"thiscall"
+				"return"	"void"
+				"this"		"entity"
+			}
+		}
+
+		"Signatures"
+		{
+			"CBaseBeltItem::SecondaryAttack"
+			{
+				"library"		"server"
+				"linux"			"@_ZN13CBaseBeltItem15SecondaryAttackEv"
+			}
+			"CTerrorPlayer::IsInCombat"
+			{
+				"library"		"server"
+				"linux"			"@_ZNK13CTerrorPlayer10IsInCombatEb"
+			}
+		}
+	}
+}

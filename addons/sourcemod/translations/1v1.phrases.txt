@@ -6,12 +6,13 @@
 	}
 	"HealthRemaining"
 	{
-		"#format"   "{1:s},{2:s},{3:d}" // 1:sName 2:L4D2_InfectedNames[iZclass] 3:iRemainingHealth
+		"#format"   "{1:N},{2:s},{3:d}" // 1:iAttacker 2:L4D2_InfectedNames[iZclass] 3:iRemainingHealth
 		"en"		"{red}{1}{default} ({green}{2}{default}) had {olive}{3}{default} health remaining!"
 	}
-	"AI"
+	"HealthRemainingAI"
 	{
-		"en"		"AI"
+		"#format"   "{1:s},{2:d}" // 1:L4D2_InfectedNames[iZclass] 2:iRemainingHealth
+		"en"		"{blue}[{default}BOT{blue}]{default} {green}{1}{default} had {olive}{2}{default} health remaining!"
 	}
 	"UMad"
 	{

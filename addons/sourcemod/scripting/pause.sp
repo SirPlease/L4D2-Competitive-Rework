@@ -35,7 +35,7 @@ public Plugin myinfo =
     name = "Pause plugin",
     author = "CanadaRox, Sir, Forgetest, A1m`",
     description = "Adds pause functionality without breaking pauses, also prevents SI from spawning because of the Pause.",
-    version = "6.8",
+    version = "6.9.0",
     url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 };
 
@@ -128,11 +128,15 @@ public void OnPluginStart()
     RegConsoleCmd("sm_pause", Pause_Cmd, "Pauses the game");
     RegConsoleCmd("sm_unpause", Unpause_Cmd, "Marks your team as ready for an unpause");
     RegConsoleCmd("sm_ready", Unpause_Cmd, "Marks your team as ready for an unpause");
+	RegConsoleCmd("sm_r", Unpause_Cmd, "Marks your team as ready for an unpause");
     RegConsoleCmd("sm_unready", Unready_Cmd, "Marks your team as ready for an unpause");
+	RegConsoleCmd("sm_nr", Unready_Cmd, "Marks your team as ready for an unpause");
     RegConsoleCmd("sm_toggleready", ToggleReady_Cmd, "Toggles your team's ready status");
 	
     RegAdminCmd("sm_forcepause", ForcePause_Cmd, ADMFLAG_BAN, "Pauses the game and only allows admins to unpause");
     RegAdminCmd("sm_forceunpause", ForceUnpause_Cmd, ADMFLAG_BAN, "Unpauses the game regardless of team ready status.  Must be used to unpause admin pauses");
+	RegAdminCmd("sm_forcestart", ForceUnpause_Cmd, ADMFLAG_BAN, "Unpauses the game regardless of team ready status.  Must be used to unpause admin pauses");
+	RegAdminCmd("sm_fs", ForceUnpause_Cmd, ADMFLAG_BAN, "Unpauses the game regardless of team ready status.  Must be used to unpause admin pauses");
 
     RegConsoleCmd("sm_show", Show_Cmd, "Hides the pause panel so other menus can be seen");
     RegConsoleCmd("sm_hide", Hide_Cmd, "Shows a hidden pause panel");
@@ -623,13 +627,13 @@ void UpdatePanel()
     menuPanel.DrawText(" ");
 
     char Titlebuffer[32];
-    Format(Titlebuffer, sizeof(Titlebuffer), "%T", "PanelTitle", LANG_SERVER);
+    FormatEx(Titlebuffer, sizeof(Titlebuffer), "%T", "PanelTitle", LANG_SERVER);
     menuPanel.DrawText(Titlebuffer);
 
     if (adminPause && initiatorId > 0)
     {
         char buffer[32];
-        Format(buffer, sizeof(buffer), "%T", "RequireAdmin", LANG_SERVER);
+        FormatEx(buffer, sizeof(buffer), "%T", "RequireAdmin", LANG_SERVER);
         menuPanel.DrawText(buffer);
         menuPanel.DrawText(teamReady[L4D2Team_Survivor] ? SurvivorUnPaused() : SurvivorPaused() );
         menuPanel.DrawText(teamReady[L4D2Team_Infected] ? InfectedUnPaused() : InfectedPaused() );
@@ -658,12 +662,12 @@ void UpdatePanel()
 
     if (adminPause)
     {
-        if (!initiatorId) Format(info, sizeof(info), "%T", "AutoPauseCrash", LANG_SERVER);
-        else Format(info, sizeof(info), "%T", "ForcePauseAdmin", LANG_SERVER, strlen(name) ? name : initiatorName);
+        if (!initiatorId) FormatEx(info, sizeof(info), "%T", "AutoPauseCrash", LANG_SERVER);
+        else FormatEx(info, sizeof(info), "%T", "ForcePauseAdmin", LANG_SERVER, strlen(name) ? name : initiatorName);
     }
     else
     {
-        Format(info, sizeof(info), "%T", "InitiatorPause", LANG_SERVER, strlen(name) ? name : initiatorName, L4D2_TeamName[pauseTeam]);
+        FormatEx(info, sizeof(info), "%T", "InitiatorPause", LANG_SERVER, strlen(name) ? name : initiatorName, L4D2_TeamName[pauseTeam]);
     }
 	
     menuPanel.DrawText(info);
@@ -784,6 +788,11 @@ void ToggleCommandListeners(bool enable)
 
 Action Callvote_Callback(int client, char[] command, int argc)
 {
+    if (!client || !IsClientInGame(client))
+    {
+        return Plugin_Continue;
+    }
+
     if (GetClientTeam(client) == L4D2Team_Spectator)
     {
         CPrintToChat(client, "%t %t", "Tag", "CallvoteNoSpec");
@@ -958,48 +967,48 @@ stock void SetClientButtons(int client, int buttons)
 stock char[] AsInitiator()
 {
     char buffer[64];
-    Format(buffer, sizeof(buffer), "%T", "AsInitiator", LANG_SERVER);
+    FormatEx(buffer, sizeof(buffer), "%T", "AsInitiator", LANG_SERVER);
     return buffer;
 }
 
 stock char[] SurvivorUnPaused()
 {
     char buffer[64];
-    Format(buffer, sizeof(buffer), "%T", "SurvivorUnPaused", LANG_SERVER);
+    FormatEx(buffer, sizeof(buffer), "%T", "SurvivorUnPaused", LANG_SERVER);
     return buffer;
 }
 
 stock char[] SurvivorPaused()
 {
     char buffer[64];
-    Format(buffer, sizeof(buffer), "%T", "SurvivorPaused", LANG_SERVER);
+    FormatEx(buffer, sizeof(buffer), "%T", "SurvivorPaused", LANG_SERVER);
     return buffer;
 }
 
 stock char[] InfectedUnPaused()
 {
     char buffer[64];
-    Format(buffer, sizeof(buffer), "%T", "InfectedUnPaused", LANG_SERVER);
+    FormatEx(buffer, sizeof(buffer), "%T", "InfectedUnPaused", LANG_SERVER);
     return buffer;
 }
 
 stock char[] InfectedPaused()
 {
     char buffer[64];
-    Format(buffer, sizeof(buffer), "%T", "InfectedPaused", LANG_SERVER);
+    FormatEx(buffer, sizeof(buffer), "%T", "InfectedPaused", LANG_SERVER);
     return buffer;
 }
 
 stock char[] InitiatorUnPaused()
 {
     char buffer[64];
-    Format(buffer, sizeof(buffer), "%T", "InitiatorUnPaused", LANG_SERVER);
+    FormatEx(buffer, sizeof(buffer), "%T", "InitiatorUnPaused", LANG_SERVER);
     return buffer;
 }
 
 stock char[] InitiatorPaused()
 {
     char buffer[64];
-    Format(buffer, sizeof(buffer), "%T", "InitiatorPaused", LANG_SERVER);
+    FormatEx(buffer, sizeof(buffer), "%T", "InitiatorPaused", LANG_SERVER);
     return buffer;
 }

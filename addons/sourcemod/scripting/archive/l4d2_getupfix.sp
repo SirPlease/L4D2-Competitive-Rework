@@ -39,7 +39,7 @@ int
 	bArClientAlreadyChecked[MAXPLAYERS + 1]; //in the rare event of it being a game with multiple chargers and 2+ getting cleared on slam
 
 static const int 
-	getUpAnimations[SurvivorCharacter_Size][eINDEX_SIZE] =
+	getUpAnimations[L4D2Util_SurvivorCharacter_Size - 1][eINDEX_SIZE] =
 	{
 		// l4d2 
 		// 0: Nick, 1: Rochelle, 2: Coach, 3: Ellis
@@ -56,7 +56,7 @@ static const int
 		{528, 759, 763, 764}  // Louis
 	},
 	//incapped animations: 0 = single-pistol, 1 = dual pistols
-	incapAnimations[SurvivorCharacter_Size][eINCAP_ANIMATIONS_SIZE] =
+	incapAnimations[L4D2Util_SurvivorCharacter_Size - 1][eINCAP_ANIMATIONS_SIZE] =
 	{
 		// l4d2
 		// 0: Nick, 1: Rochelle, 2: Coach, 3: Ellis
@@ -106,7 +106,7 @@ public Action Timer_ProcessClient(Handle hTimer, any client)
 void ProcessClient(int client)
 {
 	int charIndex = IdentifySurvivor(client);
-	if (charIndex == SurvivorCharacter_Invalid) {
+	if (charIndex == L4D2Util_SurvivorCharacter_Invalid) {
 		return;
 	}
 
@@ -148,7 +148,7 @@ public Action Timer_CheckClient(Handle hTimer, ArrayStack tempStack)
 	int client = tempStack.Pop();
 
 	int charIndex = IdentifySurvivor(client);
-	if (charIndex == SurvivorCharacter_Invalid) {
+	if (charIndex == L4D2Util_SurvivorCharacter_Invalid) {
 		return Plugin_Stop;
 	}
 
@@ -194,7 +194,7 @@ public Action GetupTimer(Handle hTimer, any attacker)
 			int seq = GetEntProp(i, Prop_Send, "m_nSequence");
 			int character = IdentifySurvivor(i);
 			
-			if (character == SurvivorCharacter_Invalid) {
+			if (character == L4D2Util_SurvivorCharacter_Invalid) {
 				return Plugin_Stop;
 			}
 			

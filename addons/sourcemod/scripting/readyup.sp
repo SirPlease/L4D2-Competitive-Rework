@@ -9,7 +9,7 @@
 #undef REQUIRE_PLUGIN
 #include <caster_system>
 
-#define PLUGIN_VERSION "10.2.6"
+#define PLUGIN_VERSION "10.2.8"
 
 public Plugin myinfo =
 {
@@ -320,7 +320,7 @@ public void OnMapEnd()
 	}
 }
 
-public void OnClientPostAdminCheck(int client)
+public void OnClientPutInServer(int client)
 {
 	if (inReadyUp && L4D2_IsScavengeMode() && !IsFakeClient(client))
 	{

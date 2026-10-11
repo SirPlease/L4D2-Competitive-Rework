@@ -11,7 +11,7 @@
 #include <l4d_tank_control_eq>
 #define REQUIRE_PLUGIN
 
-#define PLUGIN_VERSION "1.4"
+#define PLUGIN_VERSION "1.4.1"
 #define DANG "ui/pickup_secret01.wav"
 
 public Plugin myinfo = 
@@ -54,7 +54,7 @@ public void L4D_OnSpawnTank_Post(int client, const float vecPos[3], const float 
 			} 
 			else 
 			{
-				FormatEx(nameBuf, sizeof(nameBuf), "AI");
+				strcopy(nameBuf, sizeof(nameBuf), "AI");
 			}
 		}
 	}

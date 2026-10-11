@@ -1,0 +1,179 @@
+name: Build release packages
+
+# Owner-only. workflow_dispatch already requires repo write access, and the
+# job-level `if` below additionally restricts execution to the repository
+# owner, so only the owner can produce a release.
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Release version / tag (e.g. v3.0)'
+        required: true
+        type: string
+      prerelease:
+        description: 'Mark the GitHub Release as a pre-release'
+        required: false
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release-${{ inputs.version }}
+  cancel-in-progress: false
+
+jobs:
+  release:
+    name: Compile plugins and package ${{ inputs.version }}
+    runs-on: ubuntu-latest
+    # Hard gate: only the repository owner may run this workflow.
+    if: github.actor == github.repository_owner
+
+    steps:
+      - uses: actions/checkout@v5
+
+      # Same upstream compiler our check_plugins.yml CI gates on — pinned to
+      # SourceMod 1.12. Putting `spcomp` on PATH for the next step.
+      - name: Setup SourcePawn Compiler (SourceMod 1.12)
+        uses: rumblefrog/setup-sp@master
+        with:
+          version: "1.12"
+
+      - name: Compile every shipped plugin from source
+        run: |
+          set -euo pipefail
+          SCRIPTING="$GITHUB_WORKSPACE/addons/sourcemod/scripting"
+          PLUGINS="$GITHUB_WORKSPACE/addons/sourcemod/plugins"
+
+          # Compile with the upstream SourceMod 1.12 compiler from
+          # rumblefrog/setup-sp (on PATH), NOT the spcomp binary committed in
+          # the repo — a known, reproducible toolchain. The -i include paths
+          # below still point at the repo's own sources/includes.
+          COMPILER="spcomp"
+
+          BUILD="$(mktemp -d)"
+          declare -A BUILT
+          FAILED=""
+          COUNT=0
+
+          # Drive off the .smx files that ship in the repo: each one is
+          # rebuilt from its same-named .sp source and written straight back
+          # to its original path (root / fixes / optional / disabled / etc.).
+          while IFS= read -r -d '' smx; do
+            name="$(basename "$smx" .smx)"
+
+            if [ -z "${BUILT[$name]:-}" ]; then
+              if [ -f "$SCRIPTING/$name.sp" ]; then
+                base="$SCRIPTING"
+                inc="$SCRIPTING/include"
+              elif [ -f "$SCRIPTING/sourcemod/$name.sp" ]; then
+                # Stock SourceMod plugins live one level down with their
+                # own include tree.
+                base="$SCRIPTING/sourcemod"
+                inc="$SCRIPTING/sourcemod/include"
+              else
+                echo "::error::No .sp source found for shipped plugin '$name' ($smx)"
+                FAILED="$FAILED $name"
+                continue
+              fi
+
+              echo "Compiling $name ..."
+              # Run with cwd = the scripting dir and a bare source filename,
+              # exactly like check_plugins.yml: some plugins (e.g. readyup)
+              # use working-directory-relative quoted #includes that only
+              # resolve from there. -i / -o / $BUILD are absolute, so the
+              # subshell cd does not affect them.
+              if ( cd "$base" && "$COMPILER" -E -w234 -w217 -O2 -v2 -i "$inc" "-o$BUILD/$name.smx" "$name.sp" ); then
+                BUILT[$name]="$BUILD/$name.smx"
+              else
+                echo "::error::Failed to compile '$name' ($base/$name.sp)"
+                FAILED="$FAILED $name"
+                continue
+              fi
+            fi
+
+            cp -f "${BUILT[$name]}" "$smx"
+            COUNT=$((COUNT + 1))
+          done < <(find "$PLUGINS" -name '*.smx' -print0)
+
+          echo "Refreshed $COUNT plugin file(s) from ${#BUILT[@]} unique source(s)."
+          if [ -n "$FAILED" ]; then
+            echo "::error::One or more plugins failed to build:$FAILED"
+            exit 1
+          fi
+
+      - name: Stage the drop-in overlay
+        run: |
+          set -euo pipefail
+          STAGE="$GITHUB_WORKSPACE/.release"
+          rm -rf "$STAGE"
+          mkdir -p "$STAGE"
+
+          # Lean runtime overlay: only what gets dropped over left4dead2/.
+          cp -a \
+            addons cfg scripts \
+            host.txt motd.txt myhost.txt mymotd.txt \
+            README.md LICENSE \
+            "$STAGE"/
+
+          # Exclude the SourcePawn sources and the bundled compiler from the
+          # shipped overlay (the compiled .smx in plugins/ are what runs).
+          rm -rf "$STAGE/addons/sourcemod/scripting"
+
+          echo "STAGE=$STAGE" >> "$GITHUB_ENV"
+
+      - name: Build Linux archive (.so natives only)
+        run: |
+          set -euo pipefail
+          NAME="L4D2-Competitive-Rework-${{ inputs.version }}-linux"
+          OUT="$GITHUB_WORKSPACE/$NAME.tar.gz"
+          # Drop every Windows native; keep the .so files.
+          tar -czf "$OUT" --exclude='*.dll' -C "$STAGE" .
+          echo "LINUX_ASSET=$OUT" >> "$GITHUB_ENV"
+
+      - name: Build Windows archive (.dll natives only)
+        run: |
+          set -euo pipefail
+          NAME="L4D2-Competitive-Rework-${{ inputs.version }}-windows"
+          OUT="$GITHUB_WORKSPACE/$NAME.zip"
+          # Drop every Linux native; keep the .dll files.
+          ( cd "$STAGE" && zip -qr "$OUT" . -x '*.so' )
+          echo "WIN_ASSET=$OUT" >> "$GITHUB_ENV"
+
+      - name: Publish draft GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          VER="${{ inputs.version }}"
+          PRE=""
+          if [ "${{ inputs.prerelease }}" = "true" ]; then PRE="--prerelease"; fi
+
+          # Static platform preamble, built via printf so no YAML/shell
+          # indentation leaks in and gets rendered as a markdown code block.
+          # GitHub's auto-generated changelog (--generate-notes) is appended
+          # after this by gh release create.
+          NOTES="$RUNNER_TEMP/release-notes.md"
+          {
+            printf 'Automated build of `%s`.\n\n' "$VER"
+            printf -- '- **Linux** (`*-linux.tar.gz`): `.so` natives only.\n'
+            printf -- '- **Windows** (`*-windows.zip`): `.dll` natives only.\n\n'
+            printf 'Drop-in overlay for `left4dead2/`. All `.smx` plugins are recompiled '
+            printf 'from source with the upstream SourceMod 1.12 compiler '
+            printf '(rumblefrog/setup-sp); SourcePawn sources are not included in the '
+            printf 'archives.\n'
+          } > "$NOTES"
+
+          # --draft: nothing goes public (and the git tag is NOT created)
+          #          until you review and click Publish on the Releases page.
+          # --generate-notes: appends a changelog built from merged PRs since
+          #          the previous release (full history for the first one).
+          gh release create "$VER" \
+            --draft \
+            --generate-notes \
+            --target "$GITHUB_SHA" \
+            --title "$VER" \
+            --notes-file "$NOTES" \
+            $PRE \
+            "$LINUX_ASSET" "$WIN_ASSET"

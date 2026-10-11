@@ -42,7 +42,7 @@ public Plugin myinfo =
 	name = "L4D2 Horde Equaliser",
 	author = "Visor (original idea by Sir), A1m`",
 	description = "Make certain event hordes finite",
-	version = "3.0.10",
+	version = "3.0.11",
 	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 };
 
@@ -234,7 +234,7 @@ stock void LoadTranslation(const char[] translation)
 		sPath[PLATFORM_MAX_PATH],
 		sName[64];
 
-	Format(sName, sizeof(sName), "translations/%s.txt", translation);
+	FormatEx(sName, sizeof(sName), "translations/%s.txt", translation);
 	BuildPath(Path_SM, sPath, sizeof(sPath), sName);
 	if (!FileExists(sPath))
 		SetFailState("Missing translation file %s.txt", translation);

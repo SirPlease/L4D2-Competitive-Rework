@@ -49,7 +49,7 @@ public void OnPluginStart()
 	if (g_bLateLoad) {
 		for (int i = 1; i <= MaxClients; i++) {
 			if (IsClientInGame(i)) {
-				OnClientPostAdminCheck(i);
+				OnClientPutInServer(i);
 			}
 		}
 	}
@@ -125,7 +125,7 @@ public void OnMapStart()
 	g_bIsBlockEnable = false;
 }
 
-public void OnClientPostAdminCheck(int iClient)
+public void OnClientPutInServer(int iClient)
 {
 	SDKHook(iClient, SDKHook_OnTakeDamage, stop_spit_dmg);
 }

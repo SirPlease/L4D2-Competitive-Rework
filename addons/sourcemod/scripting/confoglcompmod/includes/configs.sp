@@ -59,7 +59,7 @@ bool SetCustomCfg(const char[] cfgname)
 		return true;
 	}
 
-	Format(customCfgPath, sizeof(customCfgPath), "%s%s%c%s", cfgPath, customCfgDir, DirSeparator, cfgname);
+	FormatEx(customCfgPath, sizeof(customCfgPath), "%s%s%c%s", cfgPath, customCfgDir, DirSeparator, cfgname);
 	if (!DirExists(customCfgPath)) {
 		Debug_LogError(CONFIGS_MODULE_NAME, "Custom config directory %s does not exist!", customCfgPath);
 		// Revert customCfgPath
@@ -86,7 +86,7 @@ bool SetCustomCfg(const char[] cfgname)
 void BuildConfigPath(char[] buffer, const int maxlength, const char[] sFileName)
 {
 	if (customCfgPath[0]) {
-		Format(buffer, maxlength, "%s%s", customCfgPath, sFileName);
+		FormatEx(buffer, maxlength, "%s%s", customCfgPath, sFileName);
 
 		if (FileExists(buffer)) {
 			if (IsDebugEnabled()) {
@@ -101,7 +101,7 @@ void BuildConfigPath(char[] buffer, const int maxlength, const char[] sFileName)
 		}
 	}
 
-	Format(buffer, maxlength, "%s%s", configsPath, sFileName);
+	FormatEx(buffer, maxlength, "%s%s", configsPath, sFileName);
 	if (IsDebugEnabled()) {
 		LogMessage("[%s] Built default config path: %s", CONFIGS_MODULE_NAME, buffer);
 	}
@@ -116,7 +116,7 @@ void ExecuteCfg(const char[] sFileName)
 	char sFilePath[PLATFORM_MAX_PATH];
 
 	if (customCfgPath[0]) {
-		Format(sFilePath, sizeof(sFilePath), "%s%s", customCfgPath, sFileName);
+		FormatEx(sFilePath, sizeof(sFilePath), "%s%s", customCfgPath, sFileName);
 
 		if (FileExists(sFilePath)) {
 			if (IsDebugEnabled()) {
@@ -133,7 +133,7 @@ void ExecuteCfg(const char[] sFileName)
 		}
 	}
 
-	Format(sFilePath, sizeof(sFilePath), "%s%s", cfgPath, sFileName);
+	FormatEx(sFilePath, sizeof(sFilePath), "%s%s", cfgPath, sFileName);
 
 	if (FileExists(sFilePath)) {
 		if (IsDebugEnabled()) {

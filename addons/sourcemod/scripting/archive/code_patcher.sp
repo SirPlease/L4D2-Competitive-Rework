@@ -21,7 +21,7 @@ public Plugin myinfo =
 {
 	name = "Code patcher",
 	author = "Jahze?, A1m`",
-	version = "1.1",
+	version = "1.1.1",
 	description = "Code patcher",
 	url = "https://github.com/SirPlease/L4D2-Competitive-Rework" 
 };
@@ -122,7 +122,7 @@ Action CodePatchPatchCommand(int args)
 	char key[MAX_PATCH_NAME_LENGTH + 32];
 	char value[MAX_VALUE_LENGTH + 1];
 
-	Format(key, sizeof(key), "%s_signature", name);
+	FormatEx(key, sizeof(key), "%s_signature", name);
 	if (!GameConfGetKeyValue(hGameConfig, key, value, sizeof(value))) {
 		PrintToServer("Could not find key '%s'", key);
 		return Plugin_Handled;
@@ -134,7 +134,7 @@ Action CodePatchPatchCommand(int args)
 		return Plugin_Handled;
 	}
 
-	Format(key, sizeof(key), "%s_offset", name);
+	FormatEx(key, sizeof(key), "%s_offset", name);
 	if (!GameConfGetKeyValue(hGameConfig, key, value, sizeof(value))) {
 		PrintToServer("Could not find key '%s'", key);
 		return Plugin_Handled;
@@ -146,7 +146,7 @@ Action CodePatchPatchCommand(int args)
 		return Plugin_Handled;
 	}
 
-	Format(key, sizeof(key), "%s_length_%s", name, (bIsWindows) ? "windows" : "linux");
+	FormatEx(key, sizeof(key), "%s_length_%s", name, (bIsWindows) ? "windows" : "linux");
 	if (!GameConfGetKeyValue(hGameConfig, key, value, sizeof(value))) {
 		PrintToServer("Could not find key '%s'", key);
 		return Plugin_Handled;
@@ -159,7 +159,7 @@ Action CodePatchPatchCommand(int args)
 		return Plugin_Handled;
 	}
 
-	Format(key, sizeof(key), "%s_bytes_%s", name, (bIsWindows) ? "windows" : "linux");
+	FormatEx(key, sizeof(key), "%s_bytes_%s", name, (bIsWindows) ? "windows" : "linux");
 	
 	if (!GameConfGetKeyValue(hGameConfig, key, value, sizeof(value))) {
 		PrintToServer("Could not find key '%s'", key);

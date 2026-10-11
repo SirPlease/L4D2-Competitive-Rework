@@ -713,7 +713,7 @@ static int WI_GetWeaponIndex(int iEntity, const char[] sEntityClassName)
 				continue;
 			}
 
-			Format(sBuffer, sizeof(sBuffer), "%s%s%s", SPAWN_PREFIX, Weapon_Spawns[WeaponIndex], SPAWN_SURFIX);
+			FormatEx(sBuffer, sizeof(sBuffer), "%s%s%s", SPAWN_PREFIX, Weapon_Spawns[WeaponIndex], SPAWN_SURFIX);
 
 			if (strcmp(sEntityClassName, sBuffer) != 0) {
 				continue;
@@ -764,7 +764,7 @@ static bool WI_IsStatic(int iEntity, int iWeaponIndex)
 	char sEntityClassName[MAX_ENTITY_NAME_LENGTH], sBuffer[MAX_ENTITY_NAME_LENGTH];
 
 	GetEdictClassname(iEntity, sEntityClassName, sizeof(sEntityClassName));
-	Format(sBuffer, sizeof(sBuffer), "%s%s%s", SPAWN_PREFIX, Weapon_Spawns[iWeaponIndex], SPAWN_SURFIX);
+	FormatEx(sBuffer, sizeof(sBuffer), "%s%s%s", SPAWN_PREFIX, Weapon_Spawns[iWeaponIndex], SPAWN_SURFIX);
 
 	if (strcmp(sEntityClassName, sBuffer) != 0) {
 		return false;
@@ -834,7 +834,7 @@ static void WI_ReplaceWeapon(int iEntity, int iWeaponIndex, bool bSpawnerEvent =
 		iEntity = CreateEntityByName("weapon_spawn");
 		SetEntProp(iEntity, Prop_Send, "m_weaponID", Weapon_Attributes[iWeaponIndex][WeaponID]);
 
-		Format(sModelBuffer, sizeof(sModelBuffer), "%s%s%s", MODEL_PREFIX, Weapon_Models[iWeaponIndex], MODEL_SURFIX);
+		FormatEx(sModelBuffer, sizeof(sModelBuffer), "%s%s%s", MODEL_PREFIX, Weapon_Models[iWeaponIndex], MODEL_SURFIX);
 		SetEntityModel(iEntity, sModelBuffer);
 
 		TeleportEntity(iEntity, fOrigin, fRotation, NULL_VECTOR);
@@ -862,7 +862,7 @@ static void WI_ReplaceWeapon(int iEntity, int iWeaponIndex, bool bSpawnerEvent =
 	) {
 		iWeaponIndex = Weapon_Attributes[iWeaponIndex][ReplacementIndex];
 		SetEntProp(iEntity, Prop_Send, "m_weaponID", Weapon_Attributes[iWeaponIndex][WeaponID]);
-		Format(sModelBuffer, sizeof(sModelBuffer), "%s%s%s", MODEL_PREFIX, Weapon_Models[iWeaponIndex], MODEL_SURFIX);
+		FormatEx(sModelBuffer, sizeof(sModelBuffer), "%s%s%s", MODEL_PREFIX, Weapon_Models[iWeaponIndex], MODEL_SURFIX);
 		SetEntityModel(iEntity, sModelBuffer);
 
 		#if (DEBUG_WI)
@@ -962,7 +962,7 @@ static void WI_ReplaceWeapon(int iEntity, int iWeaponIndex, bool bSpawnerEvent =
 
 	iWeaponIndex = Weapon_Attributes[iWeaponIndex][Tier1EquivalentIndex];
 	SetEntProp(iEntity, Prop_Send, "m_weaponID", Weapon_Attributes[iWeaponIndex][WeaponID]);
-	Format(sModelBuffer, sizeof(sModelBuffer), "%s%s%s", MODEL_PREFIX, Weapon_Models[iWeaponIndex], MODEL_SURFIX);
+	FormatEx(sModelBuffer, sizeof(sModelBuffer), "%s%s%s", MODEL_PREFIX, Weapon_Models[iWeaponIndex], MODEL_SURFIX);
 	SetEntityModel(iEntity, sModelBuffer);
 
 #if (DEBUG_WI)
@@ -1116,7 +1116,7 @@ static void WI_ReplaceExtra(int iEntity, int iWeaponIndex)
 
 		KillEntity(iEntity);
 
-		Format(sSpawnBuffer, sizeof(sSpawnBuffer), "%s%s%s", SPAWN_PREFIX, Weapon_Spawns[WEAPON_PAIN_PILLS_INDEX], SPAWN_SURFIX);
+		FormatEx(sSpawnBuffer, sizeof(sSpawnBuffer), "%s%s%s", SPAWN_PREFIX, Weapon_Spawns[WEAPON_PAIN_PILLS_INDEX], SPAWN_SURFIX);
 
 		iEntity = CreateEntityByName(sSpawnBuffer);
 		TeleportEntity(iEntity, fOrigin, fRotation, NULL_VECTOR);
@@ -1131,7 +1131,7 @@ static void WI_ReplaceExtra(int iEntity, int iWeaponIndex)
 
 		KillEntity(iEntity);
 
-		Format(sSpawnBuffer, sizeof(sSpawnBuffer), "%s%s%s", SPAWN_PREFIX, Weapon_Spawns[WEAPON_PAIN_PILLS_INDEX], SPAWN_SURFIX);
+		FormatEx(sSpawnBuffer, sizeof(sSpawnBuffer), "%s%s%s", SPAWN_PREFIX, Weapon_Spawns[WEAPON_PAIN_PILLS_INDEX], SPAWN_SURFIX);
 
 		iEntity = CreateEntityByName(sSpawnBuffer);
 		TeleportEntity(iEntity, fOrigin, fRotation, NULL_VECTOR);
@@ -1166,7 +1166,7 @@ static void WI_PrecacheModels()
 			continue;
 		}
 
-		Format(ModelBuffer, sizeof(ModelBuffer), "%s%s%s", MODEL_PREFIX, Weapon_Models[index], MODEL_SURFIX);
+		FormatEx(ModelBuffer, sizeof(ModelBuffer), "%s%s%s", MODEL_PREFIX, Weapon_Models[index], MODEL_SURFIX);
 
 		if (IsModelPrecached(ModelBuffer)) {
 			continue;

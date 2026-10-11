@@ -1,7 +1,7 @@
 /**
  * =============================================================================
  * Left 4 Dead Stocks Library (C)2011-2012 Buster "Mr. Zero" Nielsen
- * Syntax Update and merge into "Left 4 DHooks Direct" (C) 2025 "SilverShot"
+ * Syntax Update and merge into "Left 4 DHooks Direct" (C) 2026 "SilverShot"
  * =============================================================================
  *
  * This program is free software; you can redistribute it and/or modify it
@@ -1476,7 +1476,7 @@ stock bool L4D2_CreateInstructorHint(const char[] name,
 	}
 
 	char finalizedColor[16];
-	Format(finalizedColor, 16, "%d,%d,%d", color[0], color[1], color[2]);
+	FormatEx(finalizedColor, 16, "%d,%d,%d", color[0], color[1], color[2]);
 
 	event.SetString("hint_name", name);
 	event.SetInt("hint_target", target);
