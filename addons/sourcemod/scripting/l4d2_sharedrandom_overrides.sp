@@ -560,7 +560,6 @@ MRESReturn OverrideSharedRandom(const char[] sSharedName, float &flMin, float &f
 			float fOffsetPercent = flMax * (g_hCvarRing2MaxOffsetPercent.FloatValue / 100.0);
 
 			flMin = flMax - fOffsetPercent;
-			flMax = flMax;
 
 			return MRES_ChangedHandled; // The function will return a random value itself
 		}
