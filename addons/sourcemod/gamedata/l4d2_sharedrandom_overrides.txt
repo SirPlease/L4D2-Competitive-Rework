@@ -1,11 +1,3 @@
-/**
- * Author: A1m`
- * Work summary:
- *   - Documented parameters, return values, and calling conventions for use with DHooks
- *   - Described how to locate these functions on Windows
- *   - Found function signatures on both Linux and Windows
- *   - Created a memory patch for the central pellet
-**/
 "Games"
 {
 	"#default"

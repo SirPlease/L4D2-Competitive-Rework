@@ -6,7 +6,7 @@
  *   Implements a configurable, non-random shotgun pellet pattern:
  *     - Custom rings
  *     - Radius factors
- *     - Hybrid spread (Maybe in the future. :D)
+ *     - Hybrid spread (Maybe in the future)
  *   Replaces the old ASM patch method with a detour hook.
  *   Fixed the spread direction calculation: it now uses the full 0 – < 180 degree range, unlike the old ASM patch.
  *   The old ASM patch used a spread direction from -22° to ~154°, if the center pellet was activated, or from 0° to ~134° if not.
@@ -29,7 +29,6 @@
  *   A detailed analysis of the ASM patch from the file `code_patcher.txt` (gamedata file) was performed.
  *   Reverse engineering and analysis of the game code, function `CTerrorPlayer::FireBullets`and accompanying code
  *   Investigating the behavior of the `l4d2_static_shotgun_spread` plugin.
- *   All research and implementation were performed by A1m`.
  *
  * Bugs & Todo:
  *   Fix: Large values of the 'sgspread_prediction_seed' cvar do not match the specified ones because the cvar value is stored as a float and breaks when retrieved due to rounding.
@@ -59,7 +58,7 @@
 
 #include <sourcemod>
 #include <dhooks>
-#include <left4downtown> // #include <left4dhooks>
+#include <left4dhooks> //#include <left4downtown>
 #include <sourcescramble>
 
 #define DEBUG						0
@@ -938,7 +937,7 @@ int main()
 
 	float flVerticalSpreadScale = 1.0f;
 	if (flHorizontalSpread != 0.0f && flVerticalSpread != 0.0f) {
-		// 3.25 / 3.25 = 1.0f for chrome anyway, omg :D
+		// 3.25 / 3.25 = 1.0f for chrome anyway, omg
 		flVerticalSpreadScale = flVerticalSpread / flHorizontalSpread;
 	}
 
@@ -1010,7 +1009,6 @@ int main()
 	return 0;
 }
 
-// Try to make your code =)
 float SharedRandomFloat(const char* sSharedName, float flMin, float flMax, int iAdditionSeed)
 {
 	int iPelletsInRing1 = iNumPelletsRing1 + (bCenterPellet ? 1 : 0);
@@ -1085,6 +1083,6 @@ float SharedRandomFloat(const char* sSharedName, float flMin, float flMax, int i
 		return (fAngleStep * float(iIndexInRing));
 	}
 
-	return 0.0f; // The game returns a random value, but we return 0.0f =)
+	return 0.0f; // The game returns a random value, but we return 0.0f
 }
 #endif
