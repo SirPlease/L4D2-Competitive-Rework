@@ -37,6 +37,16 @@
 					"verify"	"\x0F\x85"
 					"patch"		"\x90\x90\x90\x90\x90\x90"
 				}
+				/**
+					Windows inverts the branch: "je" (not in combat) skips the tail-jump to the shove.
+					CBaseBeltItem::SecondaryAttack + 71: 74 09 je -> EB 09 jmp
+				**/
+				"windows"
+				{
+					"offset"	"71"
+					"verify"	"\x74\x09"
+					"patch"		"\xEB"
+				}
 			}
 
 			/**
@@ -71,6 +81,7 @@
 			{
 				"library"		"server"
 				"linux"			"@_ZN13CBaseBeltItem15SecondaryAttackEv"
+				"windows"		"\x53\x56\x8B\xD9\xE8\x2A\x2A\x2A\x2A\x8B\xF0\x85\xF6\x0F\x84\x2A\x2A\x2A\x2A\x8B\x06\x8B\x90\x2A\x2A\x2A\x2A\x8B\xCE\xFF\xD2\x84\xC0\x0F\x84"
 			}
 			"CTerrorPlayer::IsInCombat"
 			{
