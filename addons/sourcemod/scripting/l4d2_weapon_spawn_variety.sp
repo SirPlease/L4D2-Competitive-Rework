@@ -17,7 +17,7 @@ public Plugin myinfo =
 	name = "[L4D/2] T1 Weapon Spawn Variety",
 	author = "Sir",
 	description = "SMG/T1 shotgun spawners roll their tier pool (any_smg / tier1_shotgun), while keeping random weapon spawns identical between versus halves. (Does not overwrite enforced spawns)",
-	version = "1.0"
+	version = "1.1"
 };
 
 public void OnPluginStart()
@@ -78,6 +78,16 @@ void OnSpawnerSpawnPost(int entity)
 		return;
 
 	g_bManaged[entity] = false;
+
+	// Gamerules not available yet at this stage, wait.
+	RequestFrame(OnSpawnerSpawnPostFrame, EntIndexToEntRef(entity));
+}
+
+void OnSpawnerSpawnPostFrame(int ref)
+{
+	int entity = EntRefToEntIndex(ref);
+	if (entity == INVALID_ENT_REFERENCE)
+		return;
 
 	float origin[3];
 	GetEntPropVector(entity, Prop_Send, "m_vecOrigin", origin);
