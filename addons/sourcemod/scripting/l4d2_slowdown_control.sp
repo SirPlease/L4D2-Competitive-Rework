@@ -54,7 +54,8 @@ ConVar
 	hCvarSurvivorLimpspeed,
 	hCvarTankSpeedVS,
 	hCvarCrouchSpeedMod,
-	hCvarJockeyMinMoundedSpeed;
+	hCvarJockeyMinMoundedSpeed,
+	hCvarAnnounce;
 
 int
 	iSurvLimpHealth;
@@ -89,7 +90,8 @@ public void OnPluginStart()
 	hCvarSdInwaterSurvivor = CreateConVar("l4d2_slowdown_water_survivors", "-1", "Maximum survivor speed in the water outside of Tank fights (-1: ignore setting; 0: default; 220: default Survivor speed)", _, true, -1.0);
 	hCvarSdInwaterDuringTank = CreateConVar("l4d2_slowdown_water_survivors_during_tank", "0", "Maximum survivor speed in the water during Tank fights (0: ignore setting; 220: default Survivor speed)", _, true, 0.0);
 	hCvarCrouchSpeedMod = CreateConVar("l4d2_slowdown_crouch_speed_mod", "1.0", "Modifier of player crouch speed when inside a designated trigger, 75 is the defualt for everyone (1: default speed)", _, true, 0.0);
-	
+	hCvarAnnounce = CreateConVar("l4d2_slowdown_announce", "1", "Announce in chat when the water slowdown is reduced/restored during a Tank fight (0: hide, 1: show)", _, true, 0.0, true, 1.0);
+
 	hCvarSdPistolMod = CreateConVar("l4d2_slowdown_pistol_percent", "0.0", "Pistols cause this much slowdown * l4d2_slowdown_gunfire at maximum damage.");
 	hCvarSdDeagleMod = CreateConVar("l4d2_slowdown_deagle_percent", "0.1", "Deagles cause this much slowdown * l4d2_slowdown_gunfire at maximum damage.");
 	hCvarSdUziMod = CreateConVar("l4d2_slowdown_uzi_percent", "0.8", "Unsilenced uzis cause this much slowdown * l4d2_slowdown_gunfire at maximum damage.");
@@ -147,7 +149,7 @@ void TankSpawn(Event event, const char[] name, bool dontBroadcast)
 {
 	if (!tankInPlay) {
 		tankInPlay = true;
-		if (fSurvWaterSpeedDuringTank > 0.0) {
+		if (fSurvWaterSpeedDuringTank > 0.0 && hCvarAnnounce.BoolValue) {
 			PrintToChatAll("\x05Water Slowdown\x01 has been reduced while Tank is in play.");
 		}
 	}
@@ -166,7 +168,7 @@ Action Timer_CheckTank(Handle timer)
 	int tankclient = FindTankClient();
 	if (!tankclient || !IsPlayerAlive(tankclient)) {
 		tankInPlay = false;
-		if (fSurvWaterSpeedDuringTank > 0.0) {
+		if (fSurvWaterSpeedDuringTank > 0.0 && hCvarAnnounce.BoolValue) {
 			PrintToChatAll("\x05Water Slowdown\x01 has been restored to normal.");
 		}
 	}

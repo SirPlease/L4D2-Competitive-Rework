@@ -50,6 +50,7 @@ float fVersusBossBuffer, fTankBurnDuration;
 
 // Plugin Cvar
 ConVar l4d_tank_percent, l4d_witch_percent, hServerNamer, l4d_ready_cfg_name;
+ConVar g_hSpectatorUsageHint, g_hTankUsageHint;
 
 // Plugin Var
 char sReadyCfgName[64], sHostname[64];
@@ -102,7 +103,10 @@ public void OnPluginStart()
 	FillReadyConfig();
 	
 	InitTankSpawnSchemeTrie();
-	
+
+	g_hSpectatorUsageHint	= CreateConVar("spechud_spectator_usage_hint",	"1", "Show the '!spechud' usage hint to spectators the first time the Spectator HUD is drawn. 0:hide, 1:show", _, true, 0.0, true, 1.0);
+	g_hTankUsageHint		= CreateConVar("spechud_tank_usage_hint",		"1", "Show the '!tankhud' usage hint to the Tank player the first time the Tank HUD is drawn. 0:hide, 1:show", _, true, 0.0, true, 1.0);
+
 	RegConsoleCmd("sm_spechud", ToggleSpecHudCmd);
 	RegConsoleCmd("sm_tankhud", ToggleTankHudCmd);
 	
@@ -541,7 +545,7 @@ Action HudDrawTimer(Handle hTimer)
 			}
 			
 			specHud.Send(client, DummySpecHudHandler, 3);
-			if (!bSpecHudHintShown[client])
+			if (!bSpecHudHintShown[client] && g_hSpectatorUsageHint.BoolValue)
 			{
 				bSpecHudHintShown[client] = true;
 				CPrintToChat(client, "%t", "Notify_SpechudUsage");
@@ -565,7 +569,7 @@ Action HudDrawTimer(Handle hTimer)
 			}
 			
 			tankHud.Send(client, DummyTankHudHandler, 3);
-			if (!bTankHudHintShown[client])
+			if (!bTankHudHintShown[client] && g_hTankUsageHint.BoolValue)
 			{
 				bTankHudHintShown[client] = true;
 				CPrintToChat(client, "%t", "Notify_TankhudUsage");
