@@ -24,6 +24,8 @@ ConVar
 	hShovePenaltyAmtCvar,
 	hPounceCrouchDelayCvar,
 	hLeapIntervalCvar,
+	//boomer_vomit_delay,
+	hBlockInstantVomitCvar,
 	hPenaltyIncreaseHunterCvar,
 	hPenaltyIncreaseJockeyCvar,
 	hPenaltyIncreaseSmokerCvar;
@@ -31,8 +33,8 @@ ConVar
 public Plugin myinfo =
 {
 	name		= "L4D2 M2 Control",
-	author		= "Jahze, Visor, A1m`, Forgetest",
-	version		= "1.16",
+	author		= "Jahze, Visor, A1m`, Forgetest, Harry",
+	version		= "1.17",
 	description	= "Blocks instant repounces and gives m2 penalty after a shove/deadstop",
 	url 		= "https://github.com/SirPlease/L4D2-Competitive-Rework"
 }
@@ -47,10 +49,12 @@ public void OnPluginStart()
 	hShovePenaltyAmtCvar = FindConVar("z_gun_swing_vs_amt_penalty");
 	hPounceCrouchDelayCvar = FindConVar("z_pounce_crouch_delay");
 	hLeapIntervalCvar = FindConVar("z_leap_interval");
+	//boomer_vomit_delay = FindConVar("boomer_vomit_delay");
 
-	hPenaltyIncreaseHunterCvar = CreateConVar("l4d2_m2_hunter_penalty", "0", "How much penalty gets added when you shove a Hunter");
-	hPenaltyIncreaseJockeyCvar = CreateConVar("l4d2_m2_jockey_penalty", "0", "How much penalty gets added when you shove a Jockey");
-	hPenaltyIncreaseSmokerCvar = CreateConVar("l4d2_m2_smoker_penalty", "0", "How much penalty gets added when you shove a Smoker");
+	hBlockInstantVomitCvar		= CreateConVar("l4d2_m2_boomer_block_vomit_delay", "1.0", "Boomers vomit delay after getting shoved. (0=No delay)");
+	hPenaltyIncreaseHunterCvar 	= CreateConVar("l4d2_m2_hunter_penalty", "1", "How much penalty gets added when you shove a Hunter");
+	hPenaltyIncreaseJockeyCvar 	= CreateConVar("l4d2_m2_jockey_penalty", "1", "How much penalty gets added when you shove a Jockey");
+	hPenaltyIncreaseSmokerCvar 	= CreateConVar("l4d2_m2_smoker_penalty", "1", "How much penalty gets added when you shove a Smoker");
 }
 
 public void L4D_OnGameModeChange(int gamemode)
@@ -152,6 +156,9 @@ public void L4D_OnCancelStagger_Post(int client)
 
 				if (g_flStaggerEndTime != -1.0)
 					recharge += g_flStaggerEndTime - GetGameTime();
+			}
+			case L4D2Infected_Boomer: {
+				if(hBlockInstantVomitCvar.FloatValue > 0.0) recharge = hBlockInstantVomitCvar.FloatValue;
 			}
 			default: {
 				return;
