@@ -1,0 +1,55 @@
+"Phrases"
+{
+	"TagTank"
+	{
+		"chi"	"<{olive}Tank{default}>"
+	}
+	"TagWitch"
+	{
+		"chi"	"<{olive}Witch{default}>"
+	}
+	"TankOn"
+	{
+		"chi"	"Tank: %d%%"
+	}
+	"WitchOn"
+	{
+		"chi"	"Witch: %d%%"
+	}
+	"Disabled"
+	{
+		"chi"	"已禁用"
+	}
+	"StaticSpawn"
+	{
+		"chi"	"固定位置"
+	}
+	"None"
+	{
+		"chi"	"无"
+	}
+	"TankDisabled"
+	{
+		"chi"	"Tank: 已禁用"
+	}
+	"TankStatic"
+	{
+		"chi"	"Tank: 固定位置"
+	}
+	"TankNone"
+	{
+		"chi"	"Tank: 无"
+	}
+	"WitchDisabled"
+	{
+		"chi"	"Witch: 已禁用"
+	}
+	"WitchStatic"
+	{
+		"chi"	"Witch: 固定位置"
+	}
+	"WitchNone"
+	{
+		"chi"	"Witch: 无"
+	}
+}

@@ -1,0 +1,58 @@
+"Phrases"
+{
+	"TagKills"
+	{
+		"chi"		"[{olive}1v1数据{default}] {green}击杀数{default}:"
+	}
+	"TagSkeet"
+	{
+		"chi"		"[{olive}1v1数据{default}] {green}空爆数{default}:"
+	}
+	"TagAcc"
+	{
+		"chi"		"[{olive}1v1数据{default}] {green}准确度{default}:"
+	}
+    // 1. SI damage & SI kills
+	"SI_DMG_CI"
+	{
+		"#format"   "{1:d},{2:d},{3:d}" // 1:iDidDamageAll[iClientPlaying] 2:iGotKills[iClientPlaying] 3:iGotCommon[iClientPlaying]
+		"chi"		"{olive}{1}{default} 伤害 | {olive}{2}{default} 击杀 | {olive}{3}{default} 丧尸\n"
+	}
+	"SI_DMG"
+	{
+		"#format"   "{1:d},{2:d}" // 1:iDidDamageAll[iClientPlaying] 2:iGotKills[iClientPlaying]
+		"chi"		"{olive}{1}{default} 伤害 | {olive}{2}{default} 击杀\n"
+	}
+	"SI_CI"
+	{
+		"#format"   "{1:d},{2:d}" // 1:iGotKills[iClientPlaying] 2:iGotCommon[iClientPlaying]
+		"chi"		"{olive}{1}{default} 特感 | {olive}{2}{default} 丧尸\n"
+	}
+	"SI"
+	{
+		"chi"		"{olive}%d{default} 特感\n"
+	}
+    // 2. skeets
+	"SKEET"
+	{
+		"#format"   "{1:d},{2:d},{3:d}" // 1:iHuntSkeets[iClientPlaying] 2:iHuntSkeetsInj[iClientPlaying] 3:iDeadStops[iClientPlaying]
+		"chi"		"{olive}{1}{default} 满血 | {olive}{2}{default} 残血 | {olive}{3}{default} 推停\n"
+	}
+	//  3. accuracy
+	"ACC_AllShots"
+	{
+		"chi"		"总命中率 ({blue}%3.0f%%{default})"
+	}
+	"ACC_BuckShot"
+	{
+		"chi"		"| 铅弹命中率 ({blue}%3.0f%%{default})"
+	}
+	"ACC_Melee"
+	{
+		"chi"		"| 近战命中率 ({blue}%3.0f%%{default})"
+	}
+	"ACC_NoShotsFired"
+	{
+		"chi"		"没开枪\n"
+	}
+}

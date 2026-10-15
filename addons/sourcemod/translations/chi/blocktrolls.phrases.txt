@@ -1,0 +1,19 @@
+"Phrases"
+{
+	"Tag"
+	{
+		"chi"    "[{green}!{default}]"
+	}
+	"VotingNotEnabled"
+	{
+		"chi"	"投票将在回合开始后 {olive}40秒{default} 后启用."
+	}
+	"NotConsoleVote"
+	{
+		"chi"	"[!] 你必须在游戏中投票."
+	}
+	"NotSpectatorVote"
+	{
+		"chi"	"{olive}旁观者{default} 不能投票."
+	}
+}

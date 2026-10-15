@@ -1,0 +1,15 @@
+"Phrases"
+{
+	"Tag"
+	{
+		"chi"	"{red}[{default}!{red}]"
+	}
+	"Spawned"
+	{
+		"chi"	"{olive}Tank {default}({red}控制人: %s{default}) 已经生成!"
+	}
+	"Spawned2"
+	{
+		"chi"	"{olive}Tank {default}({red}控制人: %N{default}) 已经生成!"
+	}
+}
