@@ -2,53 +2,68 @@
 #pragma newdecls required
 
 #include <sourcemod>
-#include <dhooks>
+#include <sdkhooks>
 
-#define GAMEDATA "l4d2_si_ability"
-
-Handle hCBaseAbility_OnOwnerTakeDamage;
+int
+	iPounceBudgetOffset,
+	iLungeDamagedOffset;
 
 public Plugin myinfo =
 {
 	name		= "L4D2 Pounce Protect",
-	author		= "ProdigySim",
+	author		= "ProdigySim, Sir",
 	description	= "Prevent damage from blocking a hunter's ability to pounce",
-	version		= "1.1",
+	version		= "2.0",
 	url			= "https://github.com/SirPlease/L4D2-Competitive-Rework"
 };
 
 public void OnPluginStart()
 {
-	Handle hGamedata = LoadGameConfigFile(GAMEDATA);
+	// Pounce damage interrupt budget
+	iPounceBudgetOffset = FindSendPropInfo("CTerrorPlayer", "m_isAttemptingToPounce") + 4;
 
-	if (!hGamedata) {
-		SetFailState("Gamedata '%s.txt' missing or corrupt.", GAMEDATA);
-	}
-	
-	int iOnOwnerTakeDamageOffset = GameConfGetOffset(hGamedata, "CBaseAbility::OnOwnerTakeDamage");
-	if (iOnOwnerTakeDamageOffset == -1) {
-		SetFailState("Failed to get offset 'CBaseAbility::OnOwnerTakeDamage'.");
-	}
-	
-	hCBaseAbility_OnOwnerTakeDamage = DHookCreate(iOnOwnerTakeDamageOffset, HookType_Entity, ReturnType_Void, ThisPointer_Ignore, CBaseAbility_OnOwnerTakeDamage);
+	// Set when hit mid-lunge, blocks lunging again off walls
+	iLungeDamagedOffset = FindSendPropInfo("CLunge", "m_isLunging") + 1;
 
-	DHookAddParam(hCBaseAbility_OnOwnerTakeDamage, HookParamType_ObjectPtr);
-
-	delete hGamedata;
-}
-
-public void OnEntityCreated(int entity, const char[] classname)
-{
-	if (strcmp(classname, "ability_lunge") == 0) {
-		DHookEntity(hCBaseAbility_OnOwnerTakeDamage, false, entity); 
+	for (int i = 1; i <= MaxClients; i++) {
+		if (IsClientInGame(i)) {
+			OnClientPutInServer(i);
+		}
 	}
 }
 
-// During this function call the game simply validates the owner entity 
-// and then sets a bool saying you can't pounce again if you're already mid-pounce.
-// afaik
-MRESReturn CBaseAbility_OnOwnerTakeDamage(Handle hParams)
+public void OnClientPutInServer(int client)
 {
-	// Skip the whole function plox
-	return MRES_Supercede;
+	SDKHook(client, SDKHook_OnTakeDamage, OnTakeDamage);
+	SDKHook(client, SDKHook_OnTakeDamagePost, OnTakeDamagePost);
+}
+
+Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
+{
+	/*
+		Damage still counts towards z_pounce_damage_interrupt for ~0.1s after a pounce ends (and hasn't been skeeted)
+		If the pounce damage + the buffer reaches z_pounce_damage_interrupt, the hunter is stunned for ~0.5s.
+		The budget is reset at the start of every pounce, so setting it to a high value doesn't affect skeets.
+	*/
+	if (IsClientInGame(victim) && IsHunter(victim) && !GetEntProp(victim, Prop_Send, "m_isAttemptingToPounce") && GetEntPropEnt(victim, Prop_Send, "m_pounceVictim") == -1) {
+		SetEntData(victim, iPounceBudgetOffset, 999999);
+	}
+
+	return Plugin_Continue;
+}
+
+void OnTakeDamagePost(int victim, int attacker, int inflictor, float damage, int damagetype)
+{
+	// The damage flag only gets read when lunging again, so clearing it after the damage is enough (no need for gamedata)
+	if (IsClientInGame(victim) && IsHunter(victim)) {
+		int ability = GetEntPropEnt(victim, Prop_Send, "m_customAbility");
+		if (ability != -1) {
+			SetEntData(ability, iLungeDamagedOffset, 0, 1);
+		}
+	}
+}
+
+bool IsHunter(int client)
+{
+	return GetClientTeam(client) == 3 && GetEntProp(client, Prop_Send, "m_zombieClass") == 3;
 }
