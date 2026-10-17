@@ -289,11 +289,15 @@ public void OnMapStart()
 }
 #endif
 
-#if MODULE_MAPINFO || MODULE_WEAPONINFORMATION || MODULE_PASSWORDSYSTEM || MODULE_WATERSLOWDOWN
+#if MODULE_MAPINFO || MODULE_REQMATCH || MODULE_WEAPONINFORMATION || MODULE_PASSWORDSYSTEM || MODULE_WATERSLOWDOWN
 
 public void OnMapEnd()
 {
 	// Modules
+	#if MODULE_REQMATCH
+	RM_OnMapEnd();	  // ReqMatch
+	#endif
+
 	#if MODULE_MAPINFO
 	MI_OnMapEnd();	  // MapInfo
 	#endif
@@ -344,15 +348,11 @@ public bool OnClientConnect(int client, char[] rejectmsg, int maxlen)
 }
 #endif
 
-#if MODULE_REQMATCH || MODULE_UNRESERVELOBBY || MODULE_PASSWORDSYSTEM || MODULE_FINALESPAWN
+#if MODULE_UNRESERVELOBBY || MODULE_PASSWORDSYSTEM || MODULE_FINALESPAWN
 
 public void OnClientPutInServer(int client)
 {
 	// Modules
-	#if MODULE_REQMATCH
-	RM_OnClientPutInServer();	 // ReqMatch
-	#endif
-
 	#if MODULE_UNRESERVELOBBY
 	UL_OnClientPutInServer();	 // UnreserveLobby
 	#endif
