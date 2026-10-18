@@ -139,10 +139,6 @@ Action RoundStartDelay_Timer(Handle hTimer)
 	int iMax = GetMaxEntities();
 
 	for (int i = (MaxClients + 1); i < iMax; i++) {
-		if (!IsValidEntity(i)) {
-			continue;
-		}
-
 		int iWeapon = IdentifyWeapon(i);
 		if (!iWeapon) {
 			continue;
