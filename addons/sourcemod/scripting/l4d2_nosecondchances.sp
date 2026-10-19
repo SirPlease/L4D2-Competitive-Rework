@@ -23,6 +23,7 @@
 #include <sdktools>
 
 #define TEAM_INFECTED 3
+#define ZC_CHARGER    6
 
 static const char L4D2_SI_Victim_NetProps[][] = {
 	"",
@@ -38,19 +39,19 @@ static const char L4D2_SI_Victim_NetProps[][] = {
 
 ConVar g_hBotKickDelay = null;
 
-public Plugin myinfo = 
+public Plugin myinfo =
 {
 	name = "L4D2 No Second Chances",
 	author = "Visor, Jacob, A1m`",
 	description = "Previously human-controlled SI bots with a cap won't die",
-	version = "1.4",
+	version = "1.5",
 	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 };
 
 public void OnPluginStart()
 {
 	HookEvent("player_bot_replace", PlayerBotReplace);
-	
+
 	g_hBotKickDelay = CreateConVar("bot_kick_delay", "0", "How long should we wait before kicking infected bots?", _, true, 0.0, true, 30.0);
 }
 
@@ -71,18 +72,36 @@ void PlayerBotReplace(Event hEvent, const char[] eName, bool dontBroadcast)
 
 bool ShouldBeKicked(int iBot)
 {
-	int iZombieClassType = GetEntProp(iBot, Prop_Send, "m_zombieClass");
-	
+	int iZombieClassType = GetZombieClass(iBot);
+
 	if (strlen(L4D2_SI_Victim_NetProps[iZombieClassType]) == 0) {
 		return false;
 	}
-	
+
 	if (GetEntPropEnt(iBot, Prop_Send, L4D2_SI_Victim_NetProps[iZombieClassType]) != -1) {
+		return false;
+	}
+
+	if (IsChargerInCharge(iBot)) {
 		return false;
 	}
 
 	return true;
 }
+
+bool IsChargerInCharge(int client)
+{
+	if (!IsPlayerAlive(client) || GetZombieClass(client) != ZC_CHARGER)
+		return false;
+
+	int ability = GetEntPropEnt(client, Prop_Send, "m_customAbility");
+	if (ability != -1 && GetEntProp(ability, Prop_Send, "m_isCharging"))
+		return true;
+
+	return GetEntPropEnt(client, Prop_Send, "m_carryVictim") != -1 || (GetEntityFlags(client) & FL_FROZEN);
+}
+
+int GetZombieClass(int client) { return GetEntProp(client, Prop_Send, "m_zombieClass"); }
 
 Action Timer_KillBotDelay(Handle hTimer, any iUserID)
 {
