@@ -29,7 +29,7 @@
 #tryinclude <left4dhooks_silver>
 #tryinclude <left4dhooks_stocks>
 
-#define LUX_LIBRARY_VERSION "0.5.8"
+#define LUX_LIBRARY_VERSION 0.5.9
 
 #define GIMMEDATA "lux_library"
 
@@ -550,11 +550,37 @@ stock void TE_SetupPhysicsProp(float vecModelOrigin[3],
 	TE_WriteVector("m_vecVelocity", vecVelocity);
 	TE_WriteNum("m_nModelIndex", iPrecacheModel);
 	TE_WriteNum("m_nFlags", iFlags);
+	TE_WriteNum("m_nSkin", iSkin);
 	TE_WriteNum("m_nEffects", iEffects);
 	TE_WriteNum("r", RGB[0]);
 	TE_WriteNum("g", RGB[1]);
 	TE_WriteNum("b", RGB[2]);
-	if( iSkin ) iSkin += 1; // Fix "symbol is never used" in SM 1.12
+}
+
+/**
+ * Creates a cheap clientside physics prop using basic physics should work with anything.
+ *
+ * @param vecOrigin			Origin of the prop in world space.
+ * @param vecModelAngles	Angles of the prop.
+ * @param vecVelocity		Velocity used by explosion for pushing the prop.
+ * @param iPrecacheModel	Stringtable index of the prop.
+ * @param flRandomVel		Adds random velocity to model
+ * @param amountToSpawn		Amount of models to spawn recommend using flRandomVel if more than 1
+ * @param flDespawnTime		Time until despawn.
+ **/
+stock void TE_SetupBreakModel(float vecOrigin[3], float vecAngles[3]={0.0, 0.0, 0.0}, float vecVelocity[3]={0.0, 0.0, 0.0}, int iPrecacheModel, int iRandomVel, int iAmountToSpawn=1, float flDespawnTime=10.0)
+{
+	TE_Start("breakmodel");
+	TE_WriteVector("m_vecOrigin", vecOrigin);
+	TE_WriteFloat("m_angRotation[0]", vecAngles[0]);
+	TE_WriteFloat("m_angRotation[1]", vecAngles[1]);
+	TE_WriteFloat("m_angRotation[2]", vecAngles[2]);
+	TE_WriteVector("m_vecVelocity", vecVelocity);
+	TE_WriteNum("m_nModelIndex", iPrecacheModel);
+	TE_WriteNum("m_nRandomization", iRandomVel);
+	TE_WriteNum("m_nCount", iAmountToSpawn);
+	TE_WriteFloat("m_fTime", flDespawnTime);
+	TE_WriteNum("m_nFlags", 0); //forgot
 }
 
 /**
@@ -1529,6 +1555,58 @@ stock void EmitMixedAmbientSound_FallBack(int client, const char[] sample,
 		DistLevelBoost = levelBoost;
 	
 	EmitSoundToClient(client, sample, entity, sndChannel, level + DistLevelBoost, _, _, newPitch, _, origin);
+}
+
+stock void ShakeClientScreenAll(float origin[3], float shakeRange, float shakeAmplitude=5.0, float shakeFrequency=40.0, float shakeDuration=1.0)
+{
+	for(int i = 1; i <= MaxClients; ++i)
+	{
+		if(!IsClientInGame(i) || IsFakeClient(i))
+			continue;
+		
+		ShakeClientScreen(i, origin, shakeRange, shakeAmplitude, shakeFrequency, shakeDuration);
+	}
+}
+
+stock void ShakeClientScreen(int client, float origin[3], float shakeRange, float shakeAmplitude=5.0, float shakeFrequency=40.0, float shakeDuration=1.0)
+{
+	float vecEyePos[3];
+	GetClientEyePosition(client, vecEyePos);
+	float flDist = GetVectorDistance(vecEyePos, origin);
+	float flDistPercent = (flDist / shakeRange);
+	if(flDistPercent <= 0.001)
+		return;
+	
+	__Client_Shake(client, (shakeAmplitude / flDistPercent), shakeFrequency, shakeDuration);
+}
+
+//credit to smlib https://github.com/bcserv/smlib/blob/transitional_syntax/scripting/include/smlib/clients.inc#L2134-L2178
+static stock bool __Client_Shake(int client, float amplitude=50.0, float frequency=150.0, float duration=3.0)
+{
+	Handle userMessage = StartMessageOne("Shake", client);
+	
+	if (userMessage == INVALID_HANDLE) {
+		return false;
+	}
+	
+	if (GetFeatureStatus(FeatureType_Native, "GetUserMessageType") == FeatureStatus_Available
+		&& GetUserMessageType() == UM_Protobuf) {
+		
+		PbSetInt(userMessage,   "command",         0);
+		PbSetFloat(userMessage, "local_amplitude", amplitude);
+		PbSetFloat(userMessage, "frequency",       frequency);
+		PbSetFloat(userMessage, "duration",        duration);
+	}
+	else {
+		BfWriteByte(userMessage,	0);	// Shake Command
+		BfWriteFloat(userMessage,	amplitude);	// shake magnitude/amplitude
+		BfWriteFloat(userMessage,	frequency);	// shake noise frequency
+		BfWriteFloat(userMessage,	duration);	// shake lasts this long
+	}
+	
+	EndMessage();
+	
+	return true;
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

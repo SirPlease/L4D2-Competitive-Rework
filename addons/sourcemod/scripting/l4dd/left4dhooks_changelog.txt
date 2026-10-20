@@ -1,3 +1,67 @@
+1.174 (11-Oct-2026)
+	- Posted 1.173 with the wrong edits...
+	- Fixed forwards "L4D_TankClaw_DoSwing*" throwing property not found errors. Thanks to "Drgon" for reporting.
+
+	- Updated: Plugin.
+	- Updated: "/scripting/l4dd/l4dd_forwards.sp" project file.
+	- Updated: "/scripting/l4dd/l4dd_natives.sp" project file.
+
+1.173 (11-Oct-2026)
+	- Changed native "L4D_HookEntityInput" to allow modifying the "activator" and "caller" from SM version "1.12.0.7232" and newer. Thanks to "Forgetest" for reporting.
+	- Fixed native "L4D_NavArea_GetElevator" throwing invalid entity errors. Thanks to "TBK Duy" for reporting.
+	- Fixed forwards "L4D_TankClaw_DoSwing*" throwing property not found errors. Thanks to "Drgon" for reporting.
+
+1.172 (05-Oct-2026)
+	- Fixed forwards "L4D_OnVomitedUpon*" always returning "true" for "boomerExplosion" in L4D1. Thanks to "HarryPotter" for fixing.
+	- Fixed natives "L4D_HookEntityInput" and "L4D_UnhookEntityInput" to allow multiple hooks of the same entity, and fixed clashing with multiple plugins hooking the same entity.
+	- Fixed natives "L4D_HookEntityInput" and "L4D_UnhookEntityInput" throwing native not found errors in plugins on server start.
+	- Added the "caller" entity to the "InputHookCallback" callback.
+	- Changing "activator" or "caller" will only work in DHooks version "1.13.0.7356" or newer.
+
+1.171 (30-Sep-2026)
+	- Added forwards "L4D_OnSetClass" and "L4D_OnSetClass_Post" to trigger when a Special Infected's class is being set. Requested by "gvazdas".
+	- Added natives "L4D_HookEntityInput" and "L4D_UnhookEntityInput" to hook entity input/output and modify/block. Requested by "gvazdas".
+
+1.170 (30-Sep-2026)
+	- Fixed forward "L4D_OnLeft4DHooks_OnMapStart" firing before setting a bool, preventing natives from truly taking advantage of the forward. Thanks to "little_froy" for reporting.
+	- Updated: Plugin only.
+
+1.169 (29-Sep-2026)
+	- Added "AmmoType" int weapon attribute. Thanks to "Forgetest" for adding.
+	- Fixed forward "L4D_OnLeft4DHooks_OnMapStart" not triggering because it was wrongly named. Thanks to "little_froy" and "blueblur0730" for reporting.
+	- Fixed native "L4D_NavArea_GetLadder" not returning an entity due to wrong offset (no idea how it got changed before release). Thanks to "gvazdas" for reporting and testing.
+	- Fixed native "L4D2_Charger_EndPummel" not setting netprops to the correct person. Thanks to "HarryPotter" for reporting.
+	- Fixed native "L4D_NavArea_GetElevator" sometimes returning an entity that is not "func_elevator". Thanks to "gvazdas" for reporting.
+	- Fixed natives "L4D_NavArea_GetElevator" and "L4D_NavArea_GetLadder" not being correctly marked as optional.
+	- Fixed native "L4D_NavArea_ConnectTo" description. Thanks to "gvazdas" for reporting.
+	- Fixed stock "L4D1_GetZombieClassname" from the "left4dhooks_stocks" using the wrong classname list.
+	- Consolidated the "*_Post" and "*_PostHandled" forwards in the include file to remove unnecessary extra lines. Thanks to "blueblur0730" for the suggestion.
+	- Added missing stocks to the test plugin, from various include files. Every forward/native/stock should now be listed with an example.
+
+1.168 (18-Jun-2026)
+	- Fixed forwards "L4D_OnSetCampaignScores*" from crashing with "Invalid parameter or parameter type" error. Thanks to "Marttt" for reporting.
+	- Fixed "iSkin" not being used in "TE_SetupPhysicsProp" from the "left4dhooks_lux_library" include file. Thanks to "Lux" for fixing.
+	- Fixed stocks "L4D1_GetZombieClassname" and "L4D2_GetZombieClassname" from the "left4dhooks_stocks" include file from throwing errors in SM 1.12.
+	- Removed stock "L4D2_GetWeaponClassname" which was only a temporary filler to fix SM 1.12 warnings
+
+1.167 (12-Jun-2026)
+	- Added forward "L4D_OnLeft4DHooks_OnMapStart" to trigger when "Left4DHooks" has finished it's own "OnMapStart" and is ready. Requested by "SCP-076".
+	- Added natives "L4D_IsPotentiallyVisibleToTeam", "L4D_IsPotentiallyVisible", "L4D_IsCompletelyVisibleToTeam" and "L4D_IsCompletelyVisible" to check if NavAreas are visible to players. Requested by "gvazdas".
+	- Added natives "L4D_GetClusterForOrigin", "L4D_GetPVSForCluster" and "L4D_CheckOriginInPVS" to check PVS - potentially visible set. Thanks to "zyiks" and "gvazdas" for the original code creation.
+	- Added native "L4D_NavArea_GetCorner" to get the corner positions of a NavArea. Requested by "gvazdas".
+	- Added native "L4D_NavArea_GetZ" to get the height of a NavArea at a given position. Requested by "gvazdas".
+	- Added native "L4D_NavArea_GetElevator" to get the elevator entity of an area, if available. Requested by "gvazdas".
+	- Added native "L4D_NavArea_GetLadder" to get the ladder entities of an area, if available. Requested by "gvazdas".
+	- Added native "L4D_NavArea_ConnectTo" to connect NavAreas. Requested by "Marttt".
+	- Added natives "L4D_GetMass" and "L4D_SetMass" to get and set the mass of a physics object. Requested by "Marttt".
+	- Changed forwards "L4D2_OnStartUseAction*" to use the "L4D2UseAction" type. Requested by "lechuga16".
+	- Change stock "L4D2_GetPlayerZombieClass" to return "L4D2ZombieClassType" type. Requested by "lechuga16".
+	- Fixed native "AnimHookDisable" not disabling correctly. Thanks to "Piplup" for reporting.
+	- Consolidated some error messages.
+
+	- Updated to the latest version of the "lux_library" include file. Thanks to "Lux" for reporting.
+	- Added "TE_SetupBreakModel", "ShakeClientScreenAll" and "ShakeClientScreen" stocks.
+
 1.166 (15-Mar-2026)
 	- Added native "L4D_FindByClassnameTargetname" to search for an entity by classname and targetname.
 	- Added native "L4D_NavArea_IsBlocked" to check if a NavArea is blocked. Requested by "gvazdas".
@@ -6,15 +70,6 @@
 
 	- Fixed native "L4D_IsInIntro" not working on "c3m1_plankcountry" and "c7m1_docks". If other maps are broken please report. Thanks to "gvazdas" for reporting.
 	- Fixed forward "L4D2_OnEntityShoved" not working on Common Infected in recent updates. Thanks to "HwanGyul" for reporting.
-
-	- Updated: Plugin and test plugin.
-	- Updated: "/gamedata/left4dhooks.l4d1.txt" GameData file.
-	- Updated: "/gamedata/left4dhooks.l4d2.txt" GameData file.
-	- Updated: "/scripting/include/left4dhooks.inc" Include file.
-	- Updated: "/scripting/l4dd/l4dd_forwards.sp" project file.
-	- Updated: "/scripting/l4dd/l4dd_natives.sp" project file.
-	- Updated: "/scripting/l4dd/l4dd_gamedata.sp" project file.
-	- Updated: "/scripting/l4dd/l4dd_setup.sp" project file.
 
 1.165 (14-Mar-2026)
 	- Fixed the "GetMeleePointer" SDKCall being accidentality removed. Thanks to "zuaLdakid05" for reporting.
@@ -29,10 +84,10 @@
 	- Added natives "L4D_NavArea_GetAdjacentCount" and "L4D_NavArea_GetAdjacentAreas" to check for adjacent nav areas. Requested by "Slaven555".
 	- Added "POINTER_THENEXTBOTS" enum for the "L4D_GetPointer" native to return the TheNextBots pointer.
 
-	- Fixed storing float to int variable when setting float attribute "L4D2FWA_PenetrationNumLayers". Thanks to "jensewe" for fixing.
-	- Fixed default return value of Native "L4D2_GetFloatWeaponAttribute". Thanks to "jensewe" for fixing.
+	- Fixed storing float to int variable when setting float attribute "L4D2FWA_PenetrationNumLayers". Thanks to "Forgetest" for fixing.
+	- Fixed default return value of Native "L4D2_GetFloatWeaponAttribute". Thanks to "Forgetest" for fixing.
 	- Fixed "Invalid private forward handle" errors. Thanks to "gvazdas" for testing and various others for reporting.
-	- Fixed forwards "L4D_PipeBombProjectile*" and "L4D_PipeBomb_Detonate*" from firing due to breakable props when the "L4D_CBreakableProp_Break" forward wasn't being used. Thanks to "blueblur07302 for reporting.
+	- Fixed forwards "L4D_PipeBombProjectile*" and "L4D_PipeBomb_Detonate*" from firing due to breakable props when the "L4D_CBreakableProp_Break" forward wasn't being used. Thanks to "blueblur0730" for reporting.
 
 1.162 (25-Jan-2026)
 	- Added new target filters. Requested by Tonblader:
@@ -63,7 +118,7 @@
 
 	- Added "PZDmgMsg" enum for the "PZDmgMsg" usermessage. Thanks to "A1m`" for creating.
 
-	- Fixed "Ammo_t.GetName" methodmap and added "AmmoDef.MaxCarry_Call". Thanks to "jensewe" on GitHub.
+	- Fixed "Ammo_t.GetName" methodmap and added "AmmoDef.MaxCarry_Call". Thanks to "Forgetest" for fixing.
 	- Fixed wrong comment info for "L4D_WarpToValidPositionIfStuck" in "l4dd_natives". Thanks to "Marttt" for reporting.
 
 1.159 (01-Jul-2025)
@@ -263,7 +318,7 @@
 	- Added native "L4D_SetPlayerSpawnTime" to set the spawn timer of a SI. Requested by "A1m`".
 
 	- Fixed native "L4D_OnGameModeChange" in L4D2 returning 0 for realism. Thanks to "HarryPotter" for reporting.
-	- Fixed forward "L4D2_CGasCan_EventKilled" not setting the correct modified values. Thanks to " 4NTEP xD " for reporting.
+	- Fixed forward "L4D2_CGasCan_EventKilled" not setting the correct modified values. Thanks to "4NTEP xD" for reporting.
 
 	- Fixed stocks "L4D2_GetWeaponUpgradeAmmoCount" and "L4D2_GetWeaponUpgrades" in the "left4dhooks_stocks" file, to return values other than 0 and 1. Thanks to "BHaType" for reporting.
 	- Plugins using either of these stocks should be recompiled against the updated file.
@@ -578,7 +633,7 @@
 
 	- Added enums "L4D1ZombieClassname" and "L4D2ZombieClassname" to the "left4dhooks_stocks.inc" include file to retrieve a classname from the relative "L4D1ZombieClassType" and "L4D2ZombieClassType" enums.
 
-	- Added target filters "@blackwhite" and "@bw" to target people who are on their third strike (black and white - about to die). Requested by "eyal282".
+	- Added target filters "@blackwhite" and "@bw" to target people who are on their third strike (black and white - about to die). Requested by "Eyal282".
 	- Added target filters "@survivorbots" and "@sb" to target Survivor Bots. Requested by "LordVGames".
 	- Added target filters "@infectedbots" and "@ib" to target Infected Bots. Requested by "LordVGames".
 
@@ -1232,7 +1287,7 @@
 	- Fixed creating forwards and natives in the wrong place. Thanks to "Accelerator74" for reporting.
 	- Fixed some signatures failing when other plugins detour them. Thanks to "hoanganh810972" for reporting.
 	- Fixed cvar "l4d2_addons_eclipse" - values 0 and 1 now disable/enable addons unless otherwise handled.
-	- Fixed not forwarding some Director Variables that were initialized too early. Thanks to "hoanganh81097" for reporting.
+	- Fixed not forwarding some Director Variables that were initialized too early. Thanks to "hoanganh810972" for reporting.
 	- Thanks to "Spirit_12" for ideas with the Director Variables fix.
 	- Removed unused actions from some forwards.
 
