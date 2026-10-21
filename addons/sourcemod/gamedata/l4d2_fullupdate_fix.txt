@@ -1,0 +1,32 @@
+"Games"
+{
+	"left4dead2"
+	{
+		"Functions"
+		{
+			"CTerrorPlayer::CreateNoise"
+			{
+				"offset"		"CTerrorPlayer::CreateNoise"
+				"hooktype"		"entity"
+				"return"		"void"
+				"this"			"entity"
+				"arguments"
+				{
+					"noise"
+					{
+						"type"	"float"
+					}
+				}
+			}
+		}
+
+		"Offsets"
+		{
+			"CTerrorPlayer::CreateNoise"
+			{
+				"linux"			"532"
+				"windows"		"531"
+			}
+		}
+	}
+}
