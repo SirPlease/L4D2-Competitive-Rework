@@ -4,566 +4,399 @@
 #include <sourcemod>
 #include <sdkhooks>
 #include <sdktools>
-#include <dhooks>
 #undef REQUIRE_PLUGIN
 #include <l4d2_hittable_control>
 
-#define Z_TANK			8
-#define TEAM_INFECTED	3
+#define ZC_TANK			8
 #define TEAM_SPECTATOR	1
+#define TEAM_INFECTED	3
 
 #define MAX_EDICTS		2048 //(1 << 11)
+#define MODEL_FORKLIFT	"models/props/cs_assault/forklift.mdl"
 
 ConVar
-	g_hTankPropFade = null,
-	g_hCvartankPropsGlow = null,
+	g_hCvarEnable = null,
+	g_hCvarColor = null,
 	g_hCvarRange = null,
 	g_hCvarRangeMin = null,
-	g_hCvarColor = null,
 	g_hCvarTankOnly = null,
-	g_hCvarTankSpec = null,
-	g_hCvarTankPropsBeGone = null;
+	g_hCvarSpectators = null,
+	g_hCvarRemoveTime = null,
+	g_hTankPropFade = null;
 
-ArrayList
-	g_hTankProps = null,
-	g_hTankPropsHit = null;
+Handle
+	g_hRemoveTimer = null;
 
 int
-	g_iEntityList[MAX_EDICTS] = {-1, ...},
-	g_iTankClient = -1,
-	g_iCvarRange = 0,
-	g_iCvarRangeMin = 0,
-	g_iCvarColor = 0;
+	g_iGlowRef[MAX_EDICTS], // Glow entity of every hittable the Tank has hit, indexed by the hittable
+	g_iColor = 0,
+	g_iRange = 0,
+	g_iRangeMin = 0;
 
 bool
-	g_bCvarTankOnly = false,
-	g_bCvarTankSpec = false,
-	g_bTankSpawned = false,
-	g_bHittableControlExists = false;
+	g_bEnabled = false,
+	g_bTankOnly = false,
+	g_bSpectators = false,
+	g_bTankAlive = false,
+	g_bRecreatePending = false,
+	g_bGlowSent[MAXPLAYERS + 1];
 
 public Plugin myinfo =
 {
 	name = "L4D2 Tank Hittable Glow",
 	author = "Harry Potter, Sir, A1m`, Derpduck",
-	version = "2.5.1",
+	version = "3.0",
 	description = "Stop tank props from fading whilst the tank is alive + add Hittable Glow."
 };
 
 public void OnPluginStart()
 {
-	g_hCvartankPropsGlow = CreateConVar("l4d_tank_props_glow", "1", "Show Hittable Glow for infected team while the tank is alive", FCVAR_NOTIFY);
+	g_hCvarEnable = CreateConVar("l4d_tank_props_glow", "1", "Show Hittable Glow for infected team while the tank is alive", FCVAR_NOTIFY);
 	g_hCvarColor = CreateConVar("l4d2_tank_prop_glow_color", "255 255 255", "Prop Glow Color, three values between 0-255 separated by spaces. RGB Color255 - Red Green Blue.", FCVAR_NOTIFY);
 	g_hCvarRange = CreateConVar("l4d2_tank_prop_glow_range", "4500", "How near to props do players need to be to enable their glow.", FCVAR_NOTIFY);
 	g_hCvarRangeMin = CreateConVar("l4d2_tank_prop_glow_range_min", "256", "How near to props do players need to be to disable their glow.", FCVAR_NOTIFY);
 	g_hCvarTankOnly = CreateConVar("l4d2_tank_prop_glow_only", "0", "Only Tank can see the glow", FCVAR_NOTIFY);
-	g_hCvarTankSpec = CreateConVar("l4d2_tank_prop_glow_spectators", "1", "Spectators can see the glow too", FCVAR_NOTIFY);
-	g_hCvarTankPropsBeGone = CreateConVar("l4d2_tank_prop_dissapear_time", "10.0", "Time it takes for hittables that were punched by Tank to dissapear after the Tank dies.", FCVAR_NOTIFY);
-
-	GetCvars();
-
+	g_hCvarSpectators = CreateConVar("l4d2_tank_prop_glow_spectators", "1", "Spectators can see the glow too", FCVAR_NOTIFY);
+	g_hCvarRemoveTime = CreateConVar("l4d2_tank_prop_dissapear_time", "10.0", "Time it takes for hittables that were punched by Tank to dissapear after the Tank dies.", FCVAR_NOTIFY);
 	g_hTankPropFade = FindConVar("sv_tankpropfade");
-	g_hCvartankPropsGlow.AddChangeHook(TankPropsGlowAllow);
-	g_hCvarColor.AddChangeHook(ConVarChanged_Glow);
-	g_hCvarRange.AddChangeHook(ConVarChanged_Range);
-	g_hCvarRangeMin.AddChangeHook(ConVarChanged_RangeMin);
-	g_hCvarTankOnly.AddChangeHook(ConVarChanged_Cvars);
-	g_hCvarTankSpec.AddChangeHook(ConVarChanged_Cvars);
 
-	PluginEnable();
-}
+	g_hCvarEnable.AddChangeHook(CvarChanged_Enable);
+	g_hCvarColor.AddChangeHook(CvarChanged_Glow);
+	g_hCvarRange.AddChangeHook(CvarChanged_Glow);
+	g_hCvarRangeMin.AddChangeHook(CvarChanged_Glow);
+	g_hCvarTankOnly.AddChangeHook(CvarChanged_Visibility);
+	g_hCvarSpectators.AddChangeHook(CvarChanged_Visibility);
 
-public void OnAllPluginsLoaded()
-{
-	g_bHittableControlExists = LibraryExists("l4d2_hittable_control");
-}
+	CvarChanged_Enable(g_hCvarEnable, "", "");
 
-public void OnLibraryRemoved(const char[] name)
-{
-	if (StrEqual(name, "l4d2_hittable_control", true)) {
-		g_bHittableControlExists = false;
-	}
-}
-
-public void OnLibraryAdded(const char[] name)
-{
-	if (StrEqual(name, "l4d2_hittable_control", true)) {
-		g_bHittableControlExists = true;
-	}
-}
-
-void ConVarChanged_Cvars(ConVar hConvar, const char[] sOldValue, const char[] sNewValue)
-{
-	GetCvars();
+	HookEvent("round_start", Event_RoundReset, EventHookMode_PostNoCopy);
+	HookEvent("round_end", Event_RoundReset, EventHookMode_PostNoCopy);
+	HookEvent("tank_spawn", Event_TankSpawn, EventHookMode_PostNoCopy);
+	HookEvent("player_death", Event_PlayerDeath);
+	HookEvent("player_team", Event_PlayerTeam, EventHookMode_PostNoCopy);
 }
 
 void GetCvars()
 {
-	g_bCvarTankOnly = g_hCvarTankOnly.BoolValue;
-	g_bCvarTankSpec = g_hCvarTankSpec.BoolValue;
-	g_iCvarRange = g_hCvarRange.IntValue;
-	g_iCvarRangeMin = g_hCvarRangeMin.IntValue;
+	g_bEnabled = g_hCvarEnable.BoolValue;
+	g_bTankOnly = g_hCvarTankOnly.BoolValue;
+	g_bSpectators = g_hCvarSpectators.BoolValue;
+	g_iRange = g_hCvarRange.IntValue;
+	g_iRangeMin = g_hCvarRangeMin.IntValue;
 
-	char sColor[16];
+	char sColor[16], sParts[3][4];
 	g_hCvarColor.GetString(sColor, sizeof(sColor));
-	g_iCvarColor = GetColor(sColor);
+	g_iColor = (ExplodeString(sColor, " ", sParts, sizeof(sParts), sizeof(sParts[])) == 3)
+		? StringToInt(sParts[0]) + 256 * StringToInt(sParts[1]) + 65536 * StringToInt(sParts[2])
+		: 0;
 }
 
-void TankPropsGlowAllow(Handle hConVar, const char[] sOldValue, const char[] sNewValue)
+void CvarChanged_Enable(ConVar hConVar, const char[] sOldValue, const char[] sNewValue)
 {
-	if (!g_hCvartankPropsGlow.BoolValue) {
-		PluginDisable();
-	} else {
-		PluginEnable();
+	GetCvars();
+	g_hTankPropFade.SetBool(!g_bEnabled);
+
+	if (!g_bEnabled) {
+		g_bTankAlive = false;
+		delete g_hRemoveTimer;
+		ClearGlows(false);
 	}
 }
 
-void ConVarChanged_Glow(Handle hConVar, const char[] sOldValue, const char[] sNewValue)
+public void OnPluginEnd()
+{
+	// Without the transmit hook every client would see the glows
+	ClearGlows(false);
+}
+
+void CvarChanged_Glow(ConVar hConVar, const char[] sOldValue, const char[] sNewValue)
 {
 	GetCvars();
 
-	if (!g_bTankSpawned) {
-		return;
-	}
-
-	int iRef = INVALID_ENT_REFERENCE, iValue = 0, iSize = g_hTankPropsHit.Length;
-	for (int i = 0; i < iSize; i++) {
-		iValue = g_hTankPropsHit.Get(i);
-
-		if (iValue > 0 && IsValidEdict(iValue)) {
-			iRef = g_iEntityList[iValue];
-
-			if (IsValidEntRef(iRef)) {
-				SetEntProp(iRef, Prop_Send, "m_iGlowType", 3);
-				SetEntProp(iRef, Prop_Send, "m_glowColorOverride", g_iCvarColor);
-			}
+	int iGlow;
+	for (int i = MaxClients + 1; i < MAX_EDICTS; i++) {
+		if ((iGlow = GetGlow(i)) != -1) {
+			SetGlowProps(iGlow);
 		}
 	}
 }
 
-void ConVarChanged_Range(ConVar hConVar, const char[] sOldValue, const char[] sNewValue)
+void CvarChanged_Visibility(ConVar hConVar, const char[] sOldValue, const char[] sNewValue)
 {
 	GetCvars();
-
-	if (!g_bTankSpawned) {
-		return;
-	}
-
-	int iRef = INVALID_ENT_REFERENCE, iValue = -1, iSize = g_hTankPropsHit.Length;
-	for (int i = 0; i < iSize; i++) {
-		iValue = g_hTankPropsHit.Get(i);
-
-		if (iValue > 0 && IsValidEdict(iValue)) {
-			iRef = g_iEntityList[iValue];
-
-			if (IsValidEntRef(iRef)) {
-				SetEntProp(iRef, Prop_Send, "m_nGlowRange", g_iCvarRange);
-			}
-		}
-	}
-}
-
-void ConVarChanged_RangeMin(ConVar hConVar, const char[] sOldValue, const char[] sNewValue)
-{
-	GetCvars();
-
-	if (!g_bTankSpawned) {
-		return;
-	}
-
-	int iRef = INVALID_ENT_REFERENCE, iValue = -1, iSize = g_hTankPropsHit.Length;
-	for (int i = 0; i < iSize; i++) {
-		iValue = g_hTankPropsHit.Get(i);
-
-		if (iValue > 0 && IsValidEdict(iValue)) {
-			iRef = g_iEntityList[iValue];
-
-			if (IsValidEntRef(iRef)) {
-				SetEntProp(iRef, Prop_Send, "m_nGlowRangeMin", g_iCvarRangeMin);
-			}
-		}
-	}
-}
-
-void PluginEnable()
-{
-	g_hTankPropFade.SetBool(false);
-
-	g_hTankProps = new ArrayList();
-	g_hTankPropsHit = new ArrayList();
-
-	HookEvent("round_start", TankPropRoundReset, EventHookMode_PostNoCopy);
-	HookEvent("round_end", TankPropRoundReset, EventHookMode_PostNoCopy);
-	HookEvent("tank_spawn", TankPropTankSpawn, EventHookMode_PostNoCopy);
-	HookEvent("player_death", TankPropTankKilled, EventHookMode_PostNoCopy);
-
-	char sColor[16];
-	g_hCvarColor.GetString(sColor, sizeof(sColor));
-	g_iCvarColor = GetColor(sColor);
-	g_iCvarRange = g_hCvarRange.IntValue;
-	g_iCvarRangeMin = g_hCvarRangeMin.IntValue;
-	g_bCvarTankOnly = g_hCvarTankOnly.BoolValue;
-}
-
-void PluginDisable()
-{
-	g_hTankPropFade.SetBool(true);
-
-	UnhookEvent("round_start", TankPropRoundReset, EventHookMode_PostNoCopy);
-	UnhookEvent("round_end", TankPropRoundReset, EventHookMode_PostNoCopy);
-	UnhookEvent("tank_spawn", TankPropTankSpawn, EventHookMode_PostNoCopy);
-	UnhookEvent("player_death", TankPropTankKilled, EventHookMode_PostNoCopy);
-
-	if (!g_bTankSpawned) {
-		return;
-	}
-
-	int iRef = INVALID_ENT_REFERENCE, iValue = -1, iSize = g_hTankPropsHit.Length;
-
-	for (int i = 0; i < iSize; i++) {
-		iValue = g_hTankPropsHit.Get(i);
-
-		if (iValue > 0 && IsValidEdict(iValue)) {
-			iRef = g_iEntityList[iValue];
-
-			if (IsValidEntRef(iRef)) {
-				RemoveEntity(iRef);
-			}
-		}
-	}
-
-	g_bTankSpawned = false;
-
-	delete g_hTankProps;
-	g_hTankProps = null;
-
-	delete g_hTankPropsHit;
-	g_hTankPropsHit = null;
+	CheckStaleGlowClients();
 }
 
 public void OnMapEnd()
 {
-	DHookRemoveEntityListener(ListenType_Created, PossibleTankPropCreated);
-
-	g_hTankProps.Clear();
-	g_hTankPropsHit.Clear();
+	g_hRemoveTimer = null;
+	g_bTankAlive = false;
 }
 
-void TankPropRoundReset(Event hEvent, const char[] sEventName, bool bDontBroadcast)
+public void OnClientDisconnect(int iClient)
 {
-	DHookRemoveEntityListener(ListenType_Created, PossibleTankPropCreated);
-
-	g_bTankSpawned = false;
-
-	UnhookTankProps();
-	g_hTankPropsHit.Clear();
+	g_bGlowSent[iClient] = false;
 }
 
-void TankPropTankSpawn(Event hEvent, const char[] sEventName, bool bDontBroadcast)
+void Event_RoundReset(Event hEvent, const char[] sEventName, bool bDontBroadcast)
 {
-	if (g_bTankSpawned) {
+	g_bTankAlive = false;
+	RemoveHitProps();
+}
+
+void Event_TankSpawn(Event hEvent, const char[] sEventName, bool bDontBroadcast)
+{
+	if (g_bTankAlive || !g_bEnabled) {
 		return;
 	}
 
-	UnhookTankProps();
-	g_hTankPropsHit.Clear();
+	g_bTankAlive = true;
+	RemoveHitProps();
 
-	HookTankProps();
+	bool bForkliftsUnbreakable = (GetFeatureStatus(FeatureType_Native, "AreForkliftsUnbreakable") == FeatureStatus_Available
+		&& AreForkliftsUnbreakable());
 
-	DHookAddEntityListener(ListenType_Created, PossibleTankPropCreated);
-
-	g_bTankSpawned = true;
-}
-
-/* // error 203: symbol is never used: "PD_ev_EntityKilled"
-void PD_ev_EntityKilled(Event hEvent, const char[] sEventName, bool bDontBroadcast)
-{
-	if (!g_bTankSpawned) {
-		return;
-	}
-
-	int iClient = hEvent.GetInt("entindex_killed");
-
-	if (IsValidAliveTank(iClient)) {
-		CreateTimer(1.5, TankDeadCheck, _, TIMER_FLAG_NO_MAPCHANGE);
-	}
-}
-*/
-
-void TankPropTankKilled(Event hEvent, const char[] sEventName, bool bDontBroadcast)
-{
-	if (!g_bTankSpawned) {
-		return;
-	}
-
-	CreateTimer(0.5, TankDeadCheck, _, TIMER_FLAG_NO_MAPCHANGE);
-}
-
-Action TankDeadCheck(Handle hTimer)
-{
-	if (GetTankClient() == -1) {
-		CreateTimer(g_hCvarTankPropsBeGone.FloatValue, TankPropsBeGone);
-
-		DHookRemoveEntityListener(ListenType_Created, PossibleTankPropCreated);
-
-		g_bTankSpawned = false;
-	}
-
-	return Plugin_Stop;
-}
-
-Action TankPropsBeGone(Handle hTimer)
-{
-	UnhookTankProps();
-
-	return Plugin_Stop;
-}
-
-void PropDamaged(int iVictim, int iAttacker, int iInflictor, float fDamage, int iDamageType)
-{
-	if (IsValidAliveTank(iAttacker) || g_hTankPropsHit.FindValue(iInflictor) != -1) {
-		//PrintToChatAll("tank hit %d", iVictim);
-
-		if (g_hTankPropsHit.FindValue(iVictim) == -1) {
-			g_hTankPropsHit.Push(iVictim);
-			CreateTankPropGlow(iVictim);
+	char sModel[PLATFORM_MAX_PATH];
+	for (int i = MaxClients + 1, iMax = GetMaxEntities(); i < iMax; i++) {
+		// CPhysicsProp only
+		if (!IsValidEdict(i) || !HasEntProp(i, Prop_Send, "m_hasTankGlow") || !GetEntProp(i, Prop_Send, "m_hasTankGlow", 1)) {
+			continue;
 		}
+
+		if (!bForkliftsUnbreakable) {
+			GetEntPropString(i, Prop_Data, "m_ModelName", sModel, sizeof(sModel));
+
+			if (strcmp(sModel, MODEL_FORKLIFT) == 0) {
+				continue;
+			}
+		}
+
+		// Hooks are kept until the entity is gone, so never add a second one
+		SDKUnhook(i, SDKHook_OnTakeDamagePost, OnPropDamaged);
+		SDKHook(i, SDKHook_OnTakeDamagePost, OnPropDamaged);
 	}
 }
 
-void CreateTankPropGlow(int iTarget)
+void Event_PlayerDeath(Event hEvent, const char[] sEventName, bool bDontBroadcast)
 {
-	// Spawn dynamic prop entity
-	int iEntity = CreateEntityByName("prop_dynamic_override");
-	if (iEntity == -1) {
+	if (!g_bTankAlive) {
 		return;
 	}
 
-	// Get position of hittable
-	float vOrigin[3];
-	float vAngles[3];
-	GetEntPropVector(iTarget, Prop_Send, "m_vecOrigin", vOrigin);
-	GetEntPropVector(iTarget, Prop_Data, "m_angRotation", vAngles);
+	int iClient = GetClientOfUserId(hEvent.GetInt("userid"));
+	if (iClient && GetEntProp(iClient, Prop_Send, "m_zombieClass") == ZC_TANK) {
+		CreateTimer(0.5, Timer_TankDeadCheck, _, TIMER_FLAG_NO_MAPCHANGE);
+	}
+}
 
-	// Get Client Model
-	char sModelName[PLATFORM_MAX_PATH];
-	GetEntPropString(iTarget, Prop_Data, "m_ModelName", sModelName, sizeof(sModelName));
+Action Timer_TankDeadCheck(Handle hTimer)
+{
+	if (g_bTankAlive && !IsTankInPlay()) {
+		g_bTankAlive = false;
+		g_hRemoveTimer = CreateTimer(g_hCvarRemoveTime.FloatValue, Timer_RemoveHitProps, _, TIMER_FLAG_NO_MAPCHANGE);
+	}
 
-	// Set new fake model
-	SetEntityModel(iEntity, sModelName);
-	DispatchSpawn(iEntity);
+	return Plugin_Stop;
+}
 
-	// Set outline glow color
-	SetEntProp(iEntity, Prop_Send, "m_CollisionGroup", 0);
-	SetEntProp(iEntity, Prop_Send, "m_nSolidType", 0);
-	SetEntProp(iEntity, Prop_Send, "m_nGlowRange", g_iCvarRange);
-	SetEntProp(iEntity, Prop_Send, "m_nGlowRangeMin", g_iCvarRangeMin);
-	SetEntProp(iEntity, Prop_Send, "m_iGlowType", 2);
-	SetEntProp(iEntity, Prop_Send, "m_glowColorOverride", g_iCvarColor);
-	AcceptEntityInput(iEntity, "StartGlowing");
+Action Timer_RemoveHitProps(Handle hTimer)
+{
+	g_hRemoveTimer = null;
+	ClearGlows(true);
 
-	// Set model invisible
-	SetEntityRenderMode(iEntity, RENDER_NONE);
-	SetEntityRenderColor(iEntity, 0, 0, 0, 0);
+	return Plugin_Stop;
+}
 
-	// Set model to hittable position
-	TeleportEntity(iEntity, vOrigin, vAngles, NULL_VECTOR);
+void RemoveHitProps()
+{
+	delete g_hRemoveTimer;
+	ClearGlows(true);
+}
 
-	// Set model attach to client, and always synchronize
+void OnPropDamaged(int iVictim, int iAttacker, int iInflictor, float fDamage, int iDamageType)
+{
+	// Hooks outlive the Tank, so only act while it's alive or until its hittables are removed
+	if ((!g_bTankAlive && g_hRemoveTimer == null) || GetGlow(iVictim) != -1) {
+		return;
+	}
+
+	// Hit by the Tank, or by a hittable the Tank sent flying
+	if ((iAttacker > 0 && iAttacker <= MaxClients && IsClientInGame(iAttacker) && GetClientTeam(iAttacker) == TEAM_INFECTED && IsTank(iAttacker))
+		|| (iInflictor > MaxClients && iInflictor < MAX_EDICTS && GetGlow(iInflictor) != -1)) {
+		CreateGlow(iVictim);
+	}
+}
+
+public void OnEntityCreated(int iEntity, const char[] sClassName)
+{
+	// Hooks c11m4_terminal World Sphere
+	if (g_bTankAlive && strcmp(sClassName, "prop_physics") == 0) {
+		// These entities get spawned after the Tank has punched them, so doing anything here will not work smoothly.
+		SDKHook(iEntity, SDKHook_SpawnPost, OnPhysicsPropSpawned);
+	}
+}
+
+void OnPhysicsPropSpawned(int iEntity)
+{
+	char sModel[PLATFORM_MAX_PATH];
+	GetEntPropString(iEntity, Prop_Data, "m_ModelName", sModel, sizeof(sModel));
+
+	if (StrContains(sModel, "atlas_break_ball") != -1 || StrContains(sModel, "forklift_brokenlift.mdl") != -1) {
+		CreateGlow(iEntity);
+	} else if (StrContains(sModel, "forklift_brokenfork.mdl") != -1) {
+		RemoveEntity(iEntity);
+	}
+}
+
+void CreateGlow(int iProp)
+{
+	int iGlow = CreateEntityByName("prop_dynamic_override");
+	if (iGlow == -1) {
+		return;
+	}
+
+	char sModel[PLATFORM_MAX_PATH];
+	float vOrigin[3], vAngles[3];
+	GetEntPropString(iProp, Prop_Data, "m_ModelName", sModel, sizeof(sModel));
+	GetEntPropVector(iProp, Prop_Send, "m_vecOrigin", vOrigin);
+	GetEntPropVector(iProp, Prop_Data, "m_angRotation", vAngles);
+
+	// Invisible, non-solid copy of the hittable that only draws the outline
+	SetEntityModel(iGlow, sModel);
+	DispatchSpawn(iGlow);
+	SetEntProp(iGlow, Prop_Send, "m_CollisionGroup", 0);
+	SetEntProp(iGlow, Prop_Send, "m_nSolidType", 0);
+	SetEntityRenderMode(iGlow, RENDER_NONE);
+	SetEntityRenderColor(iGlow, 0, 0, 0, 0);
+	SetGlowProps(iGlow);
+	AcceptEntityInput(iGlow, "StartGlowing"); // m_iGlowType 3
+
+	TeleportEntity(iGlow, vOrigin, vAngles, NULL_VECTOR);
 	SetVariantString("!activator");
-	AcceptEntityInput(iEntity, "SetParent", iTarget);
+	AcceptEntityInput(iGlow, "SetParent", iProp);
 
-	SDKHook(iEntity, SDKHook_SetTransmit, OnTransmit);
-	g_iEntityList[iTarget] = EntIndexToEntRef(iEntity);
+	SDKHook(iGlow, SDKHook_SetTransmit, OnGlowTransmit);
+	g_iGlowRef[iProp] = EntIndexToEntRef(iGlow);
 }
 
-Action OnTransmit(int iEntity, int iClient)
+void SetGlowProps(int iGlow)
 {
-	switch (GetClientTeam(iClient)) {
-		case TEAM_INFECTED: {
-			if (!g_bCvarTankOnly) {
-				return Plugin_Continue;
-			}
+	SetEntProp(iGlow, Prop_Send, "m_nGlowRange", g_iRange);
+	SetEntProp(iGlow, Prop_Send, "m_nGlowRangeMin", g_iRangeMin);
+	SetEntProp(iGlow, Prop_Send, "m_glowColorOverride", g_iColor);
+}
 
-			if (IsTank(iClient)) {
-				return Plugin_Continue;
-			}
+int GetGlow(int iProp)
+{
+	int iGlow = EntRefToEntIndex(g_iGlowRef[iProp]);
+	return (iGlow > MaxClients) ? iGlow : -1;
+}
 
-			return Plugin_Handled;
+// Clear just the glow or the hittable as well?
+void ClearGlows(bool bRemoveProps)
+{
+	int iGlow;
+	for (int i = MaxClients + 1; i < MAX_EDICTS; i++) {
+		if ((iGlow = GetGlow(i)) != -1) {
+			RemoveEntity(bRemoveProps ? i : iGlow);
 		}
-		case TEAM_SPECTATOR: {
-			return (g_bCvarTankSpec) ? Plugin_Continue : Plugin_Handled;
-		}
+
+		g_iGlowRef[i] = 0;
+	}
+}
+
+Action OnGlowTransmit(int iGlow, int iClient)
+{
+	if (CanSeeGlow(iClient)) {
+		g_bGlowSent[iClient] = true;
+		return Plugin_Continue;
+	}
+
+	if (g_bGlowSent[iClient]) {
+		RequestGlowRecreate();
 	}
 
 	return Plugin_Handled;
 }
 
-bool IsTankProp(int iEntity)
+bool CanSeeGlow(int iClient)
 {
-	if (!IsValidEdict(iEntity)) {
-		return false;
-	}
-
-	// CPhysicsProp only
-	if (!HasEntProp(iEntity, Prop_Send, "m_hasTankGlow")) {
-		return false;
-	}
-
-	bool bHasTankGlow = (GetEntProp(iEntity, Prop_Send, "m_hasTankGlow", 1) == 1);
-	if (!bHasTankGlow) {
-		return false;
-	}
-
-	// Exception
-	bool bAreForkliftsUnbreakable;
-	if (g_bHittableControlExists)
-	{
-		bAreForkliftsUnbreakable = AreForkliftsUnbreakable();
-	}
-	else
-	{
-		bAreForkliftsUnbreakable = false;
-	}
-
-	char sModel[PLATFORM_MAX_PATH];
-	GetEntPropString(iEntity, Prop_Data, "m_ModelName", sModel, sizeof(sModel));
-	if (strcmp("models/props/cs_assault/forklift.mdl", sModel) == 0 && bAreForkliftsUnbreakable == false) {
-		return false;
-	}
-
-	return true;
-}
-
-void HookTankProps()
-{
-	int iEntCount = GetMaxEntities();
-
-	for (int i = MaxClients+1; i <= iEntCount; i++) {
-		if (IsTankProp(i)) {
-			SDKHook(i, SDKHook_OnTakeDamagePost, PropDamaged);
-			g_hTankProps.Push(i);
+	switch (GetClientTeam(iClient)) {
+		case TEAM_INFECTED: {
+			return (!g_bTankOnly || IsTank(iClient));
 		}
-	}
-}
-
-void UnhookTankProps()
-{
-	int iValue = 0, iSize = g_hTankProps.Length;
-
-	for (int i = 0; i < iSize; i++) {
-		iValue = g_hTankProps.Get(i);
-		SDKUnhook(iValue, SDKHook_OnTakeDamagePost, PropDamaged);
-	}
-
-	iValue = 0;
-	iSize = g_hTankPropsHit.Length;
-
-	for (int i = 0; i < iSize; i++) {
-		iValue = g_hTankPropsHit.Get(i);
-
-		if (iValue > 0 && IsValidEdict(iValue)) {
-			RemoveEntity(iValue);
-			//PrintToChatAll("remove %d", iValue);
+		case TEAM_SPECTATOR: {
+			return g_bSpectators;
 		}
 	}
 
-	g_hTankProps.Clear();
-	g_hTankPropsHit.Clear();
+	return false;
 }
 
-//analogue public void OnEntityCreated(int iEntity, const char[] sClassName)
-void PossibleTankPropCreated(int iEntity, const char[] sClassName)
+void Event_PlayerTeam(Event hEvent, const char[] sEventName, bool bDontBroadcast)
 {
-	if (sClassName[0] != 'p') {
-		return;
-	}
-
-	if (strcmp(sClassName, "prop_physics") != 0) { // Hooks c11m4_terminal World Sphere
-		return;
-	}
-
-	// Use SpawnPost to just push it into the Array right away.
-	// These entities get spawned after the Tank has punched them, so doing anything here will not work smoothly.
-	SDKHook(iEntity, SDKHook_SpawnPost, Hook_PropSpawned);
+	// player_team fires before the team actually changes, delay a frame
+	RequestFrame(Frame_CheckStaleGlowClients);
 }
 
-void Hook_PropSpawned(int iEntity)
+void Frame_CheckStaleGlowClients(any data)
 {
-	if (iEntity <= MaxClients || !IsValidEntity(iEntity)) {
-		return;
-	}
-
-	if (g_hTankProps.FindValue(iEntity) == -1) {
-		char sModelName[PLATFORM_MAX_PATH];
-		GetEntPropString(iEntity, Prop_Data, "m_ModelName", sModelName, sizeof(sModelName));
-
-		if (StrContains(sModelName, "atlas_break_ball") != -1 || StrContains(sModelName, "forklift_brokenlift.mdl") != -1) {
-			g_hTankProps.Push(iEntity);
-			g_hTankPropsHit.Push(iEntity);
-			CreateTankPropGlow(iEntity);
-		} else if (StrContains(sModelName, "forklift_brokenfork.mdl") != -1) {
-			RemoveEntity(iEntity);
-		}
-	}
+	CheckStaleGlowClients();
 }
 
-bool IsValidEntRef(int iRef)
-{
-	return (iRef > 0 && EntRefToEntIndex(iRef) != INVALID_ENT_REFERENCE);
-}
-
-int GetColor(char[] sTemp)
-{
-	if (strcmp(sTemp, "") == 0) {
-		return 0;
-	}
-
-	char sColors[3][4];
-	int iColor = ExplodeString(sTemp, " ", sColors, 3, 4);
-
-	if (iColor != 3) {
-		return 0;
-	}
-
-	iColor = StringToInt(sColors[0]);
-	iColor += 256 * StringToInt(sColors[1]);
-	iColor += 65536 * StringToInt(sColors[2]);
-
-	return iColor;
-}
-
-int GetTankClient()
-{
-	if (g_iTankClient == -1 || !IsValidAliveTank(g_iTankClient)) {
-		g_iTankClient = FindTank();
-	}
-
-	return g_iTankClient;
-}
-
-int FindTank()
+/*
+	A client that stops being sent a glow entity still has the glow effect now stuck in place.
+	The only way to get rid of it to delete the glow and recreate it, not too expensive considering...
+*/
+void CheckStaleGlowClients()
 {
 	for (int i = 1; i <= MaxClients; i++) {
-		if (IsAliveTank(i)) {
-			return i;
+		if (g_bGlowSent[i] && IsClientInGame(i) && !CanSeeGlow(i)) {
+			RequestGlowRecreate();
+			return;
+		}
+	}
+}
+
+void RequestGlowRecreate()
+{
+	if (g_bRecreatePending) {
+		return;
+	}
+
+	g_bRecreatePending = true;
+	RequestFrame(Frame_RecreateGlows);
+}
+
+void Frame_RecreateGlows(any data)
+{
+	g_bRecreatePending = false;
+
+	for (int i = 1; i <= MaxClients; i++) {
+		g_bGlowSent[i] = false;
+	}
+
+	int iGlow;
+	for (int i = MaxClients + 1; i < MAX_EDICTS; i++) {
+		if ((iGlow = GetGlow(i)) != -1) {
+			RemoveEntity(iGlow);
+			CreateGlow(i);
+		}
+	}
+}
+
+bool IsTankInPlay()
+{
+	for (int i = 1; i <= MaxClients; i++) {
+		if (IsClientInGame(i) && GetClientTeam(i) == TEAM_INFECTED && IsTank(i)) {
+			return true;
 		}
 	}
 
-	return -1;
-}
-
-bool IsValidAliveTank(int iClient)
-{
-	return (iClient > 0 && iClient <= MaxClients && IsAliveTank(iClient));
-}
-
-bool IsAliveTank(int iClient)
-{
-	return (IsClientInGame(iClient) && GetClientTeam(iClient) == TEAM_INFECTED && IsTank(iClient));
+	return false;
 }
 
 bool IsTank(int iClient)
 {
-	return (GetEntProp(iClient, Prop_Send, "m_zombieClass") == Z_TANK && IsPlayerAlive(iClient));
+	return (GetEntProp(iClient, Prop_Send, "m_zombieClass") == ZC_TANK && IsPlayerAlive(iClient));
 }
-
