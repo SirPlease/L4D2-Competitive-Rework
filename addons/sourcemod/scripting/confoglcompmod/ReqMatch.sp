@@ -15,8 +15,7 @@ static bool
 	RM_bIsMatchModeLoaded = false,
 	RM_bIsAMatchActive	  = false,
 	RM_bIsPluginsLoaded	  = false,
-	RM_bIsMapRestarted	  = false,
-	RM_bIsChmatchRequest = false;
+	RM_bIsMapRestarted	  = false;
 
 static Handle
 	RM_hFwdMatchLoad   = null,
@@ -28,6 +27,7 @@ static ConVar
 	// RM_hAllowVoting = null,
 	RM_hReloaded		   = null,
 	RM_hChangeMap		   = null,
+	RM_hChangeMatch		   = null,
 	RM_hAutoLoad		   = null,
 	RM_hAutoCfg			   = null,
 	RM_hConfigFile_On	   = null,
@@ -74,6 +74,12 @@ void RM_OnModuleStart()
 		RM_hChangeMap = CreateConVarEx("match_map", "", "DONT TOUCH THIS CVAR! This is to store the map that we'll be changing to", FCVAR_DONTRECORD | FCVAR_UNLOGGED);
 	}
 
+	RM_hChangeMatch = FindConVarEx("match_change");
+	if (RM_hChangeMatch == null)
+	{
+		RM_hChangeMatch = CreateConVarEx("match_change", "", "DONT TOUCH THIS CVAR! This is to store the config that we'll be changing to", FCVAR_DONTRECORD | FCVAR_UNLOGGED);
+	}
+
 	if (RM_hReloaded.BoolValue)
 	{
 		if (RM_bDebugEnabled || IsDebugEnabled())
@@ -83,6 +89,23 @@ void RM_OnModuleStart()
 
 		RM_bIsPluginsLoaded = true;
 		RM_hReloaded.SetInt(0);
+		RM_Match_Load();
+		return;
+	}
+
+	// chmatch - unloading the old match mode reloaded us, now load the new one.
+	char sConfig[128];
+	RM_hChangeMatch.GetString(sConfig, sizeof(sConfig));
+
+	if (sConfig[0] != '\0')
+	{
+		if (RM_bDebugEnabled || IsDebugEnabled())
+		{
+			LogMessage("[%s] Plugin was reloaded by chmatch, loading %s", RM_MODULE_NAME, sConfig);
+		}
+
+		RM_hChangeMatch.SetString("");
+		SetCustomCfg(sConfig);
 		RM_Match_Load();
 	}
 }
@@ -123,6 +146,11 @@ static void RM_Match_Load()
 		LogMessage("[%s] Match Load", RM_MODULE_NAME);
 	}
 
+	if (!RM_bIsPluginsLoaded && !RM_HasPluginManager(0))
+	{
+		return;
+	}
+
 	if (!RM_bIsAMatchActive)
 	{
 		RM_bIsAMatchActive = true;
@@ -146,9 +174,8 @@ static void RM_Match_Load()
 		char sPieces[32][256];
 		int	 iNumPieces = ExplodeString(sBuffer, ";", sPieces, sizeof(sPieces), sizeof(sPieces[]));
 
-		// Unlocking and Unloading Plugins.
-		ServerCommand("sm plugins load_unlock");
-		ServerCommand("sm plugins unload_all");
+		// Unlocking and Unloading Plugins (plugin_manager, last to first loaded, keeping protected plugins).
+		ServerCommand("pm_unload_plugins");
 
 		// Loading Plugins.
 		for (int i = 0; i < iNumPieces; i++)
@@ -210,10 +237,32 @@ static void RM_Match_Load()
 		LogMessage("[%s] Match mode loaded!", RM_MODULE_NAME);
 	}
 
-	RM_bIsChmatchRequest = false;
-
 	Call_StartForward(RM_hFwdMatchLoad);
 	Call_Finish();
+}
+
+/*
+	plugin_manager.smx does the unloading when a match loads, unloads or changes.
+	Without it a match wouldn't load properly, so match loads and changes are refused instead.
+*/
+static bool RM_HasPluginManager(int client)
+{
+	if (CommandExists("pm_unload_plugins"))
+	{
+		return true;
+	}
+
+	LogError("[%s] plugin_manager.smx isn't loaded, match modes can't load, unload or change without it.", RM_MODULE_NAME);
+
+	if (client > 0 && IsClientInGame(client))
+	{
+		CPrintToChat(client, "{blue}[{default}Confogl{blue}]{default} {olive}plugin_manager.smx{default} is required to load or change match modes.");
+	}
+	else {
+		PrintToServer("[Confogl] plugin_manager.smx is required to load or change match modes.");
+	}
+
+	return false;
 }
 
 static void RM_Match_Unload(bool bForced = false)
@@ -241,6 +290,9 @@ static void RM_Match_Unload(bool bForced = false)
 		LogMessage("[%s] Unloading match mode...", RM_MODULE_NAME);
 	}
 
+	// Still unload the match, its plugins just stay loaded.
+	RM_HasPluginManager(0);
+
 	char sBuffer[128];
 	RM_bIsMatchModeLoaded = false;
 	IsPluginEnabled(true, false);
@@ -253,20 +305,10 @@ static void RM_Match_Unload(bool bForced = false)
 	// PrintToChatAll("\x01[\x05Confogl\x01] Match mode unloaded!");
 	CPrintToChatAll("{blue}[{default}Confogl{blue}]{default} Match mode unloaded!");
 
+	// Ends with "pm_unload_plugins refresh" exec runs a cfg's lines after everything already queued,
+	// so the unload has to be in the cfg itself to come after the rest of it.
 	RM_hConfigFile_Off.GetString(sBuffer, sizeof(sBuffer));
-
-	if (!RM_bIsChmatchRequest)
-	{
-		ExecuteCfg(sBuffer);
-	}
-	else
-	{
-		// if we are using chmatch, don't let predictable_unloader unload confogl itself.
-		// all plugins will be unload and load when the new config excuted.
-		ServerCommand("sm plugins load_unlock");
-		ServerCommand("sm plugins unload optional/predictable_unloader.smx");
-		ExecuteCfg(sBuffer);
-	}
+	ExecuteCfg(sBuffer);
 
 	if (RM_bDebugEnabled || IsDebugEnabled())
 	{
@@ -343,6 +385,11 @@ static Action RM_Cmd_ForceMatch(int client, int args)
 			// PrintToChat(client, "\x01[\x05Confogl\x01] Please specify a \x04config\x01 to load.");
 			CPrintToChat(client, "{blue}[{default}Confogl{blue}]{default} Please specify a {olive}config{default} to load.");
 		}
+		return Plugin_Handled;
+	}
+
+	if (!RM_HasPluginManager(client))
+	{
 		return Plugin_Handled;
 	}
 
@@ -423,6 +470,11 @@ static Action RM_CMD_ChangeMatch(int client, int args)
 		return Plugin_Handled;
 	}
 
+	if (!RM_HasPluginManager(client))
+	{
+		return Plugin_Handled;
+	}
+
 	char sBuffer[128];
 	GetCmdArg(1, sBuffer, sizeof(sBuffer));
 
@@ -472,30 +524,9 @@ static Action RM_CMD_ChangeMatch(int client, int args)
 		LogMessage("[%s] Match mode forced to unload! [Change in this case!]", RM_MODULE_NAME);
 	}
 
-	RM_bIsChmatchRequest = true;
-
+	// The unload reloads every plugin, us included. RM_OnModuleStart then loads the new config.
+	RM_hChangeMatch.SetString(sBuffer);
 	RM_Match_Unload(true);
-
-	// give time to fully finish unloading.
-	CreateTimer(1.0, Timer_DelayToLoadMatchMode);
-
-	return Plugin_Handled;
-}
-
-static Action Timer_DelayToLoadMatchMode(Handle timer)
-{
-	// Load
-	if (RM_bIsMatchModeLoaded)
-	{
-		return Plugin_Handled;
-	}
-
-	if (RM_bDebugEnabled || IsDebugEnabled())
-	{
-		LogMessage("[%s] Match mode forced to load! [Change in this case!]", RM_MODULE_NAME);
-	}
-
-	RM_Match_Load();
 
 	return Plugin_Handled;
 }

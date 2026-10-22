@@ -16,7 +16,13 @@
 > **`generalfixes.cfg`** contains all the crucial fixes that will be loaded in every matchmode.  
 > **`sharedplugins.cfg`** is for you, the server owner. You can load any custom plugin that you want to be loaded in every matchmode here.
 
+> [!NOTE]
+> Matchmode changes are handled by **`plugin_manager`**. When a matchmode loads, unloads or changes, it unloads plugins from last to first loaded.
+> Confogl requires it, without **`plugins/plugin_manager.smx`**, matchmodes won't load or change.  
+> Plugins listed in **`cfg/protectedplugins.cfg`** are never unloaded (by default **`left4dhooks`** and **`command_buffer`**). Only protect plugins that others need during their own unload, or if the state NEEDS to survive a plugin reload.
+
 > [!CAUTION]
+> If you're making your own config, the last line of your **`confogl_off.cfg`** must be **`pm_unload_plugins refresh`**.
 > Plugin load locking and unlocking is no longer handled by the configs themselves, refrain from doing it manually or you can run into issues.
 
 ## **About:**
