@@ -1,0 +1,176 @@
+"Games"
+{
+	"#default"
+	{
+		"Functions"
+		{
+			/**
+			 * https://github.com/ValveSoftware/source-sdk-2013/blob/master/src/game/shared/util_shared.cpp#L157-L164
+			 * float SharedRandomFloat( const char *sharedname, float flMinVal, float flMaxVal, int additionalSeed = 0 );
+			**/
+			"DH::SharedRandomFloat"
+			{
+				"signature"		"SharedRandomFloat"
+				"callconv"		"cdecl"
+				"return"		"float"
+
+				"arguments"
+				{
+					"sharedname"
+					{
+						"type"		"charptr"
+					}
+					"flMinVal"
+					{
+						"type"		"float"
+					}
+					"flMaxVal"
+					{
+						"type"		"float"
+					}
+					"additionalSeed"
+					{
+						"type"		"int"
+					}
+				}
+			}
+
+			/**
+			 * Not used
+			 * void CTerrorPlayer::FireBullet( Vector vecSrc, const QAngle &angShoot, CSWeaponID weaponID, int additionalSeed = 0 );
+			**/
+			"DH::CTerrorPlayer::FireBullets"
+			{
+				"signature"		"CTerrorPlayer::FireBullets"
+				"callconv"		"thiscall"
+				"return"		"void"
+				"this"			"entity"
+
+				"arguments"
+				{
+					// why vectorptr???
+					"vecSrc"
+					{
+						"type"		"vectorptr"
+					}
+					"angShoot"
+					{
+						"type"		"vectorptr"
+					}
+					"weaponId"
+					{
+						"type"		"int"
+					}
+					"additionalSeed"
+					{
+						"type"		"int"
+					}
+				}
+			}
+
+			/**
+			 * void CTerrorGun::FireBullet( void );
+			**/
+			"DH::CTerrorGun::FireBullet"
+			{
+				"signature"		"CTerrorGun::FireBullet"
+				"callconv"		"thiscall"
+				"return"		"void"
+				"this"			"entity"
+			}
+		}
+	}
+
+	"left4dead2"
+	{
+		"MemPatches"
+		{
+			/**
+			 * We write 0 or 1 to the i variable when initializing the loop,
+			 * on Windows it's a little different, although I think it's also a loop variable.
+			**/
+			"spread_center_pellet_patch"
+			{
+				"signature"						"CTerrorPlayer::FireBullet"
+
+				"linux"
+				{
+					"offset"					"1018"
+
+					"patch"						"\xB8\x00\x00\x00\x00" /* B8 00 00 00 00 - mov eax, 0 */
+					"verify"					"\xB8\x01\x00\x00\x00" /* B8 01 00 00 00 - mov eax, 1 */
+				}
+
+				"windows"
+				{
+					"offset"					"747"
+
+					"patch"						"\xB1\x00" /* B1 00 - mov cl, 0 */
+					"verify"					"\xB1\x01" /* B1 01 - mov cl, 1 */
+				}
+			}
+		}
+
+		"Addresses"
+		{
+			"CBaseEntity::m_nPredictionRandomSeed"
+			{
+				"windows"
+				{
+					"signature"	"SharedRandomFloat"
+					"read"		"7" // 55 8B EC 83 EC 08 A1 (? ? ? ?), we read addr (? ? ? ?)
+				}
+				"linux"
+				{
+					"signature"	"CBaseEntity::m_nPredictionRandomSeed"
+				}
+			}
+		}
+
+		"Signatures"
+		{
+			/**
+			 * [Windows] Can be found by string "SharedRandomFloat"
+			**/
+			"SharedRandomFloat"
+			{
+				"library"		"server"
+
+				"linux"			"@_Z17SharedRandomFloatPKcffi"
+								/* 55 8B EC 83 EC 08 A1 ? ? ? ? 53 56 57 8B 7D 14 8D 4D 14 51 89 7D F8 89 45 FC E8 ? ? ? ? 6A 04 8D 55 FC 52 8D 45 14 50 E8 ? ? ? ? 6A 04 8D 4D F8 51 8D 55 14 52 E8 ? ? ? ? 8B 75 08 56 E8 ? ? ? ? 50 8D 45 14 56 50 E8 ? ? ? ? 8D 4D 14 51 E8 ? ? ? ? 8B 15 ? ? ? ? 8B 5D 14 83 C4 30 83 7A 30 00 74 ? 57 53 56 68 ? ? ? ? 68 ? ? ? ? 8D 45 14 68 ? ? ? ? 50 C7 45 14 FF FF 00 FF FF 15 ? ? ? ? 83 C4 1C 53 B9 ? ? ? ? FF 15 ? ? ? ? D9 45 10 */
+				"windows"		"\x55\x8B\xEC\x83\xEC\x08\xA1\x2A\x2A\x2A\x2A\x53\x56\x57\x8B\x7D\x14\x8D\x4D\x14\x51\x89\x7D\xF8\x89\x45\xFC\xE8\x2A\x2A\x2A\x2A\x6A\x04\x8D\x55\xFC\x52\x8D\x45\x14\x50\xE8\x2A\x2A\x2A\x2A\x6A\x04\x8D\x4D\xF8\x51\x8D\x55\x14\x52\xE8\x2A\x2A\x2A\x2A\x8B\x75\x08\x56\xE8\x2A\x2A\x2A\x2A\x50\x8D\x45\x14\x56\x50\xE8\x2A\x2A\x2A\x2A\x8D\x4D\x14\x51\xE8\x2A\x2A\x2A\x2A\x8B\x15\x2A\x2A\x2A\x2A\x8B\x5D\x14\x83\xC4\x30\x83\x7A\x30\x00\x74\x2A\x57\x53\x56\x68\x2A\x2A\x2A\x2A\x68\x2A\x2A\x2A\x2A\x8D\x45\x14\x68\x2A\x2A\x2A\x2A\x50\xC7\x45\x14\xFF\xFF\x00\xFF\xFF\x15\x2A\x2A\x2A\x2A\x83\xC4\x1C\x53\xB9\x2A\x2A\x2A\x2A\xFF\x15\x2A\x2A\x2A\x2A\xD9\x45\x10"
+			}
+
+			/**
+			 * [Windows] Can be found by string "CTerrorPlayer::FireBullet Spread" or "CTerrorPlayer::FireBullet SpreadDir"
+			**/
+			"CTerrorPlayer::FireBullet"
+			{
+				"library"		"server"
+
+				"linux"			"@_ZN13CTerrorPlayer10FireBulletE6VectorRK6QAngle10CSWeaponIDi"
+								/* 55 8B EC 81 EC A0 00 00 00 8B 45 18 */
+				"windows"		"\x55\x8B\xEC\x81\xEC\xA0\x00\x00\x00\x8B\x45\x18"
+			}
+
+			/**
+			 * [Windows] Can be found by string "CTerrorGun::FireBullet HorizSpread" or "CTerrorGun::FireBullet VertSpread"
+			**/
+			"CTerrorGun::FireBullet"
+			{
+				"library"		"server"
+
+				"linux"			"@_ZN10CTerrorGun10FireBulletEv"
+								/* 55 8B EC 83 EC 34 53 56 8B F1 E8 ? ? ? ? */
+				"windows"		"\x55\x8B\xEC\x83\xEC\x34\x53\x56\x8B\xF1\xE8\x2A\x2A\x2A\x2A"
+			}
+
+			"CBaseEntity::m_nPredictionRandomSeed"
+			{
+				"library"		"server"
+
+				"linux"			"@_ZN11CBaseEntity23m_nPredictionRandomSeedE"
+			}
+		}
+	}
+}
