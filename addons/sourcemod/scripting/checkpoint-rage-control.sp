@@ -48,6 +48,7 @@ bool
 
 ConVar
 	g_cvarAllMaps,
+	g_cvarAnnounce,
 	g_cvarDebug;
 
 StringMap
@@ -68,6 +69,7 @@ public void OnPluginStart()
 	LoadTranslation("checkpoint-rage-control.phrases");
 	
 	g_cvarAllMaps = CreateConVar("crc_global", "0", "Remove saferoom frustration preservation mechanic on all maps by default");
+	g_cvarAnnounce = CreateConVar("crc_announce", "1", "Announce in chat whether the Tank will keep or lose frustration while survivors are in the saferoom. 0:hide, 1:show", FCVAR_NONE, true, 0.0, true, 1.0);
 	g_cvarDebug	  = CreateConVar("crc_debug", "0", "Whether or not to debug. 0:disable, 1:enable, 2:onlychat, 3:onlyconsole", FCVAR_NONE, true, 0.0, true, 3.0);
 
 	LoadGameData();
@@ -143,10 +145,13 @@ void Event_EnteredStartArea(Event hEvent, const char[] sName, bool dontBroadcast
 		return;
 	}
 
-	if (g_cvarAllMaps.BoolValue)
-		CPrintToChatAll("%t %t", "Tag", "LoseFrustration");
-	else
-		CPrintToChatAll("%t %t", "Tag", "KeepFrustration");
+	if (g_cvarAnnounce.BoolValue)
+	{
+		if (g_cvarAllMaps.BoolValue)
+			CPrintToChatAll("%t %t", "Tag", "LoseFrustration");
+		else
+			CPrintToChatAll("%t %t", "Tag", "KeepFrustration");
+	}
 
 	DebugPrint("{red}Unhook{default} from Event_EnteredStartArea (%N)", client);
 	UnHookAll();
