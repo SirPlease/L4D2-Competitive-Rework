@@ -1,0 +1,83 @@
+"Phrases"
+{
+	"Tag"
+	{
+		"chi"		"[{olive}!{default}]"
+	}
+	"Disabled"
+	{
+		"chi"		"插件 {red}已禁用{default}"
+	}
+	"NoConsole"
+	{
+		"chi"		"这个命令不能通过控制台使用."
+	}
+	"ConfoglNotAvailable"
+	{
+		"chi"		"比赛配置 {red}不存在{default}."
+	}
+	"CedaGame"
+	{
+		"chi"		"在 {red}cedapug 比赛中{default}不允许使用这个命令"
+	}
+	"Title_Match"
+	{
+		"chi"		"选择比赛模式:"
+	}
+	"Title_Config"
+	{
+		"chi"		"选择 %s 模式:"
+	}
+	"ConfigNotFound"
+	{
+		"chi"		"没有找到这个比赛模式."
+	}
+	"NoSpec"
+	{
+		"chi"		"旁观者不可以发起投票."
+	}
+	"MatchLoaded"
+	{
+		"chi"		"已经载入了一个比赛模式!"
+	}
+	"NotEnoughPlayers"
+	{
+		"chi"		"投票无法开启. {red}没有足够玩家{default} ({red}%d{default}/{green}%d{default})."
+	}
+	"Title_LoadConfig"
+	{
+		"chi"		"载入 '%s' 配置?"
+	}
+	"VoteInProgress"
+	{
+		"chi"		"{red}投票正在进行中{default}, 请等待 {green}%d{default} 秒."
+	}
+	"VotePass_Loading"
+	{
+		"chi"		"比赛配置加载中..."
+	}
+	"MatchNotLoaded"
+	{
+		"chi"		"{red}没有比赛配置{default} 已加载."
+	}
+	"PlayersConnecting"
+	{
+		"chi"		"投票无法开始. 有玩家正在连接."
+	}
+	"Title_OffConfogl"
+	{
+		"chi"		"关闭比赛配置?"
+	}
+	"VotePass_Unloading"
+	{
+		"chi"		"卸载比赛配置中..."
+	}
+	"Title_ChangeConfogl"
+	{
+		"chi"		"将比赛配置更改为 '%s'模式?"
+	}
+	"VotePass_Changed"
+	{
+		"chi"		"Matchmode Changed..."
+	}
+}
