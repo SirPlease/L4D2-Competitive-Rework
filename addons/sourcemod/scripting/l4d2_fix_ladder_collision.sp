@@ -12,17 +12,21 @@
 
 bool g_bInfectedLadder[MAX_EDICTS + 1];
 
+int g_iTeamNumOffset;
+
 public Plugin myinfo =
 {
 	name = "[L4D/2] Fix Infected Ladder Collision",
 	author = "Sir",
 	description = "Remove survivor collision with infected ladders.",
-	version = "1.0",
+	version = "1.1",
 	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 };
 
 public void OnPluginStart()
 {
+	g_iTeamNumOffset = FindSendPropInfo("CTerrorPlayer", "m_iTeamNum");
+
 	int entity = -1;
 	while ((entity = FindEntityByClassname(entity, "func_simpleladder")) != -1) {
 		Hook_LadderSpawnPost(entity);
@@ -83,7 +87,7 @@ public Action CH_PassFilter(int ent1, int ent2, bool &result)
 		return Plugin_Continue;
 	}
 
-	if (GetEntProp(client, Prop_Send, "m_iTeamNum") != TEAM_SURVIVOR) {
+	if (GetEntData(client, g_iTeamNumOffset) != TEAM_SURVIVOR) {
 		return Plugin_Continue;
 	}
 
