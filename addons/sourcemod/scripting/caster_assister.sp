@@ -3,18 +3,16 @@
 
 #include <sourcemod>
 #include <sdktools>
-#undef REQUIRE_PLUGIN
-#include <caster_system>
 #define MAX_SPEED 2
 
-bool readyUpIsAvailable;
+bool casterSystemAvailable;
 
 public Plugin myinfo =
 {
     name = "Caster Assister",
     author = "CanadaRox, Sir, Forgetest",
     description = "Allows spectators to control their own specspeed and move vertically",
-    version = "2.3.1",
+    version = "2.4.0",
     url = ""
 };
 
@@ -35,14 +33,14 @@ public void OnPluginStart()
 
 public void OnAllPluginsLoaded()
 {
-    readyUpIsAvailable = LibraryExists("caster_system");
+    casterSystemAvailable = LibraryExists("caster_system");
 }
 
 public void OnLibraryRemoved(const char[] name)
 {
     if (StrEqual(name, "caster_system"))
     {
-        readyUpIsAvailable = false;
+        casterSystemAvailable = false;
     }
 }
 
@@ -50,31 +48,26 @@ public void OnLibraryAdded(const char[] name)
 {
     if (StrEqual(name, "caster_system"))
     {
-        readyUpIsAvailable = true;
-    }
-}
-
-public void OnClientPutInServer(int client)
-{
-    if (readyUpIsAvailable && IsClientCaster(client))
-    {
-        FakeClientCommand(client, "sm_spechud");
+        casterSystemAvailable = true;
     }
 }
 
 void PlayerTeam_Event(Event event, const char[] name, bool dontBroadcast)
 {
-    int team = event.GetInt("team");
-    if (team == 1)
-    {
-        int client = GetClientOfUserId(event.GetInt("userid"));
-        SetEntPropFloat(client, Prop_Send, "m_flLaggedMovementValue", currentMulti[client]);
-    }
+    if (!casterSystemAvailable || event.GetInt("team") != 1)
+        return;
+
+    int client = GetClientOfUserId(event.GetInt("userid"));
+
+    if (!IsValidClient(client))
+        return;
+
+    SetEntPropFloat(client, Prop_Send, "m_flLaggedMovementValue", currentMulti[client]);
 }
 
 Action SetSpecspeed_Cmd(int client, int args)
 {
-    if (!IsValidClient(client) || GetClientTeam(client) != 1)
+    if (!casterSystemAvailable || !IsValidClient(client) || GetClientTeam(client) != 1)
     {
         return Plugin_Handled;
     }
@@ -96,7 +89,7 @@ Action SetSpecspeed_Cmd(int client, int args)
 
 Action SetSpecspeedIncrement_Cmd(int client, int args)
 {
-    if (!IsValidClient(client) || GetClientTeam(client) != 1)
+    if (!casterSystemAvailable || !IsValidClient(client) || GetClientTeam(client) != 1)
     {
         return Plugin_Handled;
     }
@@ -114,7 +107,7 @@ Action SetSpecspeedIncrement_Cmd(int client, int args)
 
 Action IncreaseSpecspeed_Cmd(int client, int args)
 {
-    if (!IsValidClient(client) || GetClientTeam(client) != 1)
+    if (!casterSystemAvailable || !IsValidClient(client) || GetClientTeam(client) != 1)
     {
         return Plugin_Handled;
     }
@@ -125,7 +118,7 @@ Action IncreaseSpecspeed_Cmd(int client, int args)
 
 Action DecreaseSpecspeed_Cmd(int client, int args)
 {
-    if (!IsValidClient(client) || GetClientTeam(client) != 1)
+    if (!casterSystemAvailable || !IsValidClient(client) || GetClientTeam(client) != 1)
     {
         return Plugin_Handled;
     }
@@ -145,7 +138,7 @@ stock void IncreaseSpecspeed(int client, float difference)
 
 Action SetVerticalIncrement_Cmd(int client, int args)
 {
-    if (!IsValidClient(client) || GetClientTeam(client) != 1)
+    if (!casterSystemAvailable || !IsValidClient(client) || GetClientTeam(client) != 1)
     {
         return Plugin_Handled;
     }
@@ -163,7 +156,7 @@ Action SetVerticalIncrement_Cmd(int client, int args)
 
 public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3], float angles[3], int &weapon, int &subtype, int &cmdnum, int &tickcount, int &seed, int mouse[2])
 {
-	if (IsValidClient(client) && GetClientTeam(client) == 1)
+	if (casterSystemAvailable && IsValidClient(client) && GetClientTeam(client) == 1)
 	{
 		if (buttons & IN_USE)
 		{
@@ -187,5 +180,5 @@ bool IsSpeedValid(float speed)
 
 bool IsValidClient(int client)
 {
-	return (client > 0 && client <= MaxClients && IsClientInGame(client));
+	return (client > 0 && client <= MaxClients && IsClientInGame(client) && !IsFakeClient(client));
 }
