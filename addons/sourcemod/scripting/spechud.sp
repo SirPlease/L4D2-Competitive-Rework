@@ -19,7 +19,7 @@
 #include <lerpmonitor>
 #include <witch_and_tankifier>
 
-#define PLUGIN_VERSION "3.9.1"
+#define PLUGIN_VERSION "3.9.2"
 
 public Plugin myinfo =
 {
@@ -1257,7 +1257,7 @@ stock int GetWeaponExtraAmmo(int client, int wepid)
 	{
 		case WEPID_RIFLE, WEPID_RIFLE_AK47, WEPID_RIFLE_DESERT, WEPID_RIFLE_SG552:
 			offset = ASSAULT_RIFLE_OFFSET_IAMMO;
-		case WEPID_SMG, WEPID_SMG_SILENCED:
+		case WEPID_SMG, WEPID_SMG_SILENCED, WEPID_SMG_MP5:
 			offset = SMG_OFFSET_IAMMO;
 		case WEPID_PUMPSHOTGUN, WEPID_SHOTGUN_CHROME:
 			offset = PUMPSHOTGUN_OFFSET_IAMMO;
