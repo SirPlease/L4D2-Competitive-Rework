@@ -6,27 +6,25 @@
 #include <sourcemod>
 #include <left4dhooks>
 
-#define TEAM_SPECTATOR          1
-#define TEAM_INFECTED           3
-#define ZOMBIECLASS_TANK        8
-#define IS_SPECTATOR(%1)        (GetClientTeam(%1) == TEAM_SPECTATOR)
-#define IS_INFECTED(%1)         (GetClientTeam(%1) == TEAM_INFECTED)
+#define IS_SPECTATOR(%1)        (GetClientTeam(%1) == L4D_TEAM_SPECTATOR)
+#define IS_INFECTED(%1)         (GetClientTeam(%1) == L4D_TEAM_INFECTED)
 #define IS_VALID_INFECTED(%1)   (IsClientInGame(%1) && IS_INFECTED(%1))
 #define IS_VALID_SPECTATOR(%1)  (IsClientInGame(%1) && IS_SPECTATOR(%1))
 
 ArrayList h_whosHadTank;
 ArrayList h_tankQueue;
 
-ConVar 
+ConVar
     hTankPrint,
-    hTankWindow, 
-    hTankDebug;
+    hTankWindow,
+    hTankDebug,
+    hCircularTankAssignment;
 
 GlobalForward
     hForwardOnTryOfferingTankBot,
     hForwardOnTankSelection;
 
-char 
+char
     queuedTankSteamId[64],
     tankInitiallyChosen[64];
 
@@ -54,7 +52,7 @@ public Plugin myinfo =
     name = "L4D2 Tank Control",
     author = "arti, (Contributions by: Sheo, Sir, Altair-Sossai)",
     description = "Distributes the role of the tank evenly throughout the team, allows for overrides. (Includes forwards)",
-    version = "0.0.29",
+    version = "0.0.30",
     url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 }
 
@@ -87,6 +85,7 @@ public void OnPluginStart()
     hTankPrint  = CreateConVar("tankcontrol_print_all", "0", "Who gets to see who will become the tank? (0 = Infected, 1 = Everyone)");
     hTankWindow = CreateConVar("tankcontrol_force_window", "0.0", "Give player that was initially going to be Tank (or was Tank and dced) back the Tank this long after Tank was given to somebody else (0 = Off)");
     hTankDebug  = CreateConVar("tankcontrol_debug", "0", "Whether or not to debug to console");
+    hCircularTankAssignment = CreateConVar("tankcontrol_circular_tank_assignment", "0", "Assign the Tank in a circular rotation so players keep the same order across cycles and never become Tank twice in a row (0 = Off, 1 = On)");
 }
 
 
@@ -275,7 +274,7 @@ void PlayerTeam_Event(Event hEvent, const char[] name, bool dontBroadcast)
     if (client < 1 || client > MaxClients)
         return;
 
-    if (oldTeam == TEAM_INFECTED)
+    if (oldTeam == L4D_TEAM_INFECTED)
     {
         /*
         * Triggers for disconnects as well as forced-swaps and whatnot.
@@ -284,7 +283,7 @@ void PlayerTeam_Event(Event hEvent, const char[] name, bool dontBroadcast)
         if (!IsFakeClient(client))
         {
             int zombieClass = GetEntProp(client, Prop_Send, "m_zombieClass");
-            if (zombieClass == ZOMBIECLASS_TANK)
+            if (zombieClass == view_as<int>(L4D2ZombieClass_Tank))
             {
                 dcedTankFrustration = GetTankFrustration(client);
                 fTankGrace = CTimer_GetRemainingTime(GetFrustrationTimer(client));
@@ -308,7 +307,7 @@ void PlayerTeam_Event(Event hEvent, const char[] name, bool dontBroadcast)
         }
     }
 
-    if (team == TEAM_INFECTED && !IsFakeClient(client) && !StrEqual(tankInitiallyChosen, ""))
+    if (team == L4D_TEAM_INFECTED && !IsFakeClient(client) && !StrEqual(tankInitiallyChosen, ""))
     {
         GetClientAuthId(client, AuthId_Steam2, tmpSteamId, sizeof(tmpSteamId));
         if (StrEqual(tankInitiallyChosen, tmpSteamId))
@@ -391,7 +390,7 @@ void PlayerDeath_Event(Event hEvent, const char[] eName, bool dontBroadcast)
     if (victim && IS_VALID_INFECTED(victim) && gotTankAt > 0.0)
     {
         int zombieClass = GetEntProp(victim, Prop_Send, "m_zombieClass");
-        if (zombieClass == ZOMBIECLASS_TANK) 
+        if (zombieClass == view_as<int>(L4D2ZombieClass_Tank)) 
         {
             if (hTankDebug.BoolValue)
                 PrintToConsoleAll("[TC] Tank died (player_death), choosing a new tank");
@@ -521,6 +520,12 @@ void chooseTank(any data)
         nextTankIndex = PeekNextTankIndexInTheQueue();
     }
 
+    if (nextTankIndex == -1 && hCircularTankAssignment.BoolValue)
+    {
+        RequeuePlayersWhoHadTank();
+        nextTankIndex = PeekNextTankIndexInTheQueue();
+    }
+
     if (nextTankIndex == -1)
     {
         RemoveAllInfectedFrom(h_tankQueue);
@@ -593,7 +598,7 @@ int getTankPlayer()
         
         int zombieClass = GetEntProp(i, Prop_Send, "m_zombieClass");
         
-        if (zombieClass == ZOMBIECLASS_TANK)
+        if (zombieClass == view_as<int>(L4D2ZombieClass_Tank))
             return i;
     }
 
@@ -667,6 +672,24 @@ int PeekNextTankIndexInTheQueue()
     return -1;
 }
 
+void RequeuePlayersWhoHadTank()
+{
+    char steamId[64];
+
+    for (int i = 0; i < h_whosHadTank.Length; i++)
+    {
+        h_whosHadTank.GetString(i, steamId, sizeof(steamId));
+
+        int client = getInfectedPlayerBySteamId(steamId);
+        if (client == -1 || h_tankQueue.FindString(steamId) != -1)
+            continue;
+
+        h_tankQueue.PushString(steamId);
+        h_whosHadTank.Erase(i);
+        i--;
+    }
+}
+
 void EnqueueNewInfectedPlayers()
 {
     char steamId[64];
@@ -676,7 +699,7 @@ void EnqueueNewInfectedPlayers()
 
     for (int client = 1; client <= MaxClients; client++)
     {
-        if (!IsClientInGame(client) || IsFakeClient(client) || GetClientTeam(client) != TEAM_INFECTED)
+        if (!IsClientInGame(client) || IsFakeClient(client) || GetClientTeam(client) != L4D_TEAM_INFECTED)
             continue;
         
         GetClientAuthId(client, AuthId_Steam2, steamId, sizeof(steamId));
@@ -699,7 +722,7 @@ void RemoveAllInfectedFrom(ArrayList arrayList)
 
     for (int client = 1; client <= MaxClients; client++)
     {
-        if (!IsClientInGame(client) || IsFakeClient(client) || GetClientTeam(client) != TEAM_INFECTED)
+        if (!IsClientInGame(client) || IsFakeClient(client) || GetClientTeam(client) != L4D_TEAM_INFECTED)
             continue;
         
         GetClientAuthId(client, AuthId_Steam2, steamId, sizeof(steamId));
