@@ -32,7 +32,11 @@ jobs:
           #- "1.10"
           #- "1.11"
           - "1.12"
-          - "1.13.7296"
+          #- 1.13
+          # Every 1.13 build still on smdrop makes Address an int64 (alliedmodders/sourcemod#2414)
+          # which breaks left4dhooks.inc, plugins that include it and some others.
+          # The last 1.13 build before that change (7296) has been removed from smdrop.
+          # I'll add 1.13 back once left4dhooks updates for it, or it takes too long.
 
     steps:
       - uses: actions/checkout@v5
