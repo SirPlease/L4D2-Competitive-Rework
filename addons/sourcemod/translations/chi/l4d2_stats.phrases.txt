@@ -1,0 +1,59 @@
+"Phrases"
+{
+	"Tag+"
+	{
+		"chi"	"{green}★{default}"
+	}
+	"Tag++"
+	{
+		"chi"    "{green}★★{default}"
+	}
+	"Tag+++"
+	{
+		"chi"	"{green}★★★{default}"
+	}
+	"MeleeSkeeted"
+	{
+        "#format"   "{1:N},{2:N}" // 1:victim 2:attacker
+		"chi"    	"{olive}{1}{default} 被 {olive}{2}{default} 用 {blue}近战空爆{default}"
+	}
+	"Headshotted"
+	{
+       "#format"	"{1:N},{2:N}" // 1:victim 2:attacker
+		"chi"    	"{olive}{1}{default} 被 {olive}{2}{default} {blue}爆头击杀{default}"
+	}
+	"assister"
+	{
+        "#format"   "{1:N},{2:d},{3:d},{4:s}" // 1:assisters[0][0], 2:assisters[0][1], 3:g_iShotsDealt[victim][assisters[0][0]], 4:assist_shots == 1 ? AssistShotsSingular:AssistShotsPlural
+		"chi"		"{1} ({2}/{3} 枪)"
+	}
+	"AssistShotsSingular"
+	{
+		"chi"		""
+	}
+	"AssistShotsPlural"
+	{
+		"chi"		"s"
+	}
+	"TeamSkeeted"
+	{
+       "#format"	"{1:N},{2:N},{3:d},{4:d},{5:s},{6:s}" // 1:attacker 2:victim 3:damage 4:shots 5:shots == 1 ? "" : "s" 6:assister_string
+		"chi"    	"{olive}{1}{default} 和团队空爆了 {olive}{2}{default} {blue}{4} {default}枪 {3} {default}伤害 {default} . 助攻: {olive}{6}{default}"
+	}
+	"Skeeted"
+	{
+       "#format"	"{1:N},{2:N},{3:d},{4:s}" // 1:attacker 2:victim 3:shots 4:shots == 1 ? "" : "s"
+		"chi"    	"{olive}{1}{default} {blue}{3}{default} 枪 空爆了 {olive}{2}{default}"
+	}
+	"ShutBoomer"
+	{
+       "#format"	"{1:N},{2:s},{3:.1f}" // 1:g_iBoomerKiller 2:Boomer 3:BoomerKillTime
+		"chi"    	"{olive}{1}{default} 瞬杀了在 {blue}{3}秒{default} 前生成的Boomer [{olive}{2}{default}]"
+	}
+	"AlarmedCar"
+	{
+		"chi"		"{olive}%N{default} 打了 {olive}警报车{default}"
+	}
+}
+
+
