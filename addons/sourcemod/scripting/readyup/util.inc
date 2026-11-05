@@ -7,7 +7,7 @@ int GetMaxAllowedPlayers()
 {
 	int survLimit = survivor_limit.IntValue;
 	
-	if (L4D_GetGameModeType() & (GAMEMODE_VERSUS|GAMEMODE_SCAVENGE))
+	if (hasInfectedTeam)
 	{
 		return survLimit + z_max_player_zombies.IntValue;
 	}

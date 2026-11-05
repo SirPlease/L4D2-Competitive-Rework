@@ -9,7 +9,7 @@
 #undef REQUIRE_PLUGIN
 #include <caster_system>
 
-#define PLUGIN_VERSION "10.2.9"
+#define PLUGIN_VERSION "10.3.0"
 
 public Plugin myinfo =
 {
@@ -100,7 +100,8 @@ bool
 	inLiveCountdown,
 	inReadyUp,
 	isForceStart,
-	readySurvFreeze;
+	readySurvFreeze,
+	hasInfectedTeam;
 
 // Spectate Fix
 Handle g_hChangeTeamTimer[MAXPLAYERS+1];
