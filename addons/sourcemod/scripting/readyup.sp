@@ -9,7 +9,7 @@
 #undef REQUIRE_PLUGIN
 #include <caster_system>
 
-#define PLUGIN_VERSION "10.3.0"
+#define PLUGIN_VERSION "10.3.1"
 
 public Plugin myinfo =
 {

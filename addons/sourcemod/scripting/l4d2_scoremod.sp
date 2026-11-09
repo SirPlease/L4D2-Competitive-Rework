@@ -15,7 +15,7 @@ public Plugin myinfo =
 	name = "L4D2 Scoremod",
 	author = "CanadaRox, ProdigySim",
 	description = "L4D2 Custom Scoring System (Health Bonus)",
-	version = "1.1.2",
+	version = "1.1.3",
 	url = "https://bitbucket.org/CanadaRox/random-sourcemod-stuff"
 };
 
@@ -327,7 +327,8 @@ bool:SM_IsPlayerIncap(client)
 Action SM_Cmd_Health(client, args)
 {
 	if (!SM_bModuleIsEnabled) return Plugin_Handled;
-	
+	if (client && !IsClientInGame(client)) return Plugin_Handled;
+
 	decl iAliveCount;
 	new Float:fAvgHealth = SM_CalculateAvgHealth(iAliveCount);	
 	
@@ -337,7 +338,14 @@ Action SM_Cmd_Health(client, args)
     {
 		iDifference = SM_iFirstScore - iScore;
 		if (iScore > SM_iFirstScore) iDifference = (~iDifference) + 1;
-		CPrintToChat(client, "{blue}[{default}!{blue}] {default}Round {blue}1 {default}Bonus: {olive}%d {default}({green}Difference: {olive}%d{default})", SM_iFirstScore, iDifference);
+		if (client)
+		{
+			CPrintToChat(client, "{blue}[{default}!{blue}] {default}Round {blue}1 {default}Bonus: {olive}%d {default}({green}Difference: {olive}%d{default})", SM_iFirstScore, iDifference);
+		}
+		else
+		{
+			PrintToServer("[ScoreMod] Round 1 Bonus: %d (Difference: %d)", SM_iFirstScore, iDifference);
+		}
 	}
 	
 	#if DEBUG_SM

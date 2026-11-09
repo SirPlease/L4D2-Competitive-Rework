@@ -48,7 +48,7 @@ public Plugin myinfo =
 	name = "RateMonitor",
 	author = "Visor, Sir, A1m`",
 	description = "Keep track of players' netsettings",
-	version = "2.6.2",
+	version = "2.6.3",
 	url = "https://github.com/A1mDev/L4D2-Competitive-Plugins"
 };
 
@@ -143,7 +143,7 @@ void OnTeamChange(Event hEvent, const char[] name, bool dontBroadcast)
 Action OnTeamChangeDelay(Handle hTimer, any userid)
 {
 	int client = GetClientOfUserId(userid);
-	if (client > 0) {
+	if (client > 0 && IsClientInGame(client)) {
 		RegisterSettings(client);
 	}
 
@@ -168,7 +168,7 @@ Action ListRates(int client, int args)
 		hClientSettingsArray.GetArray(i, player, sizeof(NetsettingsStruct));
 
 		int iClient = GetClientBySteamId(player.Client_SteamId);
-		if (iClient > 0 && GetClientTeam(client) > L4D2Team_Spectator) {
+		if (iClient > 0 && GetClientTeam(iClient) > L4D2Team_Spectator) {
 			ReplyToCommand(client, "\x03%N\x01 : %d/%d/%d", iClient, player.Client_Cmdrate, player.Client_Updaterate, player.Client_Rate);
 		}
 	}

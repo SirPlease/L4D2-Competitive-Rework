@@ -38,7 +38,7 @@ public Plugin myinfo =
 	name = "L4D2Lib",
 	author = "Confogl Team",
 	description = "Useful natives and fowards for L4D2 Plugins",
-	version = "3.2.1",
+	version = "3.2.2",
 	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 };
 

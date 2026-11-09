@@ -119,6 +119,15 @@ Action MI_KV_CmdSave(int iClient, int iArgs)
 
 Action MI_KV_CmdSaveLoc(int iClient, int iArgs)
 {
+	if (!iClient) {
+		ReplyToCommand(iClient, "This command saves your current position, so it can only be used in-game.");
+		return Plugin_Handled;
+	}
+
+	if (!IsClientInGame(iClient)) {
+		return Plugin_Handled;
+	}
+
 	bool bUpdateInfo;
 	char sCurMap[128];
 	GetCurrentMap(sCurMap, sizeof(sCurMap));

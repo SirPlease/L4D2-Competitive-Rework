@@ -35,7 +35,7 @@ public Plugin myinfo =
     name = "Pause plugin",
     author = "CanadaRox, Sir, Forgetest, A1m`",
     description = "Adds pause functionality without breaking pauses, also prevents SI from spawning because of the Pause.",
-    version = "6.9.1",
+    version = "6.9.2",
     url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 };
 
@@ -419,6 +419,9 @@ Action ToggleReady_Cmd(int client, int args)
     if (onlyEnableForce.BoolValue)
         return Plugin_Continue;
 
+    if (!client || !IsClientInGame(client))
+        return Plugin_Handled;
+
     int clientTeam = GetClientTeam(client);
     teamReady[clientTeam] ? Unready_Cmd(client, 0) : Unpause_Cmd(client, 0);
 
@@ -586,6 +589,9 @@ void Unpause(bool real = true)
 
 Action Show_Cmd(int client, int args)
 {
+    if (!client || !IsClientInGame(client))
+        return Plugin_Handled;
+
     if (isPaused)
     {
         hiddenPanel[client] = false;
@@ -597,6 +603,9 @@ Action Show_Cmd(int client, int args)
 
 Action Hide_Cmd(int client, int args)
 {
+    if (!client || !IsClientInGame(client))
+        return Plugin_Handled;
+
     if (isPaused)
     {
         hiddenPanel[client] = true;
@@ -903,8 +912,8 @@ int Native_IsInPause(Handle plugin, int numParams)
 
 stock bool IsPlayer(int client)
 {
-    if (!client) return false;
-	
+    if (!client || !IsClientInGame(client)) return false;
+
     int team = GetClientTeam(client);
     return !SpecTimer[client] && (team == L4D2Team_Survivor || team == L4D2Team_Infected);
 }
