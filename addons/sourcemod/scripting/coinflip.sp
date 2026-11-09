@@ -1,99 +1,79 @@
-/*    
-		Coinflip
+/*
+	Coinflip
 
-   by purpletreefactory
-   Credit for the idea goes to Fig
-   This version was made out of convenience
-   
-   1.0.2: added e-z-p-z commands, removed unnecessary colors.inc, removed generation of config file
- */
- 
+	by purpletreefactory
+	Credit for the idea goes to Fig
+	This version was made out of convenience
+
+	1.0.2: added e-z-p-z commands, removed unnecessary colors.inc, removed generation of config file
+	1.1.0: new syntax rewrite + in-game players only + invalid roll sizes fall back to the default
+*/
+
+#pragma semicolon 1
+#pragma newdecls required
+
 #include <sourcemod>
-#include <sdktools>
 
-new result_int;
-new String:client_name[32]; // Used to store the client_name of the player who calls coinflip
-new previous_timeC = 0; // Used for coinflip
-new current_timeC = 0; // Used for coinflip
-new previous_timeN = 0; // Used for picknumber
-new current_timeN = 0; // Used for picknumber
-new Handle:delay_time; // Handle for the coinflip_delay cvar
-new number_max = 20; // Default maximum bound for picknumber
+#define DEFAULT_SIDES 20
 
-public Plugin:myinfo =
+ConVar g_cvDelay;
+
+int
+	g_iLastFlip,
+	g_iLastRoll;
+
+public Plugin myinfo =
 {
 	name = "Coinflip",
 	author = "purpletreefactory, epilimic",
 	description = "purpletreefactory's version of coinflip",
-	version = "1.0.2",
-	url = "http://www.sourcemod.net/"
-}
- 
-public OnPluginStart()
-{
-	delay_time = CreateConVar("coinflip_delay","-1", "Time delay in seconds between allowed coinflips. Set at -1 if no delay at all is desired.");
+	version = "1.1.0",
+	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
+};
 
-	RegConsoleCmd("sm_coinflip", Command_Coinflip);
-	RegConsoleCmd("sm_cf", Command_Coinflip);
-	RegConsoleCmd("sm_flip", Command_Coinflip);
-	RegConsoleCmd("sm_roll", Command_Picknumber);
-	RegConsoleCmd("sm_picknumber", Command_Picknumber);
+public void OnPluginStart()
+{
+	g_cvDelay = CreateConVar("coinflip_delay", "-1", "Time delay in seconds between allowed coinflips. Set at -1 if no delay at all is desired.");
+
+	RegConsoleCmd("sm_coinflip", Cmd_Coinflip);
+	RegConsoleCmd("sm_cf", Cmd_Coinflip);
+	RegConsoleCmd("sm_flip", Cmd_Coinflip);
+	RegConsoleCmd("sm_roll", Cmd_Roll);
+	RegConsoleCmd("sm_picknumber", Cmd_Roll);
 }
 
-Action:Command_Coinflip(client, args)
+Action Cmd_Coinflip(int client, int args)
 {
-	current_timeC = GetTime();
-	
-	if((current_timeC - previous_timeC) > GetConVarInt(delay_time)) // Only perform a coinflip if enough time has passed since the last one. This prevents spamming.
-	{
-		result_int = GetURandomInt() % 2; // Gets a random integer and checks to see whether it's odd or even
-		GetClientName(client, client_name, sizeof(client_name)); // Gets the client_name of the person using the command
-		
-		if(result_int == 0)
-			PrintToChatAll("\x01[\x05Coinflip\x01] \x03%s\x01 flipped a coin!\nIt's \x04Heads\x01!", client_name); // Here \x04 is actually yellow
-		else
-			PrintToChatAll("\x01[\x05Coinflip\x01] \x03%s\x01 flipped a coin!\nIt's \x04Tails\x01!", client_name);
-		
-		previous_timeC = current_timeC; // Update the previous time
-	}
-	else
-	{
-		PrintToConsole(client, "[Coinflip] Whoa there buddy, slow down. Wait at least %d seconds.", GetConVarInt(delay_time));
-	}
-	
+	if (!client || !IsClientInGame(client) || IsOnCooldown(client, g_iLastFlip))
+		return Plugin_Handled;
+
+	PrintToChatAll("\x01[\x05Coinflip\x01] \x03%N\x01 flipped a coin!\nIt's \x04%s\x01!", client, (GetURandomInt() & 1) ? "Tails" : "Heads");
 	return Plugin_Handled;
 }
 
-Action:Command_Picknumber(client, args)
+Action Cmd_Roll(int client, int args)
 {
-	current_timeN = GetTime();
-	
-	if((current_timeN - previous_timeN) > GetConVarInt(delay_time)) // Only perform a numberpick if enough time has passed since the last one.
+	if (!client || !IsClientInGame(client) || IsOnCooldown(client, g_iLastRoll))
+		return Plugin_Handled;
+
+	// No argument, non-numeric, zero or negative input all use the default die
+	int sides = GetCmdArgInt(1);
+	if (sides < 1)
+		sides = DEFAULT_SIDES;
+
+	PrintToChatAll("\x01[\x05Coinflip\x01] \x03%N\x01 rolled a \x03%d \x01sided die!\nIt's \x04%d\x01!", client, sides, GetRandomInt(1, sides));
+	return Plugin_Handled;
+}
+
+bool IsOnCooldown(int client, int &last)
+{
+	int now = GetTime();
+	if (now - last > g_cvDelay.IntValue)
 	{
-		GetClientName(client, client_name, sizeof(client_name)); // Gets the client_name of the person using the command
-		
-		if(GetCmdArgs() == 0)
-		{
-			result_int = GetURandomInt() % (number_max); // Generates a random number within the default range
-			
-			PrintToChatAll("\x01[\x05Coinflip\x01] \x03%s\x01 rolled a \x03%d \x01sided die!\nIt's \x04%d\x01!", client_name, number_max, result_int + 1);
-		}
-		else
-		{
-			new String:arg[32];
-			new max;
-			
-			GetCmdArg(1, arg, sizeof(arg)); // Get the command argument
-			max = StringToInt(arg);
-			
-			result_int = GetURandomInt() % (max); // Generates a random number within the specified range
-			PrintToChatAll("\x01[\x05Coinflip\x01] \x03%s\x01 rolled a \x03%d \x01sided die!\nIt's \x04%d\x01!", client_name, max, result_int + 1);
-		}
-		
-		previous_timeN = current_timeN; // Update the previous time
+		last = now;
+		return false;
 	}
-	else
-	{
-		PrintToConsole(client, "[Coinflip] Whoa there buddy, slow down. Wait at least %d seconds.", GetConVarInt(delay_time));
-	}
+
+	PrintToChat(client, "[Coinflip] Whoa there buddy, slow down. Wait at least %d seconds.", g_cvDelay.IntValue);
+	return true;
 }
