@@ -5,11 +5,11 @@
 #include <sourcescramble>
 
 #define BULLET_MAX_SIZE		3
-#define GAMEDATA_FILE		"code_patcher"
+#define GAMEDATA_FILE		"l4d2_static_shotgun_spread"
 #define KEY_SGSPREAD		"sgspread"
 
 // Original code & Notes: https://github.com/Jahze/l4d2_plugins/tree/master/spread_patch
-// Static Shotgun Spread leverages code_patcher (code_patcher.txt gamedata)
+// Static Shotgun Spread patches CTerrorPlayer::FireBullet (l4d2_static_shotgun_spread.txt gamedata)
 // to replace RNG in pellet spread with static factors.
 // This plugin allows you to adjust the spread characteristics, by live patching operands in the custom ASM.
 
@@ -64,7 +64,7 @@ public Plugin myinfo =
 {
 	name = "L4D2 Static Shotgun Spread",
 	author = "Jahze, Visor, A1m`, Rena",
-	version = "1.6.5",
+	version = "1.6.6",
 	description = "Changes the values in the sgspread patch",
 	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 };
