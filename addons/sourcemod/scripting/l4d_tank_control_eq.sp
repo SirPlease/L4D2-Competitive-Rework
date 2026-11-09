@@ -54,7 +54,7 @@ public Plugin myinfo =
     name = "L4D2 Tank Control",
     author = "arti, (Contributions by: Sheo, Sir, Altair-Sossai)",
     description = "Distributes the role of the tank evenly throughout the team, allows for overrides. (Includes forwards)",
-    version = "0.0.29",
+    version = "0.0.30",
     url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 }
 
@@ -318,7 +318,12 @@ void PlayerTeam_Event(Event hEvent, const char[] name, bool dontBroadcast)
             int tank = getTankPlayer();
 
             if (hTankDebug.BoolValue)
-                PrintToConsoleAll("[TC] Tank: %N - L4D2_GetTankCount: %i - initialTankLeft: %f - gotTankAt: %f", tank, L4D2_GetTankCount(), initialTankLeft, gotTankAt);
+            {
+                if (tank != -1)
+                    PrintToConsoleAll("[TC] Tank: %N - L4D2_GetTankCount: %i - initialTankLeft: %f - gotTankAt: %f", tank, L4D2_GetTankCount(), initialTankLeft, gotTankAt);
+                else
+                    PrintToConsoleAll("[TC] Tank: none - L4D2_GetTankCount: %i - initialTankLeft: %f - gotTankAt: %f", L4D2_GetTankCount(), initialTankLeft, gotTankAt);
+            }
 
             float window = hTankWindow.FloatValue;
             if (window > 0.0 && L4D2_GetTankCount() == 1 && tank != -1 && (gotTankAt - initialTankLeft) < window)
