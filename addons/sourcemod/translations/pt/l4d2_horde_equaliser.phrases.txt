@@ -1,0 +1,19 @@
+"Phrases"
+{
+	"Tag"
+	{
+		"pt"		"{default}<{olive}Horda{default}>"
+	}
+	"NoCommonRemaining"
+	{
+		"pt"		"{red}Nenhum {default}comum restante!"
+	}
+	"CommonRemaining"
+	{
+		"pt"		"{red}%i {default}comuns restantes.."
+	}
+	"FiniteEventStarted"
+	{
+		"pt"		"{default}Um {blue}evento finito{default} de {olive}%i{default} comuns começou! Corra ou espere passar, a escolha é sua!"
+	}
+}

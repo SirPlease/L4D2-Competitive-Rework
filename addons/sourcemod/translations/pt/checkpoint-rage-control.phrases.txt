@@ -1,0 +1,15 @@
+"Phrases"
+{
+	"Tag"
+	{
+		"pt"    "{default}[{green}!{default}]"
+	}
+	"LoseFrustration"
+	{
+		"pt"	"{default}O {red}Tank{default} {green}continuará perdendo{default} frustração enquanto os sobreviventes estiverem na {olive}saferoom{default}."
+	}
+	"KeepFrustration"
+	{
+		"pt"	"{default}O {red}Tank{default} {green}não perderá{default} frustração enquanto os sobreviventes estiverem na {olive}saferoom{default}."
+	}
+}
