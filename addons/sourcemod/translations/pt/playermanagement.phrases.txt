@@ -1,0 +1,39 @@
+"Phrases"
+{
+    "Tag"
+    {
+        "pt"    "{default}[{olive}!{default}]"
+    }
+    "Usage"
+    {
+        "pt"    "{blue}Uso{default}"
+    }
+    "NoSnoop"
+    {
+        "pt"    "{default}Você não deve {red}espiar{default} o Tank!"
+    }
+    "BecomeSpectator"
+    {
+        "pt"    "{teamcolor}%N{default} virou espectador!"
+    }
+    "WhileCapped"
+    {
+        "pt"    "{red}Não é permitido ir para o espectador{default} enquanto estiver capturado!"
+    }
+    "FixBot"
+    {
+        "pt"    "{teamcolor}%N{default} está tentando corrigir a contagem de bots"
+    }
+    "FixBotConsole"
+    {
+        "pt"    "{default}O console está tentando {red}corrigir a contagem de bots{default}"
+    }
+    "ValidTeams"
+    {
+        "pt"    "Times válidos: %d = Espectadores, %d = Sobreviventes, %d = Infectados"
+    }
+    "CouldNotSwitched"
+    {
+        "pt"    "{teamcolor}%N{default} não pôde ser trocado porque o time de destino está cheio ou não tem um bot para assumir."
+    }
+}
