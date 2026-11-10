@@ -22,13 +22,29 @@ public Plugin myinfo =
 	name = "L4D2 Ellis Hunter Band aid Fix",
 	author = "Sir (with pointers from Rena)",
 	description = "Band-aid fix for Ellis' getup not matching the other Survivors",
-	version = "1.2",
+	version = "1.3",
 	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 };
 
 public void OnPluginStart()
 {
 	HookEvent("pounce_end", Event_PounceEnd);
+	HookEvent("player_bot_replace", Event_Replaced);
+	HookEvent("bot_player_replace", Event_Replaced);
+}
+
+// A player/bot swap hands the get-up to another client, so keep the speed-up on whoever has it now.
+void Event_Replaced(Event event, const char[] name, bool dontBroadcast)
+{
+	int client = GetClientOfUserId(event.GetInt(name[0] == 'p' ? "bot" : "player"));
+	if (client < 1 || !IsClientInGame(client) || GetClientTeam(client) != L4D2Team_Survivor) {
+		return;
+	}
+
+	if (IdentifySurvivorFast(client) == L4D2Util_SurvivorCharacter_Ellis && GetEntProp(client, Prop_Send, "m_nSequence") == ANIM_ELLIS_HUNTER_GETUP) {
+		SDKUnhook(client, SDKHook_PostThinkPost, UpdateThink);
+		SDKHook(client, SDKHook_PostThinkPost, UpdateThink);
+	}
 }
 
 void Event_PounceEnd(Event event, char[] name, bool dontBroadcast)
