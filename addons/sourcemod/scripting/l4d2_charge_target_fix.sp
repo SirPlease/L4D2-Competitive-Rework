@@ -2,10 +2,11 @@
 #pragma newdecls required
 
 #include <sourcemod>
+#include <sdkhooks>
 #include <dhooks>
 #include <left4dhooks>
 
-#define PLUGIN_VERSION "1.10"
+#define PLUGIN_VERSION "1.11"
 
 public Plugin myinfo = 
 {
@@ -13,7 +14,7 @@ public Plugin myinfo =
 	author = "Forgetest",
 	description = "Fix multiple issues with charger targets.",
 	version = PLUGIN_VERSION,
-	url = "https://github.com/Target5150/MoYu_Server_Stupid_Plugins"
+	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 };
 
 #define GAMEDATA_FILE "l4d2_charge_target_fix"
@@ -47,12 +48,15 @@ methodmap AnimState
 
 #define FSOLID_NOT_SOLID 0x0004 // Are we currently not solid?
 #define KNOCKDOWN_DURATION_CHARGER 2.5
+#define SLAM_ATTACK_HOLD 0.2
+#define SLAM_PUMMEL_MARGIN 0.1
 
 int 
 	g_iChargeVictim[MAXPLAYERS+1] = {-1, ...},
 	g_iChargeAttacker[MAXPLAYERS+1] = {-1, ...};
 
 bool g_bNotSolid[MAXPLAYERS+1];
+float g_flSuppressUntil[MAXPLAYERS+1];
 
 enum
 {
@@ -492,6 +496,57 @@ public void L4D2_OnSlammedSurvivor_Post(int victim, int attacker, bool bWallSlam
 	{
 		L4D_Smoker_ReleaseVictim(victim, smoker);
 	}
+	
+	SuppressAttacks(victim, attacker);
+}
+
+/*
+	A survivor slammed on contact pulls out their active weapon for a small window until the
+	queued pummel hides it.
+	In this window, the survivor can shoot and shove, which can lead to an unfair outcome.
+	To fix this, we suppress the survivor's weapon attacks until the pummel starts (with a small buffer)
+	A slam that incaps swaps to the pistol a tick later and a deploy resets the attack timers,
+	so any weapon switched to before the pummel starts gets the same suppression.
+*/
+void SuppressAttacks(int client, int attacker)
+{
+	float flHold = GetGameTime() + SLAM_ATTACK_HOLD;
+	
+	if (L4D2_IsInQueuedPummel(attacker))
+	{
+		float flPummelStart = L4D2_GetQueuedPummelStartTime(attacker) + SLAM_PUMMEL_MARGIN;
+		if (flPummelStart > flHold)
+			flHold = flPummelStart;
+	}
+	
+	g_flSuppressUntil[client] = flHold;
+	SuppressWeapon(GetEntPropEnt(client, Prop_Send, "m_hActiveWeapon"), flHold);
+	
+	SDKUnhook(client, SDKHook_WeaponSwitchPost, SDK_OnWeaponSwitchPost);
+	SDKHook(client, SDKHook_WeaponSwitchPost, SDK_OnWeaponSwitchPost);
+}
+
+void SDK_OnWeaponSwitchPost(int client, int weapon)
+{
+	if (GetGameTime() >= g_flSuppressUntil[client])
+	{
+		SDKUnhook(client, SDKHook_WeaponSwitchPost, SDK_OnWeaponSwitchPost);
+		return;
+	}
+	
+	SuppressWeapon(weapon, g_flSuppressUntil[client]);
+}
+
+void SuppressWeapon(int weapon, float flHold)
+{
+	if (weapon <= MaxClients || !IsValidEntity(weapon))
+		return;
+	
+	if (GetEntPropFloat(weapon, Prop_Send, "m_flNextPrimaryAttack") < flHold)
+		SetEntPropFloat(weapon, Prop_Send, "m_flNextPrimaryAttack", flHold);
+	
+	if (GetEntPropFloat(weapon, Prop_Send, "m_flNextSecondaryAttack") < flHold)
+		SetEntPropFloat(weapon, Prop_Send, "m_flNextSecondaryAttack", flHold);
 }
 
 Action Timer_KnockdownRepeat(Handle timer, int userid)

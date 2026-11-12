@@ -113,6 +113,7 @@ enum L4D2GlowType
 
 enum L4D1ZombieClassType
 {
+	L4D1ZombieClass_None			= 0,
 	L4D1ZombieClass_Smoker			= 1,
 	L4D1ZombieClass_Boomer			= 2,
 	L4D1ZombieClass_Hunter			= 3,
@@ -123,6 +124,7 @@ enum L4D1ZombieClassType
 
 enum L4D2ZombieClassType
 {
+	L4D2ZombieClass_None			= 0,
 	L4D2ZombieClass_Smoker			= 1,
 	L4D2ZombieClass_Boomer			= 2,
 	L4D2ZombieClass_Hunter			= 3,
@@ -255,7 +257,7 @@ stock void L4D1_SetPlayerZombieClass(int client, L4D1ZombieClassType class)
  * @error				Invalid client index
  */
 // L4D2 only
-stock any L4D2_GetPlayerZombieClass(int client)
+stock L4D2ZombieClassType L4D2_GetPlayerZombieClass(int client)
 {
 	return view_as<L4D2ZombieClassType>(GetEntProp(client, Prop_Send, "m_zombieClass"));
 }
@@ -284,7 +286,11 @@ stock void L4D2_SetPlayerZombieClass(int client, L4D2ZombieClassType class)
 // L4D1 only
 stock char[] L4D1_GetZombieClassname(L4D1ZombieClassType type)
 {
-	return L4D1ZombieClassname[type];
+	char temp[32];
+	strcopy(temp, sizeof(temp), L4D1ZombieClassname[type]); // Copying because of SM 1.12 error 413: returned array does not have the same dimension count as return type
+	return temp;
+
+	// return L4D1ZombieClassname[type]; // Does not work on SM 1.12
 }
 
 /**
@@ -297,7 +303,11 @@ stock char[] L4D1_GetZombieClassname(L4D1ZombieClassType type)
 // L4D2 only
 stock char[] L4D2_GetZombieClassname(L4D2ZombieClassType type)
 {
-	return L4D2ZombieClassname[type];
+	char temp[32];
+	strcopy(temp, sizeof(temp), L4D2ZombieClassname[type]); // Copying because of SM 1.12 error 413: returned array does not have the same dimension count as return type
+	return temp;
+
+	// return L4D2ZombieClassname[type]; // Does not work on SM 1.12
 }
 
 /**

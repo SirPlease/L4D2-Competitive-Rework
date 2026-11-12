@@ -1,0 +1,44 @@
+"Phrases"
+{
+	"Tag"
+	{
+		"chi"    	"{blue}[{default}Slots{blue}]{default}"
+	}
+	"NotConsoleVote"
+	{
+		"chi"		"[Slots] 必须在游戏中才能使用slots命令."
+	}
+	"LimitSlotsAbove"
+	{
+		"chi"		"你不能在这个服务器上将位置设置超过 {olive}%i{default} 人."
+	}
+	"LimitedSlotsTo"
+	{
+		"#format"   "{1:s},{2:i}" // 1:sName 2:Int
+		"chi"		"{olive}{1}{default} 将位置设置为 {blue}{2}{default}"
+	}
+	"RequiredPlayers"
+	{
+		"chi"		"你不能将最小位置设置小于该模式需要的人数."
+	}
+	"SlotsUsage"
+	{
+		"chi"		"用法: {olive}!slots{default} <{olive}想要设置的位置数量{default}> {blue}|{default} 例子: {olive}!slots 8{default}"
+	}
+	"Spectators"
+	{
+		"chi"		"旁观者不允许使用位置命令."
+	}
+	"LimitSlots"
+	{
+		"chi"		"位置被限制到 '%s'?"
+	}
+	"CannotBeStarted"
+	{
+		"chi"		"暂时不能进行投票."
+	}
+	"LimitingSlots"
+	{
+		"chi"		"设置服务器位置中..."
+	}
+}

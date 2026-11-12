@@ -1,0 +1,39 @@
+"Phrases"
+{
+	"Tag"
+	{
+		"pt"		"{default}[{green}8Ball{default}]"
+	}
+	"Usage"
+	{
+		"pt"		"Uso: !8ball <pergunta>"
+	}
+	"Asked"
+	{
+		"pt"		"{teamcolor}%N{default} perguntou: {olive}%s{default}"
+	}
+	"WithYes"
+	{
+		"pt"		"{default}Vou de {olive}Sim{default}!"
+	}
+	"WithNo"
+	{
+		"pt"		"{default}Vou de {red}Não{default}!"
+	}
+	"Yikes"
+	{
+		"pt"		"{default}Eita. {red}Não{default}!"
+	}
+	"Sure"
+	{
+		"pt"		"{default}Ãhhhhh... {olive}Claro{default}?"
+	}
+	"AbsolutelyNot"
+	{
+		"pt"		"{default}KKKK {red}De jeito nenhum{default}!"
+	}
+	"Yeah"
+	{
+		"pt"		"{default}Quer saber? {olive}Sim{default}!"
+	}
+}

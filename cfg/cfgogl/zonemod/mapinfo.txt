@@ -3061,6 +3061,14 @@
 		{
 			"pain_pills"	"3"
 		}
+		"tank_ban_flow"
+		{
+			"Roof to saferoom"
+			{
+				"min"		"38"
+				"max"		"70"
+			}
+		}
 	}
 	"dc2025_2"
 	{

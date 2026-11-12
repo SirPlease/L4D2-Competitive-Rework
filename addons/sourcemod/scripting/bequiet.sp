@@ -13,7 +13,7 @@ public Plugin myinfo =
     name = "BeQuiet",
     author = "Sir",
     description = "Please be Quiet!",
-    version = "1.33.7",
+    version = "1.33.8",
     url = "https://github.com/SirPlease/SirCoding"
 }
 
@@ -68,6 +68,11 @@ Action TeamSay_Callback(int client, char[] command, int args)
         return Plugin_Handled;
     }
     
+    if (!client || !IsClientInGame(client))
+    {
+        return Plugin_Continue;
+    }
+
     if (bSpecSeeChat && GetClientTeam(client) != 1)
     {
         char sChat[256];

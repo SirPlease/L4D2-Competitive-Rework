@@ -819,6 +819,7 @@ stock bool L4D_HasReachedSmoker(int client)
  *
  * @return					Offset into CTerrorPlayer to the start of queued pummel props
  */
+// L4D2 only
 static stock int L4D2_OffsQueuedPummelInfo()
 {
 	static int m_hQueuedPummelVictim = -1;
@@ -835,6 +836,7 @@ static stock int L4D2_OffsQueuedPummelInfo()
  *
  * @return timestamp or -1.0 if no queued pummel
  */
+// L4D2 only
 stock float L4D2_GetQueuedPummelStartTime(int charger)
 {
 	return GetEntDataFloat(charger, L4D2_OffsQueuedPummelInfo() + QueuedPummel_StartTime);
@@ -848,6 +850,7 @@ stock float L4D2_GetQueuedPummelStartTime(int charger)
  *
  * @noreturn
  */
+// L4D2 only
 stock void L4D2_SetQueuedPummelStartTime(int charger, float timestamp)
 {
 	SetEntDataFloat(charger, L4D2_OffsQueuedPummelInfo() + QueuedPummel_StartTime, timestamp);
@@ -860,6 +863,7 @@ stock void L4D2_SetQueuedPummelStartTime(int charger, float timestamp)
  *
  * @return true if in queued pummel, false otherwise
  */
+// L4D2 only
 stock bool L4D2_IsInQueuedPummel(int charger)
 {
 	float flTimestamp = L4D2_GetQueuedPummelStartTime(charger);
@@ -874,6 +878,7 @@ stock bool L4D2_IsInQueuedPummel(int charger)
  *
  * @return client index or -1 if none
  */
+// L4D2 only
 stock int L4D2_GetQueuedPummelVictim(int client)
 {
 	return GetEntDataEnt2(client, L4D2_OffsQueuedPummelInfo() + QueuedPummel_Victim);
@@ -887,6 +892,7 @@ stock int L4D2_GetQueuedPummelVictim(int client)
  *
  * @noreturn
  */
+// L4D2 only
 stock void L4D2_SetQueuedPummelVictim(int client, int target)
 {
 	SetEntDataEnt2(client, L4D2_OffsQueuedPummelInfo() + QueuedPummel_Victim, target);
@@ -899,6 +905,7 @@ stock void L4D2_SetQueuedPummelVictim(int client, int target)
  *
  * @return client index or -1 if none
  */
+// L4D2 only
 stock int L4D2_GetQueuedPummelAttacker(int client)
 {
 	return GetEntDataEnt2(client, L4D2_OffsQueuedPummelInfo() + QueuedPummel_Attacker);
@@ -912,6 +919,7 @@ stock int L4D2_GetQueuedPummelAttacker(int client)
  *
  * @noreturn
  */
+// L4D2 only
 stock void L4D2_SetQueuedPummelAttacker(int client, int target)
 {
 	SetEntDataEnt2(client, L4D2_OffsQueuedPummelInfo() + QueuedPummel_Attacker, target);
@@ -1048,6 +1056,14 @@ stock bool L4D_IsPlayerStaggering(int client)
 	return true;
 }
 
+/**
+ * @brief Get the players current animation activity sequence number
+ *
+ * @param client			Client ID of the player
+ *
+ * @return Activity number
+ */
+// L4D1 only
 stock int L4D1_GetMainActivity(int client)
 {
 	static int s_iOffs_m_eCurrentMainSequenceActivity = -1;

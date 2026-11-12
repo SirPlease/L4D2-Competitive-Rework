@@ -19,7 +19,7 @@
 #include <lerpmonitor>
 #include <witch_and_tankifier>
 
-#define PLUGIN_VERSION "3.9.1"
+#define PLUGIN_VERSION "3.9.2"
 
 public Plugin myinfo =
 {
@@ -643,7 +643,7 @@ void GetWeaponInfo(int client, char[] info, int length)
 		default:
 		{
 			GetLongWeaponName(primaryWepId, buffer, sizeof(buffer));
-			FormatEx(info, length, "%s %i/%i", buffer, GetWeaponClipAmmo(primaryWep), GetWeaponExtraAmmo(client, primaryWepId));
+			FormatEx(info, length, "%s %i/%i", buffer, GetWeaponClipAmmo(primaryWep), GetWeaponExtraAmmo(client, primaryWep));
 		}
 	}
 	
@@ -674,7 +674,7 @@ void GetWeaponInfo(int client, char[] info, int length)
 		else
 		{
 			GetLongWeaponName(primaryWepId, buffer, sizeof(buffer));
-			Format(info, length, "%s | %s %i", info, buffer, GetWeaponClipAmmo(primaryWep) + GetWeaponExtraAmmo(client, primaryWepId));
+			Format(info, length, "%s | %s %i", info, buffer, GetWeaponClipAmmo(primaryWep) + GetWeaponExtraAmmo(client, primaryWep));
 		}
 	}
 }
@@ -1226,53 +1226,18 @@ void FillGameInfo(Panel hSpecHud)
 /**
  *	Stocks
 **/
-/**
- *	Datamap m_iAmmo
- *	offset to add - gun(s) - control cvar
- *	
- *	+12: M4A1, AK74, Desert Rifle, also SG552 - ammo_assaultrifle_max
- *	+20: both SMGs, also the MP5 - ammo_smg_max
- *	+28: both Pump Shotguns - ammo_shotgun_max
- *	+32: both autoshotguns - ammo_autoshotgun_max
- *	+36: Hunting Rifle - ammo_huntingrifle_max
- *	+40: Military Sniper, AWP, Scout - ammo_sniperrifle_max
- *	+68: Grenade Launcher - ammo_grenadelauncher_max
- */
-
-#define	ASSAULT_RIFLE_OFFSET_IAMMO		12
-#define	SMG_OFFSET_IAMMO				20
-#define	PUMPSHOTGUN_OFFSET_IAMMO		28
-#define	AUTO_SHOTGUN_OFFSET_IAMMO		32
-#define	HUNTING_RIFLE_OFFSET_IAMMO		36
-#define	MILITARY_SNIPER_OFFSET_IAMMO	40
-#define	GRENADE_LAUNCHER_OFFSET_IAMMO	68
-
-stock int GetWeaponExtraAmmo(int client, int wepid)
+/* Reads the reserve slot through the weapon's own ammo type, so every gun
+ * (MP5, M60, and any added later) resolves without a hand-kept table. */
+stock int GetWeaponExtraAmmo(int client, int weapon)
 {
-	static int ammoOffset;
-	if (!ammoOffset) ammoOffset = FindSendPropInfo("CCSPlayer", "m_iAmmo");
-	
-	int offset;
-	switch (wepid)
-	{
-		case WEPID_RIFLE, WEPID_RIFLE_AK47, WEPID_RIFLE_DESERT, WEPID_RIFLE_SG552:
-			offset = ASSAULT_RIFLE_OFFSET_IAMMO;
-		case WEPID_SMG, WEPID_SMG_SILENCED:
-			offset = SMG_OFFSET_IAMMO;
-		case WEPID_PUMPSHOTGUN, WEPID_SHOTGUN_CHROME:
-			offset = PUMPSHOTGUN_OFFSET_IAMMO;
-		case WEPID_AUTOSHOTGUN, WEPID_SHOTGUN_SPAS:
-			offset = AUTO_SHOTGUN_OFFSET_IAMMO;
-		case WEPID_HUNTING_RIFLE:
-			offset = HUNTING_RIFLE_OFFSET_IAMMO;
-		case WEPID_SNIPER_MILITARY, WEPID_SNIPER_AWP, WEPID_SNIPER_SCOUT:
-			offset = MILITARY_SNIPER_OFFSET_IAMMO;
-		case WEPID_GRENADE_LAUNCHER:
-			offset = GRENADE_LAUNCHER_OFFSET_IAMMO;
-		default:
-			return -1;
-	}
-	return GetEntData(client, ammoOffset + offset);
+	if (weapon <= 0)
+		return -1;
+
+	int ammoType = GetEntProp(weapon, Prop_Send, "m_iPrimaryAmmoType");
+	if (ammoType < 0)
+		return -1;
+
+	return GetEntProp(client, Prop_Send, "m_iAmmo", _, ammoType);
 }
 
 stock int GetWeaponClipAmmo(int weapon)

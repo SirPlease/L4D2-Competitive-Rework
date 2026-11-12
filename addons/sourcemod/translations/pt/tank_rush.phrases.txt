@@ -1,0 +1,19 @@
+"Phrases"
+{
+	"Tag"
+	{
+		"pt"		"{red}[{default}NoTankRush{red}]"
+	}
+	"freeze"
+	{
+		"pt"		"{default}O {red}Tank {default}nasceu. {olive}Congelando {default}os pontos de distância!"
+	}
+	"unfreeze"
+	{
+		"pt"		"{default}O {red}Tank {default}morreu. {olive}Descongelando {default}os pontos de distância!"
+	}
+	"saferoom"
+	{
+		"pt"		"{default}Os {red}Sobreviventes {default}chegaram à sala segura. {olive}Descongelando {default}os pontos de distância!"
+	}
+}

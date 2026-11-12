@@ -1,0 +1,19 @@
+"Phrases"
+{
+	"Title"
+	{
+		"pt"	"{blue}[{default}Seletor de Pedra do Tank{blue}]"
+	}
+	"Reload"
+	{
+		"pt"	"{olive}Recarregar{default}/{olive}!overhand{default} = {blue}Por cima com 2 mãos{default}"
+	}
+	"Use"
+	{
+		"pt"	"{olive}Usar{default}/{olive}!underhand{default} = {blue}Por baixo{default}"
+	}
+	"M2"
+	{
+		"pt"	"{olive}M2{default}/{olive}!overonehand{default} = {blue}Por cima com 1 mão{default}"
+	}
+}

@@ -1,0 +1,19 @@
+"Phrases"
+{
+	"Tag"
+	{
+		"pt"    "{default}[{green}!{default}]"
+	}
+	"VotingNotEnabled"
+	{
+		"pt"	"{default}A votação só é liberada após {olive}40s{default} da rodada."
+	}
+	"NotConsoleVote"
+	{
+		"pt"	"[!] Você precisa estar no jogo para votar."
+	}
+	"NotSpectatorVote"
+	{
+		"pt"	"{olive}Espectadores{default} não podem votar."
+	}
+}

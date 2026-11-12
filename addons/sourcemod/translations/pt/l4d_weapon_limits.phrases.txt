@@ -1,0 +1,11 @@
+"Phrases"
+{
+	"Tag"
+	{
+		"pt"		"{default}[{olive}Limite de Armas{default}]"
+	}
+	"Full"
+	{
+		"pt"		"{default}Este grupo de armas atingiu o máximo de {green}%d{default}!"
+	}
+}

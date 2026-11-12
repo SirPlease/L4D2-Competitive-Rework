@@ -317,7 +317,12 @@ void PlayerTeam_Event(Event hEvent, const char[] name, bool dontBroadcast)
             int tank = getTankPlayer();
 
             if (hTankDebug.BoolValue)
-                PrintToConsoleAll("[TC] Tank: %N - L4D2_GetTankCount: %i - initialTankLeft: %f - gotTankAt: %f", tank, L4D2_GetTankCount(), initialTankLeft, gotTankAt);
+            {
+                if (tank != -1)
+                    PrintToConsoleAll("[TC] Tank: %N - L4D2_GetTankCount: %i - initialTankLeft: %f - gotTankAt: %f", tank, L4D2_GetTankCount(), initialTankLeft, gotTankAt);
+                else
+                    PrintToConsoleAll("[TC] Tank: none - L4D2_GetTankCount: %i - initialTankLeft: %f - gotTankAt: %f", L4D2_GetTankCount(), initialTankLeft, gotTankAt);
+            }
 
             float window = hTankWindow.FloatValue;
             if (window > 0.0 && L4D2_GetTankCount() == 1 && tank != -1 && (gotTankAt - initialTankLeft) < window)

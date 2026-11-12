@@ -1,0 +1,27 @@
+"Phrases"
+{
+	"Tag"
+	{
+		"chi"		"<{olive}尸潮事件{default}>"
+	}
+	"TankPlay"
+	{
+		"chi"		"尸潮因Tank生成而已被{blue}暂停{default}! 继续推进{blue}%0.1f%%{default}将会重启尸潮."
+	}
+	"UntilHordeStarts"
+	{
+		"chi"		"剩余{blue}%0.1f%%{default}进度重启尸潮..."
+	}
+	"HordeResumed"
+	{
+		"chi"		"尸潮已在 {green}%i%%{default} 的{green}强度{default}下被{blue}重启{default}, 继续推进将会提升尸潮强度."
+	}
+	"HordeStrength"
+	{
+		"chi"		"当前尸潮强度为 {green}%i%%{default} ..."
+	}
+	"HordeVeryStrength"
+	{
+		"chi"		"生还者已推进太远, 尸潮强度已重新回到{green}100%%{default}!"
+	}
+}
