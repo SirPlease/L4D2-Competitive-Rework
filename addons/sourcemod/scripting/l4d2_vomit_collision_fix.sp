@@ -5,7 +5,7 @@
 #include <sdktools>
 #include <dhooks>
 
-#define PLUGIN_VERSION "1.0"
+#define PLUGIN_VERSION "1.1"
 #define GAMEDATA_FILE "l4d2_vomit_collision_fix"
 #define TEAM_SURVIVOR 2
 
@@ -30,6 +30,9 @@ DynamicHook
 
 int g_iDownCheckTick = -1;
 bool g_bAnyDown;
+
+int g_iHitboxHook[MAXPLAYERS + 1] = {INVALID_HOOK_ID, ...};
+bool g_bHitboxHooked;
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -59,15 +62,6 @@ public void OnPluginStart()
 		SetFailState("Failed to set up hooks from gamedata \"%s\"", GAMEDATA_FILE);
 	}
 
-	// Late load stuff (just in case)
-	for (int i = 1; i <= MaxClients; i++)
-	{
-		if (IsClientInGame(i))
-		{
-			OnClientPutInServer(i);
-		}
-	}
-
 	int entity = -1;
 	while ((entity = FindEntityByClassname(entity, "ability_vomit")) != -1)
 	{
@@ -87,7 +81,10 @@ public void OnMapStart()
 
 public void OnClientPutInServer(int client)
 {
-	g_hTestHitboxes.HookEntity(Hook_Pre, client, CTerrorPlayer_TestHitboxes);
+	if (g_bHitboxHooked)
+	{
+		g_iHitboxHook[client] = g_hTestHitboxes.HookEntity(Hook_Pre, client, CTerrorPlayer_TestHitboxes);
+	}
 }
 
 public void OnEntityCreated(int entity, const char[] classname)
@@ -107,8 +104,43 @@ MRESReturn Vomit_PhysicsSolidMaskForEntity_Post(DHookReturn hReturn)
 		return MRES_Ignored;
 	}
 
+	HookPlayerHitboxes();
+
 	hReturn.Value = hReturn.Value | CONTENTS_HITBOX;
 	return MRES_Override;
+}
+
+void HookPlayerHitboxes()
+{
+	if (g_bHitboxHooked)
+	{
+		return;
+	}
+
+	for (int i = 1; i <= MaxClients; i++)
+	{
+		if (IsClientInGame(i))
+		{
+			g_iHitboxHook[i] = g_hTestHitboxes.HookEntity(Hook_Pre, i, CTerrorPlayer_TestHitboxes);
+		}
+	}
+
+	g_bHitboxHooked = true;
+	RequestFrame(Frame_UnhookPlayerHitboxes);
+}
+
+void Frame_UnhookPlayerHitboxes()
+{
+	for (int i = 1; i <= MaxClients; i++)
+	{
+		if (g_iHitboxHook[i] != INVALID_HOOK_ID)
+		{
+			DynamicHook.RemoveHook(g_iHitboxHook[i]);
+			g_iHitboxHook[i] = INVALID_HOOK_ID;
+		}
+	}
+
+	g_bHitboxHooked = false;
 }
 
 /*
