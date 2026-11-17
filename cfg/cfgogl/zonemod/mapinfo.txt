@@ -3190,6 +3190,78 @@
 		}
 	}
 
+//=======================================================================
+//=============== Precinct 84 第84辖区
+	"p84m1_apartment"
+        {
+                "tank_ban_flow"
+                {
+                        "Just right before guns"
+                        {
+                                "min"           "0"
+                                "max"           "26"
+                        }
+                        "Entire apartments building"
+                        {
+                                "min"           "29"
+                                "max"           "40"
+                        }
+			"Underground area and ladder"
+			{	"min"		"48"
+				"max"		"72"
+			}
+			"Past the propane truck"
+			{
+				"min"		"84"
+				"max"		"100"
+			}
+                }
+	}
+	"p84m2_eltrain"
+	{
+		"tank_ban_flow"
+		{
+			"The train area all the way to the outside area at the bottom"
+			{
+				"min"		"27"
+				"max"		"73"
+			}
+			"The sewer area"
+			{
+				"min"		"81"
+				"max"		"100"
+			}
+		}
+		
+	}
+	"p84m3_tunnel"
+	{
+		"tank_ban_flow"
+		{
+			"Fixes a stuck tank spawn"
+			{
+				"min"		"60"
+				"max"		"76"
+			}
+		}
+		
+	}
+	"p84m4_station"
+	{
+		"tank_ban_flow"
+		{
+			"Prevent saferoom tank"
+			{
+				"min"        "0"
+				"max"        "68"
+			}
+		}
+		"ItemLimits"
+		{
+			"pain_pills"    "-1"
+		}
+	}
+
 //-------- ↓↓↓ you can add custom info here ↓↓↓
 
 
