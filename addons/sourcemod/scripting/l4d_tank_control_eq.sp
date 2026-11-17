@@ -20,7 +20,8 @@ ArrayList h_tankQueue;
 ConVar 
     hTankPrint,
     hTankWindow, 
-    hTankDebug;
+    hTankDebug,
+    hCircularTankAssignment;
 
 GlobalForward
     hForwardOnTryOfferingTankBot,
@@ -54,7 +55,7 @@ public Plugin myinfo =
     name = "L4D2 Tank Control",
     author = "arti, (Contributions by: Sheo, Sir, Altair-Sossai)",
     description = "Distributes the role of the tank evenly throughout the team, allows for overrides. (Includes forwards)",
-    version = "0.0.30",
+    version = "0.0.31",
     url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 }
 
@@ -87,6 +88,7 @@ public void OnPluginStart()
     hTankPrint  = CreateConVar("tankcontrol_print_all", "0", "Who gets to see who will become the tank? (0 = Infected, 1 = Everyone)");
     hTankWindow = CreateConVar("tankcontrol_force_window", "0.0", "Give player that was initially going to be Tank (or was Tank and dced) back the Tank this long after Tank was given to somebody else (0 = Off)");
     hTankDebug  = CreateConVar("tankcontrol_debug", "0", "Whether or not to debug to console");
+    hCircularTankAssignment = CreateConVar("tankcontrol_circular_tank_assignment", "0", "Assign the Tank in a circular rotation so players keep the same order across cycles and never become Tank twice in a row (0 = Off, 1 = On)");
 }
 
 
@@ -526,6 +528,12 @@ void chooseTank(any data)
         nextTankIndex = PeekNextTankIndexInTheQueue();
     }
 
+    if (nextTankIndex == -1 && hCircularTankAssignment.BoolValue)
+    {
+        RequeuePlayersWhoHadTank();
+        nextTankIndex = PeekNextTankIndexInTheQueue();
+    }
+
     if (nextTankIndex == -1)
     {
         RemoveAllInfectedFrom(h_tankQueue);
@@ -670,6 +678,24 @@ int PeekNextTankIndexInTheQueue()
     }
 
     return -1;
+}
+
+void RequeuePlayersWhoHadTank()
+{
+    char steamId[64];
+
+    for (int i = 0; i < h_whosHadTank.Length; i++)
+    {
+        h_whosHadTank.GetString(i, steamId, sizeof(steamId));
+
+        int client = getInfectedPlayerBySteamId(steamId);
+        if (client == -1 || h_tankQueue.FindString(steamId) != -1)
+            continue;
+
+        h_tankQueue.PushString(steamId);
+        h_whosHadTank.Erase(i);
+        i--;
+    }
 }
 
 void EnqueueNewInfectedPlayers()
