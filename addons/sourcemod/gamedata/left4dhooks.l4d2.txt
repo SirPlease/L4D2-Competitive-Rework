@@ -1559,6 +1559,21 @@
 				"this"			"entity"
 			}
 
+			"L4DD::CTerrorPlayer::SetClass"
+			{
+				"signature"		"CTerrorPlayer::SetClass"
+				"callconv"		"thiscall"
+				"return"		"void"
+				"this"			"entity"
+				"arguments"
+				{
+					"a1"
+					{
+						"type"	"int"
+					}
+				}
+			}
+
 			"L4DD::CTerrorPlayer::MaterializeFromGhost"
 			{
 				"signature"		"CTerrorPlayer::MaterializeFromGhost"
@@ -1960,6 +1975,21 @@
 				}
 			}
 
+			"EngineAddr"
+			{
+				"linux"
+				{
+					"signature"	"EngineAddr"
+					"read"		"0"
+				}
+				"windows"
+				{
+					"signature"	"EngineAddr"
+					"read"		"12"
+					"read"		"0"
+				}
+			}
+
 			/* Offset into CreateGameRulesObject */
 			"GameRules"
 			{
@@ -2193,6 +2223,15 @@
 				"linux"		"7"
 			}
 
+			/*
+			* CBaseEntity::AcceptInput(char const*, CBaseEntity*, CBaseEntity*, variant_t, int)
+			*/
+			"CBaseEntity::AcceptInput"
+			{
+				"windows"	"44"
+				"linux"		"45"
+			}
+
 			"CBaseGrenade::Detonate"
 			{
 				"windows"	"346"
@@ -2215,6 +2254,35 @@
 			{
 				"windows"	"330"
 				"linux"		"331"
+			}
+
+			"IPhysicsObject::GetMass"
+			{
+				"linux"		"30"
+				"windows"	"29"
+			}
+
+			"IPhysicsObject::SetMass"
+			{
+				"linux"		"29"
+				"windows"	"28"
+			}
+
+            // IVEngineServer PVS functions
+			"IVEngineServer::GetClusterForOrigin"
+			{
+				"linux"		"12"
+				"windows"	"12"
+			}
+			"IVEngineServer::GetPVSForCluster"
+			{
+				"linux"		"13"
+				"windows"	"13"
+			}
+			"IVEngineServer::CheckOriginInPVS"
+			{
+				"linux"		"14"
+				"windows"	"14"
 			}
 
 
@@ -2705,6 +2773,11 @@
 			{
 				"windows"	"2196"
 				"linux"		"2196"
+			}
+			"L4D2IntWeapon_AmmoType"
+			{
+				"windows"	"2128"
+				"linux"		"2128"
 			}
 
 			// L4D2FloatWeapon
@@ -3421,6 +3494,58 @@
 				"linux"		"@_Z17IsVisibleToPlayerRK6VectorP11CBasePlayeriifPK11CBaseEntityPP13TerrorNavAreaPb"
 				"windows"	"\x55\x8B\x2A\x81\xEC\x2A\x2A\x2A\x2A\xA1\x2A\x2A\x2A\x2A\x33\x2A\x89\x2A\x2A\x8B\x2A\x2A\x8B\x2A\x2A\x53\x8B\x2A\x2A\x56\x8B\x2A\x2A\xC6"
 				/* 55 8B ? 81 EC ? ? ? ? A1 ? ? ? ? 33 ? 89 ? ? 8B ? ? 8B ? ? 53 8B ? ? 56 8B ? ? C6 */
+			}
+
+			/*
+			* TerrorNavArea::IsPotentiallyVisibleToTeam(int team) -> bool
+			*/
+			"TerrorNavArea::IsPotentiallyVisibleToTeam"
+			{
+				"library"	"server"
+				"linux"		"@_ZNK13TerrorNavArea26IsPotentiallyVisibleToTeamEi"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\xA1\x2A\x2A\x2A\x2A\x53\x33\xDB\x56\x89\x5D\xF4\x89\x5D\xF8\x57\x89\x4D\xFC\x39\x58\x08\x74\x2A\x8B\x40\x08\x68\x2A\x2A\x2A\x2A\x8B\x50\x50\x68\x2A\x2A\x2A\x2A\x68\x2A\x2A\x2A\x2A\x68\x2A\x2A\x2A\x2A\x68\x77\x07\x00\x00\x68\x2A\x2A\x2A\x2A\x53\x53\x53\x53\x8D\x4D\xF4\x51\x50\xFF\xD2\xA1\x2A\x2A\x2A\x2A\x83\xC4\x30"
+				/* ? ? ? ? ? ? A1 ? ? ? ? 53 33 DB 56 89 5D F4 89 5D F8 57 89 4D FC 39 58 08 74 ? 8B 40 08 68 ? ? ? ? 8B 50 50 68 ? ? ? ? 68 ? ? ? ? 68 ? ? ? ? 68 77 07 00 00 68 ? ? ? ? 53 53 53 53 8D 4D F4 51 50 FF D2 A1 ? ? ? ? 83 C4 30 */
+				/* Search: "TerrorNavArea::IsPotentiallyVisibleToTeam" */
+			}
+
+			/*
+			* TerrorNavArea::IsPotentiallyVisible(const TerrorNavArea* other, bool checkAttributes) -> bool
+			*/
+			"TerrorNavArea::IsPotentiallyVisible"
+			{
+				"library"	"server"
+				"linux"		"@_ZNK13TerrorNavArea20IsPotentiallyVisibleEPKS_b"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x5D\x08\x56\x8B\xF1\x85\xDB\x0F\x84\x2A\x2A\x2A\x2A\x3B\xDE\x75\x2A\x5E\xB0\x2A\x2A\x2A\x2A\x2A\x2A\x80"
+				/* ? ? ? ? ? 5D 08 56 8B F1 85 DB 0F 84 ? ? ? ? 3B DE 75 ? 5E B0 ? ? ? ? ? ? 80 */
+				/* Search: "%3.2f: %s: NOT FIRING because we might hit the car alarm\n" - call is 2nd above, with 0 as param */
+			}
+
+			/*
+			* TerrorNavArea::IsCompletelyVisibleToTeam(int team) -> bool
+			*/
+			"TerrorNavArea::IsCompletelyVisibleToTeam"
+			{
+				"library"	"server"
+				"linux"		"@_ZNK13TerrorNavArea25IsCompletelyVisibleToTeamEi"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x45\x08\x53\x56\x57\x50\x8B\xD9\xE8\x2A\x2A\x2A\x2A\x8B\xF8\x8B"
+				/* ? ? ? ? ? 45 08 53 56 57 50 8B D9 E8 ? ? ? ? 8B F8 8B */
+				/* Search: "IsCompletelyVisibleToTeam" - call is 3rd below */
+
+                // "windows"   "\x55\x8B\xEC\x51\x8B\x45\x08\x53\x56\x57\x50\x8B\xD9\xE8\x2A\x2A\x2A\x2A\x8B\xF8\x8B\x17\x8B\x82\x50\x03\x00\x00\x33\xF6\x83\xC4\x04\x8B\xCF\x89\x75\xFC\xFF\xD0"
+                /* 55 8B EC 51 8B 45 08 53 56 57 50 8B D9 E8 ? ? ? ? 8B F8 8B 17 8B 82 50 03 00 00 33 F6 83 C4 04 8B CF 89 75 FC FF D0 */
+				/* Signature thanks to "zyiks" */
+			}
+
+			/*
+			* TerrorNavArea::IsCompletelyVisible(const TerrorNavArea* other) -> bool
+			*/
+			"TerrorNavArea::IsCompletelyVisible"
+			{
+				"library"	"server"
+				"linux"		"@_ZNK13TerrorNavArea19IsCompletelyVisibleEPKS_"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x5D\x08\x56\x8B\xF1\x85\xDB\x0F\x84\x2A\x2A\x2A\x2A\x3B\xDE\x75\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x8B"
+				/* ? ? ? ? ? 5D 08 56 8B F1 85 DB 0F 84 ? ? ? ? 3B DE 75 ? ? ? ? ? ? ? ? ? 8B */
+				/* Search "low: %3.0f / %3.0f" - match with linux for call */
 			}
 
 			/**
@@ -4838,6 +4963,18 @@
 			}
 
 			/*
+			 * CNavArea::ConnectTo(CNavArea *, CNavArea *, int)
+			 */
+			"CNavArea::ConnectTo"
+			{
+				"library"	"server"
+				"linux"		"@_ZN8CNavArea9ConnectToEPS_10NavDirType"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x83\x2A\x2A\x83\x2A\x2A\x55\x8B\x2A\x2A\x89\x2A\x2A\x2A\x8B\x2A\x83\x2A\x2A\x56\x57\x8B\x2A\x89\x2A\x2A\x39\x2A\x2A\x0F\x84"
+				/* ? ? ? ? ? ? 83 ? ? 83 ? ? 55 8B ? ? 89 ? ? ? 8B ? 83 ? ? 56 57 8B ? 89 ? ? 39 ? ? 0F 84 */
+				/* Search: "Tried to connect a bad corner connection.. get Brian!" */
+			}
+
+			/*
 			 * CNavArea::IsConnected(CNavArea const*, NavDirType)const
 			 */
 			"CNavArea::IsConnected"
@@ -4859,6 +4996,18 @@
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x74\x2A\x8B\x2A\x2A\x85\x2A\x79\x2A\x8B\x2A\x2A\x2A\x2A\x2A\x83"
 				/* ? ? ? ? ? ? ? 74 ? 8B ? ? 85 ? 79 ? 8B ? ? ? ? ? 83 */
 				/* Search: "Flow Error: Goal area is blocked!\n", target function is call above with "-1" */
+			}
+
+			/*
+			 * CNavArea::GetZ(CNavArea *__hidden this, float, float)
+			 */
+			"CNavArea::GetZ"
+			{
+				"library"	"server"
+				"linux"		"@_ZNK8CNavArea4GetZEff"
+				"windows"	"\x55\x8B\x2A\x51\xF3\x2A\x2A\x2A\x2A\x0F\x57\x2A\x0F\x2E\x2A\x9F"
+				/* 55 8B ? 51 F3 ? ? ? ? 0F 57 ? 0F 2E ? 9F */
+				/* Search: "SpliceEdit: Out of memory.\n" called several times a few lines up */
 			}
 
 			/*
@@ -5784,6 +5933,15 @@
 				"windows"	"\x55\x8B\x2A\x8B\x2A\x2A\x50\xB9\x2A\x2A\x2A\x2A\xE8\x2A\x2A\x2A\x2A\x85\x2A\x75\x2A\x5D\xC2"
 				/* 55 8B ? 8B ? ? 50 B9 ? ? ? ? E8 ? ? ? ? 85 ? 75 ? 5D C2 */
 				/* Search: "cl_updaterate" - function with many strings together. Called by target. */
+			}
+
+			// IVEngineServer* pointer in server library
+			"EngineAddr"
+			{
+				"library"	"server"
+				"linux"		"@engine"
+				"windows"	"\x68\x2A\x2A\x2A\x2A\xFF\x55\x08\x83\xC4\x0C\xA3\x2A\x2A\x2A\x2A\x85\xC0"
+				/* 68 ? ? ? ? FF 55 08 83 C4 0C A3 ? ? ? ? 85 C0 */
 			}
 
 			"g_pGameRules"

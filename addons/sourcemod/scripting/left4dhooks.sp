@@ -18,8 +18,8 @@
 
 
 
-#define PLUGIN_VERSION		"1.166"
-#define PLUGIN_VERLONG		1166
+#define PLUGIN_VERSION		"1.174"
+#define PLUGIN_VERLONG		1174
 
 #define DEBUG				0
 // #define DEBUG			1	// Prints addresses + detour info (only use for debugging, slows server down).
@@ -104,6 +104,22 @@
 
 *	"Dysphie" for "ReadMemoryString" function code.
 
+*	Thanks to the following individuals who have helped, contributed, reported issues and requested features since version 1.0 to 1.167:
+	"3ipKa", "4NTEP xD", "A1m`", "a2121858", "Accelerator74", "Addie", "Alexmy", "Arman", "azureblue", "ball2hi", "Beatles", "BHaType",
+	"BloodyBlade", "blueblur0730", "blueblur07302", "bw4re", "Chenhupo", "Crasher", "DarklSide", "ddd123", "DeathChaos25", "Deathreus",
+	"devilesk", "disawar1", "Dragokas", "Drgon", "Eärendil", "Edison1318", "epzminion", "Eyal282", "fbef0102", "fdxx", "Forgetest",
+	"Gabe Iggy", "gabuch2", "GAMMACASE", "GoD-Tony", "Gold Fish", "gvazdas", "HarryPotter", "Hawkins", "hefiwhfcds2", "hoanganh810972",
+	"HwanGyul", "iaNanaNana", "ilham92-cc-sakura", "Impact", "ioioio", "Ja-Forces", "jackz", "jensewe", "JoinedSenses", "JustMadMan",
+	"KadabraZz", "kayletid201", "Kerouha", "King_OXO", "knifeeeee", "kochiurun119", "KoMiKoZa", "Krufftys Killers", "lechuga16",
+	"LordVGames", "Lux", "lzvs", "Machine", "Marttt", "matrixmark", "Mika Misori", "Mis", "morzlee", "moschinovac", "Mr. Man",
+	"Mr. Zero", "mr.raptor", "Mrs cheng", "Mystik Spiral", "Neburai", "nikita1824", "NoroHime", "nosoop", "Nuki", "Pa4H", "PaaNChaN",
+	"PencilMario", "Piplup", "ProdigySim", "ProjectSky", "Psyk0tik", "Re:Creator", "Red Flame", "robex", "Rostu", "SCP-076", "Shadowart",
+	"Shadowysn", "SirPlease", "Sist", "Slaven555", "sorallll", "Spirit_12", "spumer", "TiTz", "tonblader", "tRololo312312", "user2000",
+	"vikingo12", "Vinillia", "Voevoda", "Xbye", "xerox8521", "xiaolinRM", "XiLuo", "xZk", "yezi", "yongeni", "yuzumi", "Zippeli",
+	"zuaLdakid05", "zyiks"
+
+*	Thanks to everyone else who has helped with this plugin. If I missed including you, please let me know. With community support, we can create great things.
+
 ===================================================================================================*/
 
 
@@ -181,6 +197,10 @@ float g_fProf;
 
 
 
+// Entities
+#define MAX_ENTITES				2048
+#define MAX_EDICTS				4096
+
 // Dissolver
 #define SPRITE_GLOW							"sprites/blueglow1.vmt"
 
@@ -240,6 +260,20 @@ int g_iCvar_AddonsEclipse, g_iCvar_RescueDeadTime;
 
 
 
+// Entity input/output Hooks
+bool g_bDHooksFixedVersion;			// Build "1.12.0.7232" fixed "DHooks: Fix setting CBaseEntity* params (#2465)"
+int g_iHookCount[MAX_EDICTS];		// Track number of hooks to this entity, only really unhook when no longer used by any plugin
+int g_iHookEntity[MAX_EDICTS];		// Entity reference to validate same entity
+int g_iHookID_Pre[MAX_EDICTS];		// Hook ID used to unhook the detour
+int g_iHookID_Post[MAX_EDICTS];		// Hook ID used to unhook the detour
+Handle g_CBaseEntity_AcceptInput;
+ArrayList g_hInputPlugins_Pre[MAX_EDICTS];
+ArrayList g_hInputPlugins_Post[MAX_EDICTS];
+PrivateForward g_hInputCallback_Pre[MAX_EDICTS];
+PrivateForward g_hInputCallback_Post[MAX_EDICTS];
+
+
+
 // Animation Hook
 int g_iAnimationDetourIndex;
 bool g_bAnimationRemoveHook;
@@ -267,6 +301,7 @@ Address g_pVanillaModeAddress;
 
 // Various offsets
 // int g_iOff_EHandle;
+int g_iOff_AcceptInput;
 int g_iOff_LobbyReservation;
 int g_iOff_VersusStartTimer;
 int g_iOff_m_rescueCheckTimer;
@@ -308,6 +343,8 @@ int g_iOff_m_bInIntro;
 int g_iOff_m_attributeFlags;
 int g_iOff_m_spawnAttributes;
 int g_iOff_NavAreaID;
+int g_iOff_NavAreaLadderBase;
+int g_iOff_NavAreaLadderEntity;
 
 Address g_pCTerrorPlayer_RoundRespawn;
 int g_iOff_RespawnPlayer;
@@ -323,7 +360,7 @@ int L4D2CountdownTimer_Offsets[10];
 int L4D2IntervalTimer_Offsets[6];
 
 // l4d2weapons.inc
-int L4D2IntWeapon_Offsets[7];
+int L4D2IntWeapon_Offsets[8];
 int L4D2FloatWeapon_Offsets[21];
 int L4D2BoolMeleeWeapon_Offsets[1];
 int L4D2IntMeleeWeapon_Offsets[2];
@@ -342,6 +379,7 @@ int g_pSessionManager;
 int g_pChallengeMode;
 int g_pTheNextBots;
 Address g_pServer;
+Address g_pEngine;
 Address g_pAmmoDef;
 Address g_pDirector;
 Address g_pGameRules;
@@ -560,6 +598,21 @@ public void OnPluginStart()
 
 
 
+	// Verify SM build version that fixed DHooks bug "DHooks: Fix setting CBaseEntity* params (#2465)"
+	// Used for the "L4D_HookEntityInput" natives "InputHookCallback" callback
+	ConVar cvar = FindConVar("sourcemod_version");
+
+	char version[16];
+	cvar.GetString(version, sizeof(version));
+
+	int pos = FindCharInString(version, '.', true);
+	if( pos != -1 )
+	{
+		g_bDHooksFixedVersion = StringToInt(version[pos + 1]) > 7232;
+	}
+
+
+
 	// NULL PTR - METHOD (kept for demonstration)
 	// Null pointer - by Dragokas
 	/*
@@ -572,23 +625,30 @@ public void OnPluginStart()
 
 
 
-	// ====================================================================================================
-	//									LOAD GAMEDATA
-	// ====================================================================================================
+	// =========================
+	// LOAD GAMEDATA
+	// =========================
 	LoadGameData();
 
 
 
-	// ====================================================================================================
-	//									TARGET FILTERS
-	// ====================================================================================================
+	// =========================
+	// TARGET FILTERS
+	// =========================
 	LoadTargetFilters();
 
 
 
-	// ====================================================================================================
-	//									ANIMMATION HOOK
-	// ====================================================================================================
+	// =========================
+	// ENTITY INPUT/OUTPUT HOOKS
+	// =========================
+	DetourEntityInput();
+
+
+
+	// =========================
+	// ANIMMATION HOOK
+	// =========================
 	g_hAnimationActivityList = new ArrayList(ByteCountToCells(48));
 	ParseActivityConfig();
 
@@ -603,9 +663,9 @@ public void OnPluginStart()
 
 
 
-	// ====================================================================================================
-	//									WEAPON IDS
-	// ====================================================================================================
+	// =========================
+	// WEAPON IDS
+	// =========================
 	g_aWeaponPtrs = new StringMap();
 	g_aWeaponIDs = new StringMap();
 
@@ -697,9 +757,9 @@ public void OnPluginStart()
 
 
 
-	// ====================================================================================================
-	//									COMMANDS
-	// ====================================================================================================
+	// =========================
+	// COMMANDS
+	// =========================
 	// When adding or removing plugins that use any detours during gameplay. To optimize forwards by disabling unused or enabling required functions that were previously unused. TODO: Not needed when using extra-api.ext
 	RegAdminCmd("sm_l4dd_unreserve",	CmdLobby,	ADMFLAG_ROOT, "Removes lobby reservation.");
 	RegAdminCmd("sm_l4dd_reload",		CmdReload,	ADMFLAG_ROOT, "Reloads the detour hooks, enabling or disabling depending if they're required by other plugins.");
@@ -709,9 +769,9 @@ public void OnPluginStart()
 
 
 
-	// ====================================================================================================
-	//									CVARS
-	// ====================================================================================================
+	// =========================
+	// CVARS
+	// =========================
 	ConVar hVersion = CreateConVar("left4dhooks_version", PLUGIN_VERSION,	"Left 4 DHooks Direct plugin version.", FCVAR_NOTIFY|FCVAR_DONTRECORD);
 	hVersion.SetString(PLUGIN_VERSION); // Force version cvar to update if server updates the plugin but doesn't reboot, so it's reporting the current version in use
 
@@ -719,6 +779,7 @@ public void OnPluginStart()
 	{
 		g_hCvar_VScriptBuffer = CreateConVar("l4d2_vscript_return", "", "Buffer used to return VScript values. Do not use.", FCVAR_DONTRECORD);
 		g_hCvar_AddonsEclipse = CreateConVar("l4d2_addons_eclipse", "-1", "Addons Manager (-1: use addonconfig; 0: disable addons; 1: enable addons.)", FCVAR_NOTIFY);
+		AutoExecConfig(true, "left4dhooks");
 
 		g_hCvar_AddonsEclipse.AddChangeHook(ConVarChanged_Addons);
 		g_iCvar_AddonsEclipse = g_hCvar_AddonsEclipse.IntValue;
@@ -743,9 +804,9 @@ public void OnPluginStart()
 
 
 
-	// ====================================================================================================
-	//									EVENTS
-	// ====================================================================================================
+	// =========================
+	// EVENTS
+	// =========================
 	HookEvent("round_start",						Event_RoundStart);
 
 	if( !g_bLeft4Dead2 )
@@ -762,6 +823,11 @@ public void OnPluginStart()
 	}
 }
 
+
+
+// ====================================================================================================
+//									EVENTS
+// ====================================================================================================
 void Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
 {
 	g_bRoundEnded = false;
@@ -1069,26 +1135,45 @@ public void OnMapEnd()
 	g_iAnimationHookedClients = new ArrayList();
 	g_iAnimationHookedPlugins = new ArrayList(2);
 
+
+
 	// Remove all hooked functions from private forward
-	Handle hIter = GetPluginIterator();
-	Handle hPlug;
+	Handle hIterator = GetPluginIterator();
+	Handle hPlugin;
 
 	// Iterate plugins - remove animation hooks
-	while( MorePlugins(hIter) )
+	while( MorePlugins(hIterator) )
 	{
-		hPlug = ReadPlugin(hIter);
+		hPlugin = ReadPlugin(hIterator);
 
-		if( hPlug )
+		if( hPlugin )
 		{
 			for( int i = 1; i <= MaxClients; i++ )
 			{
-				if( g_hAnimationCallbackPre[i] ) g_hAnimationCallbackPre[i].RemoveAllFunctions(hPlug);
-				if( g_hAnimationCallbackPost[i] ) g_hAnimationCallbackPost[i].RemoveAllFunctions(hPlug);
+				if( g_hAnimationCallbackPre[i] ) g_hAnimationCallbackPre[i].RemoveAllFunctions(hPlugin);
+				if( g_hAnimationCallbackPost[i] ) g_hAnimationCallbackPost[i].RemoveAllFunctions(hPlugin);
+
+				if( g_hInputCallback_Pre[i] ) g_hInputCallback_Pre[i].RemoveAllFunctions(hPlugin);
+				if( g_hInputCallback_Post[i] ) g_hInputCallback_Post[i].RemoveAllFunctions(hPlugin);
 			}
 		}
 	}
 
-	delete hIter;
+	delete hIterator;
+
+	// Entity input/output hooks
+	for( int i = 0; i < MAX_EDICTS; i++ )
+	{
+		g_iHookCount[i] = 0;
+		g_iHookEntity[i] = 0;
+		g_iHookID_Pre[i] = 0;
+		g_iHookID_Post[i] = 0;
+
+		delete g_hInputCallback_Pre[i];
+		delete g_hInputCallback_Post[i];
+		delete g_hInputPlugins_Pre[i];
+		delete g_hInputPlugins_Post[i];
+	}
 }
 
 public void OnClientDisconnect(int client)
@@ -1105,18 +1190,18 @@ public void OnClientDisconnect(int client)
 		g_iAnimationHookedClients.Erase(index);
 
 		// Remove PrivateForward for client
-		Handle hIter = GetPluginIterator();
-		Handle hPlug;
+		Handle hIterator = GetPluginIterator();
+		Handle hPlugin;
 
-		while( MorePlugins(hIter) )
+		while( MorePlugins(hIterator) )
 		{
-			hPlug = ReadPlugin(hIter);
+			hPlugin = ReadPlugin(hIterator);
 
-			if( g_hAnimationCallbackPre[client] ) g_hAnimationCallbackPre[client].RemoveAllFunctions(hPlug);
-			if( g_hAnimationCallbackPost[client] ) g_hAnimationCallbackPost[client].RemoveAllFunctions(hPlug);
+			if( g_hAnimationCallbackPre[client] ) g_hAnimationCallbackPre[client].RemoveAllFunctions(hPlugin);
+			if( g_hAnimationCallbackPost[client] ) g_hAnimationCallbackPost[client].RemoveAllFunctions(hPlugin);
 		}
 
-		delete hIter;
+		delete hIterator;
 	}
 
 
@@ -1165,11 +1250,24 @@ public void OnNotifyPluginUnloaded(Handle plugin)
 {
 	if( plugin )
 	{
+		// Remove animation callbacks for plugin (probably not required and automatic...
 		for( int i = 1; i <= MaxClients; i++ )
 		{
 			if( g_hAnimationCallbackPre[i] ) g_hAnimationCallbackPre[i].RemoveAllFunctions(plugin);
 			if( g_hAnimationCallbackPost[i] ) g_hAnimationCallbackPost[i].RemoveAllFunctions(plugin);
 		}
+
+		// Remove AcceptInput callbacks for plugin and unhook detour if not being used
+		// Must be 1 frame later or the unloading plugin is counted
+		RequestFrame(OnFrame_OnNotifyPluginUnloaded);
+	}
+}
+
+void OnFrame_OnNotifyPluginUnloaded()
+{
+	for( int i = 0; i < MAX_EDICTS; i++ )
+	{
+		RemoveAcceptInputDetour(i);
 	}
 }
 
@@ -1223,6 +1321,8 @@ int Native_AnimHookDisable(Handle plugin, int numParams) // Native "AnimHookDisa
 	// Loop through all anim hooks
 	for( int i = g_iAnimationHookedPlugins.Length-1; i >= 0; i-- )
 	{
+		keep = false;
+
 		// Get hooked plugin handle
 		target = g_iAnimationHookedPlugins.Get(i, 0);
 
@@ -1620,7 +1720,7 @@ public void OnMapStart()
 		for( int i = 0; i < sizeof(g_sAcidSounds); i++ )
 			PrecacheSound(g_sAcidSounds[i]);
 
-		for( int i = 0; i <= 2048; i++ )
+		for( int i = 0; i <= MAX_ENTITES; i++ )
 			g_iAcidEntity[i] = 0;
 	}
 
@@ -1718,7 +1818,12 @@ public void OnMapStart()
 		}
 	}
 
+
+
 	g_bMapStarted = true;
+
+	Call_StartForward(g_hFWD_OnMapStartPost);
+	Call_Finish();
 }
 
 

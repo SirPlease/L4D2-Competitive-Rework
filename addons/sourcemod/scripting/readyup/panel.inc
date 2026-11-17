@@ -115,7 +115,7 @@ void UpdatePanel()
 				{
 					case ReadyMode_PlayerReady:
 					{
-						if (!inLiveCountdown) PrintHintText(client, "%t", hintPhrase[isReady]);
+						if (!inLiveCountdown && !l4d_ready_autoready.BoolValue) PrintHintText(client, "%t", hintPhrase[isReady]);
 						Format(nameBuf, sizeof(nameBuf), "%s %s%s\n", readySymbol[isReady], nameBuf, IsPlayerAfk(client) ? " [AFK]" : "");
 					}
 					case ReadyMode_AutoStart:
@@ -124,7 +124,7 @@ void UpdatePanel()
 					}
 					case ReadyMode_TeamReady:
 					{
-						if (!inLiveCountdown) PrintHintText(client, "%t", hintPhrase[type ? survivorReady : infectedReady]);
+						if (!inLiveCountdown && !l4d_ready_autoready.BoolValue) PrintHintText(client, "%t", hintPhrase[type ? survivorReady : infectedReady]);
 						Format(nameBuf, sizeof(nameBuf), "%s%s\n", nameBuf, IsPlayerAfk(client) ? " [AFK]" : "");
 					}
 				}

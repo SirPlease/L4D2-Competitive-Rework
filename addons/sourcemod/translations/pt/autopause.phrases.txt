@@ -1,0 +1,29 @@
+"Phrases"
+{
+    "Unpausing"
+    {
+        "pt"        "{blue}[{default}AutoPause{blue}] {default}Todos os jogadores que {green}crasharam {default}reconectaram.. {blue}Despausando{default}!"
+    }
+
+    "Waiting"
+    {
+        "#format"   "{1:i},{2:t}"   // 1: remainingCrashers 2: remainingCrashers > 1 ? "players" : "player"
+        "pt"        "{blue}[{default}AutoPause{blue}] {default}Aguardando mais {olive}{1} {default}{2} {green}com crash {default}antes de {blue}despausar{default} automaticamente!"
+    }
+
+    "Crashed"
+    {
+        "#format"   "{1:N}"         // 1: client
+        "pt"        "{blue}[{default}AutoPause{blue}] {olive}{1} {default}crashou."
+    }
+
+    "players"
+    {
+        "pt"        "jogadores"
+    }
+
+    "player"
+    {
+        "pt"        "jogador"
+    }
+}

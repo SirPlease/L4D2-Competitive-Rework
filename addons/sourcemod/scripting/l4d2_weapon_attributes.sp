@@ -56,6 +56,7 @@ static const L4D2IntWeaponAttributes iIntWeaponAttributes[] =
     L4D2IWA_Damage,
     L4D2IWA_Bullets,
     L4D2IWA_ClipSize,
+    L4D2IWA_DefaultSize,
     L4D2IWA_Bucket,
     L4D2IWA_Tier, // L4D2 only
 };
@@ -90,6 +91,7 @@ static const char sWeaponAttrNames[PLUGIN_WEAPON_MAX_ATTRS][MAX_ATTRS_NAME_LENGT
     "Damage",
     "Bullets",
     "Clip Size",
+    "Default Clip",
     "Bucket",
     "Tier",
     "Max player speed",
@@ -123,6 +125,7 @@ static const char sWeaponAttrShortName[PLUGIN_WEAPON_MAX_ATTRS][MAX_ATTRS_NAME_L
     "damage",
     "bullets",
     "clipsize",
+    "defclip",
     "bucket",
     "tier",
     "speed",
@@ -214,7 +217,7 @@ public Plugin myinfo =
 {
     name = "L4D2 Weapon Attributes",
     author = "Jahze, A1m`, Forgetest",
-    version = "3.1.0",
+    version = "3.1.1",
     description = "Allowing tweaking of the attributes of all weapons"
 };
 
@@ -679,7 +682,7 @@ void SetWeaponAttributeInt(const char[] sWeaponName, int iAtrriIndex, int iSetVa
     }
     
     L4D2_SetIntWeaponAttribute(sWeaponName, iIntWeaponAttributes[iAtrriIndex], iSetValue);
-    
+
     value.curVal = iSetValue;
     hDefaultWeaponAttributes[iAtrriIndex].SetArray(sWeaponName, value, sizeof(value), true);
 

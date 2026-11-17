@@ -37,6 +37,7 @@ void SetupForwardsNatives()
 	// ====================================================================================================
 	// FORWARDS
 	// List should match the CreateDetour list of forwards.
+	g_hFWD_OnMapStartPost													= new GlobalForward("L4D_OnLeft4DHooks_OnMapStart",						ET_Event);
 	g_hFWD_GameModeChange													= new GlobalForward("L4D_OnGameModeChange",								ET_Event, Param_Cell);
 	g_hFWD_ZombieManager_SpawnSpecial										= new GlobalForward("L4D_OnSpawnSpecial",								ET_Event, Param_CellByRef, Param_Array, Param_Array);
 	g_hFWD_ZombieManager_SpawnSpecial_Post									= new GlobalForward("L4D_OnSpawnSpecial_Post",							ET_Event, Param_Cell, Param_Cell, Param_Array, Param_Array);
@@ -171,6 +172,8 @@ void SetupForwardsNatives()
 	// g_hFWD_BossZombiePlayerBot_ChooseVictim_Pre								= new GlobalForward("L4D2_OnChooseVictim_Pre",							ET_Event, Param_Cell, Param_CellByRef, Param_CellByRef, Param_CellByRef, Param_CellByRef); // For a future update
 	g_hFWD_BossZombiePlayerBot_ChooseVictim_Pre								= new GlobalForward("L4D2_OnChooseVictim_Pre",							ET_Event, Param_Cell, Param_CellByRef);
 	g_hFWD_BossZombiePlayerBot_ChooseVictim_Post							= new GlobalForward("L4D2_OnChooseVictim",								ET_Event, Param_Cell, Param_CellByRef);
+	g_hFWD_CTerrorPlayer_SetClass											= new GlobalForward("L4D_OnSetClass",									ET_Event, Param_Cell, Param_CellByRef);
+	g_hFWD_CTerrorPlayer_SetClass_Post										= new GlobalForward("L4D_OnSetClass_Post",								ET_Event, Param_Cell, Param_Cell);
 	g_hFWD_CTerrorPlayer_MaterializeFromGhost_Pre							= new GlobalForward("L4D_OnMaterializeFromGhostPre",					ET_Event, Param_Cell);
 	g_hFWD_CTerrorPlayer_MaterializeFromGhost_Post							= new GlobalForward("L4D_OnMaterializeFromGhost",						ET_Event, Param_Cell);
 	g_hFWD_CTerrorPlayer_MaterializeFromGhost_PostHandled					= new GlobalForward("L4D_OnMaterializeFromGhost_PostHandled",			ET_Event, Param_Cell);
@@ -330,6 +333,10 @@ void SetupForwardsNatives()
 	CreateNative("AnimGetActivity",		 							Native_AnimGetActivity);
 	CreateNative("AnimGetFromActivity",		 						Native_AnimGetFromActivity);
 
+	// ENTITY INPUT/OUTPUT HOOK
+	CreateNative("L4D_HookEntityInput",								Native_HookEntityInput);
+	CreateNative("L4D_UnhookEntityInput",							Native_UnhookEntityInput);
+
 
 
 	// =========================
@@ -366,12 +373,21 @@ void SetupForwardsNatives()
 	CreateNative("L4D_OnITExpired",		 							Native_CTerrorPlayer_OnITExpired);
 	CreateNative("L4D_EstimateFallingDamage",		 				Native_CTerrorPlayer_EstimateFallingDamage);
 	CreateNative("L4D_GetEntityWorldSpaceCenter",		 			Native_CBaseEntity_WorldSpaceCenter);
+	CreateNative("L4D_GetMass",		 								Native_GetMass);
+	CreateNative("L4D_SetMass",		 								Native_SetMass);
 	CreateNative("L4D_AngularVelocity",		 						Native_CBaseEntity_ApplyLocalAngularVelocityImpulse);
 	CreateNative("L4D_GetRandomPZSpawnPosition",		 			Native_ZombieManager_GetRandomPZSpawnPosition);
 	CreateNative("L4D_FindRandomSpot",		 						Native_TerrorNavArea_FindRandomSpot);
 	CreateNative("L4D_WarpToValidPositionIfStuck",		 			Native_CTerrorPlayer_WarpToValidPositionIfStuck);
 	CreateNative("L4D2_GetSpecialInfectedDominatingMe",				Native_CTerrorPlayer_GetSpecialInfectedDominatingMe);
 	CreateNative("L4D2_IsVisibleToPlayer",		 					Native_IsVisibleToPlayer);
+	CreateNative("L4D_IsPotentiallyVisibleToTeam",		 			Native_IsPotentiallyVisibleToTeam);
+	CreateNative("L4D_IsPotentiallyVisible",		 				Native_IsPotentiallyVisible);
+	CreateNative("L4D_IsCompletelyVisibleToTeam",		 			Native_IsCompletelyVisibleToTeam);
+	CreateNative("L4D_IsCompletelyVisible",		 					Native_IsCompletelyVisible);
+	CreateNative("L4D_GetClusterForOrigin",		 					Native_GetClusterForOrigin);
+	CreateNative("L4D_GetPVSForCluster",		 					Native_GetPVSForCluster);
+	CreateNative("L4D_CheckOriginInPVS",		 					Native_CheckOriginInPVS);
 	CreateNative("L4D_GetNearestNavArea",		 					Native_CNavMesh_GetNearestNavArea);
 	CreateNative("L4D_GetLastKnownArea",		 					Native_CTerrorPlayer_GetLastKnownArea);
 	CreateNative("L4D_IsTouchingTrigger",		 					Native_CBaseTrigger_IsTouching);
@@ -476,10 +492,15 @@ void SetupForwardsNatives()
 	CreateNative("L4D_GetNavAreaPos",								Native_GetNavAreaPos);
 	CreateNative("L4D_GetNavAreaCenter",							Native_GetNavAreaCenter);
 	CreateNative("L4D_GetNavAreaSize",								Native_GetNavAreaSize);
+	CreateNative("L4D_NavArea_GetCorner",							Native_NavArea_GetCorner);
+	CreateNative("L4D_NavArea_GetZ",								Native_NavArea_GetZ);
 	CreateNative("L4D_NavArea_GetAdjacentCount",					Native_CNavArea_GetAdjacentCount);
 	CreateNative("L4D_NavArea_GetAdjacentAreas",					Native_CNavArea_GetAdjacentAreas);
+	CreateNative("L4D_NavArea_ConnectTo",							Native_CNavArea_ConnectTo);
 	CreateNative("L4D_NavArea_IsConnected",							Native_CNavArea_IsConnected);
 	CreateNative("L4D_NavArea_IsBlocked",							Native_CNavArea_IsBlocked);
+	CreateNative("L4D_NavArea_GetElevator",							Native_CNavArea_GetElevator);
+	CreateNative("L4D_NavArea_GetLadder",							Native_CNavArea_GetLadder);
 	CreateNative("L4D_GetNavArea_SpawnAttributes",					Native_GetTerrorNavArea_Attributes);
 	CreateNative("L4D_SetNavArea_SpawnAttributes",					Native_SetTerrorNavArea_Attributes);
 	CreateNative("L4D_GetNavArea_AttributeFlags",					Native_GetCNavArea_AttributeFlags);

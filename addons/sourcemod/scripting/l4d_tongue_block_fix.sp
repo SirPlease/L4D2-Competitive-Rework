@@ -6,9 +6,9 @@
 #include <sourcescramble>
 #include <dhooks>
 
-#define PLUGIN_VERSION "1.2.1"
+#define PLUGIN_VERSION "1.2.2"
 
-public Plugin myinfo = 
+public Plugin myinfo =
 {
 	name = "[L4D & 2] Tongue Block Fix",
 	author = "Forgetest",
@@ -26,12 +26,19 @@ public Plugin myinfo =
 #define KEY_PATCH_SURFIX_3 "__AddEntityToIgnore_dummypatch"
 #define KEY_SETPASSENTITY "CTraceFilterSimple::SetPassEntity"
 
+#define MAX_EDICTS 2048
+
 DynamicDetour g_hDetour;
 
 int
 	g_iTankClass,
 	g_iTipFlag,
-	g_iFlyFlag;
+	g_iFlyFlag,
+	g_iOwnerOffset,
+	g_iZombieClassOffset;
+
+bool g_bIsTongue[MAX_EDICTS + 1];
+bool g_bUpdateTongueTarget = false;
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -53,51 +60,54 @@ public void OnPluginStart()
 	GameData conf = new GameData(GAMEDATA_FILE);
 	if (!conf)
 		SetFailState("Missing gamedata \""...GAMEDATA_FILE..."\"");
-	
+
 	int os = conf.GetOffset("OS");
 	if (os == -1)
 		SetFailState("Failed to get offset of \"OS\"");
-	
+
 	Address addr = conf.GetAddress(KEY_SETPASSENTITY);
 	if (addr == Address_Null)
 		SetFailState("Failed to get address of \""...KEY_SETPASSENTITY..."\"");
-	
+
 	if (os == 0) // windows
 	{
 		addr = LoadFromAddress(addr, NumberType_Int32);
 		if (addr == Address_Null)
 			SetFailState("Failed to deref pointer to \""...KEY_SETPASSENTITY..."\"");
 	}
-	
+
 	MemoryPatch hPatch = MemoryPatch.CreateFromConf(conf, KEY_FUNCTION...KEY_PATCH_SURFIX);
 	if (!hPatch.Enable())
 		SetFailState("Failed to enable patch \""...KEY_FUNCTION...KEY_PATCH_SURFIX..."\"");
-	
+
 	hPatch = MemoryPatch.CreateFromConf(conf, KEY_FUNCTION...KEY_PATCH_SURFIX_2);
 	if (!hPatch.Enable())
 		SetFailState("Failed to enable patch \""...KEY_FUNCTION...KEY_PATCH_SURFIX_2..."\"");
-	
+
 	hPatch = MemoryPatch.CreateFromConf(conf, KEY_FUNCTION...KEY_PATCH_SURFIX_3);
 	if (!hPatch.Enable())
 		SetFailState("Failed to enable patch \""...KEY_FUNCTION...KEY_PATCH_SURFIX_3..."\"");
-	
+
 	PatchNearJump(0xE8, hPatch.Address, addr);
-	
+
 	if (GetEngineVersion() == Engine_Left4Dead)
 	{
 		hPatch = MemoryPatch.CreateFromConf(conf, KEY_FUNCTION_3...KEY_PATCH_SURFIX_3);
 		if (!hPatch.Enable())
 			SetFailState("Failed to enable patch \""...KEY_FUNCTION_3...KEY_PATCH_SURFIX_3..."\"");
-		
+
 		PatchNearJump(0xE8, hPatch.Address, addr);
 	}
-	
+
 	g_hDetour = DynamicDetour.FromConf(conf, KEY_FUNCTION_2);
 	if (!g_hDetour)
 		SetFailState("Missing detour setup \""...KEY_FUNCTION_2..."\"");
-	
+
 	delete conf;
-	
+
+	g_iOwnerOffset = FindSendPropOffset("CTongue", "m_owner");
+	g_iZombieClassOffset = FindSendPropOffset("CTerrorPlayer", "m_zombieClass");
+
 	ConVar cv = CreateConVar("tongue_tip_through_teammate",
 								"0",
 								"Whether smoker can shoot his tongue through his teammates.\n"
@@ -106,7 +116,7 @@ public void OnPluginStart()
 								true, 0.0, true, 3.0);
 	CvarChg_TipThroughTeammate(cv, "", "");
 	cv.AddChangeHook(CvarChg_TipThroughTeammate);
-	
+
 	cv = CreateConVar("tongue_fly_through_teammate",
 								"1",
 								"Whether tongue can go through his teammates once shot.\n"
@@ -115,6 +125,12 @@ public void OnPluginStart()
 								true, 0.0, true, 3.0);
 	CvarChg_FlyThroughTeammate(cv, "", "");
 	cv.AddChangeHook(CvarChg_FlyThroughTeammate);
+}
+
+public void OnEntityCreated(int entity, const char[] classname)
+{
+	if (entity > MaxClients && entity <= MAX_EDICTS)
+		g_bIsTongue[entity] = (strcmp(classname, "ability_tongue") == 0);
 }
 
 void CvarChg_TipThroughTeammate(ConVar convar, const char[] oldValue, const char[] newValue)
@@ -149,7 +165,6 @@ void ToggleDetour(bool enable)
 	}
 }
 
-bool g_bUpdateTongueTarget = false;
 MRESReturn DTR_OnUpdateTongueTarget(int pThis)
 {
 	g_bUpdateTongueTarget = true;
@@ -164,28 +179,22 @@ MRESReturn DTR_OnUpdateTongueTarget_Post(int pThis)
 
 public Action CH_PassFilter(int touch, int pass, bool &result)
 {
-	if (!touch || touch > MaxClients || !IsClientInGame(touch))
+	if (touch < 1 || touch > MaxClients)
 		return Plugin_Continue;
-	
-	if (GetClientTeam(touch) != 3)
-		return Plugin_Continue;
-		
+
 	if (!g_bUpdateTongueTarget)
 	{
-		if (pass <= MaxClients)
+		// both flags off never passes through, skip the client checks
+		if (!g_iFlyFlag || pass <= MaxClients || pass > MAX_EDICTS || !g_bIsTongue[pass])
 			return Plugin_Continue;
-		
-		static char cls[64];
-		if (!GetEdictClassname(pass, cls, sizeof(cls)))
+
+		if (!IsClientInGame(touch) || GetClientTeam(touch) != 3)
 			return Plugin_Continue;
-		
-		if (strcmp(cls, "ability_tongue") != 0)
+
+		if (touch == GetEntDataEnt2(pass, g_iOwnerOffset)) // probably won't happen
 			return Plugin_Continue;
-		
-		if (touch == GetEntPropEnt(pass, Prop_Send, "m_owner")) // probably won't happen
-			return Plugin_Continue;
-			
-		if (GetEntProp(touch, Prop_Send, "m_zombieClass") == g_iTankClass)
+
+		if (GetEntData(touch, g_iZombieClassOffset) == g_iTankClass)
 		{
 			if (~g_iFlyFlag & 2)
 				return Plugin_Continue;
@@ -195,16 +204,19 @@ public Action CH_PassFilter(int touch, int pass, bool &result)
 	}
 	else
 	{
-		if (!pass || pass > MaxClients)
+		if (pass < 1 || pass > MaxClients)
 			return Plugin_Continue;
-		
+
+		if (!IsClientInGame(touch) || GetClientTeam(touch) != 3)
+			return Plugin_Continue;
+
 		if (!IsClientInGame(pass))
 			return Plugin_Continue;
-		
-		if (GetClientTeam(pass) != 3 || GetEntProp(pass, Prop_Send, "m_zombieClass") != 1)
+
+		if (GetClientTeam(pass) != 3 || GetEntData(pass, g_iZombieClassOffset) != 1)
 			return Plugin_Continue;
-			
-		if (GetEntProp(touch, Prop_Send, "m_zombieClass") == g_iTankClass)
+
+		if (GetEntData(touch, g_iZombieClassOffset) == g_iTankClass)
 		{
 			if (~g_iTipFlag & 2)
 				return Plugin_Continue;
@@ -212,9 +224,18 @@ public Action CH_PassFilter(int touch, int pass, bool &result)
 		else if (~g_iTipFlag & 1)
 			return Plugin_Continue;
 	}
-	
+
 	result = false;
 	return Plugin_Handled;
+}
+
+int FindSendPropOffset(const char[] cls, const char[] prop)
+{
+	int offset = FindSendPropInfo(cls, prop);
+	if (offset <= 0)
+		SetFailState("Failed to find offset of \"%s::%s\"", cls, prop);
+
+	return offset;
 }
 
 void PatchNearJump(int instruction, Address src, Address dest)

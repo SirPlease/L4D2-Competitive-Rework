@@ -1,0 +1,142 @@
+"Phrases"
+{
+    "Tag"
+    {
+        "pt"        "{blue}<{green}BossVote{blue}>{default}"
+    }
+    // RunVoteChecks
+    "NotAvailable"
+    {
+        "pt"        "A votação de bosses não está disponível neste mapa."
+    }
+    "Available"
+    {
+        "pt"        "A votação de bosses só está disponível durante o ready up."
+    }
+    "FirstRound"
+    {
+        "pt"        "A votação de bosses só está disponível durante a primeira rodada de um mapa."
+    }
+    "NotAvailableForSpec"
+    {
+        "pt"        "A votação de bosses não está disponível para espectadores."
+    }
+    "CannotBeCalled"
+    {
+        "pt"        "A votação de bosses não pode ser iniciada agora..."
+    }
+    // VoteBossCmd
+    "Usage"
+    {
+        "pt"        "{default}Uso: !voteboss {olive}<{default}tank{olive}> <{default}witch{olive}>{default}."
+    }
+    "Usage2"
+    {
+        "pt"        "{default}Use {default}\"{blue}0{default}\" para {olive}Sem Spawn{default}, \"{blue}-1{default}\" para {olive}Ignorar."
+    }
+    "Invalid"
+    {
+        "pt"        "{default}As porcentagens são {olive}inválidas{default}."
+    }
+    "TankStatic"
+    {
+        "pt"        "O spawn do Tank é fixo e não pode ser alterado neste mapa."
+    }
+    "WitchStatic"
+    {
+        "pt"        "O spawn da Witch é fixo e não pode ser alterado neste mapa."
+    }
+    "TankBanned"
+    {
+        "pt"        "{default}A porcentagem do Tank está {blue}banida{default}."
+    }
+    "WitchBanned"
+    {
+        "pt"        "{default}A porcentagem da Witch está {blue}banida{default}."
+    }
+    "SetBosses"
+    {
+        "pt"        "Definir Tank para: %s e Witch para: %s?"
+    }
+    "SetTank"
+    {
+        "pt"        "Definir Tank para: %s e Witch para: Desativada?"
+    }
+    "SetOnlyTank"
+    {
+        "pt"        "Definir Tank para: %s?"
+    }
+    "SetWitch"
+    {
+        "pt"        "Definir Tank para: Desativado e Witch para: %s?"
+    }
+    "SetOnlyWitch"
+    {
+        "pt"        "Definir Witch para: %s?"
+    }
+    "SetBossesDisabled"
+    {
+        "pt"        "Definir Bosses para: Desativados?"
+    }
+    "SetTankDisabled"
+    {
+        "pt"        "Definir Tank para: Desativado?"
+    }
+    "SetWitchDisabled"
+    {
+        "pt"        "Definir Witch para: Desativada?"
+    }
+    // BossVoteResultHandler
+    "OnlyReadyUp"
+    {
+        "pt"        "Os spawns só podem ser definidos durante o ready up."
+    }
+    "SettingBoss"
+    {
+        "pt"        "Definindo spawns dos bosses..."
+    }
+    "SettingTank"
+    {
+        "pt"        "Definindo spawn do Tank..."
+    }
+    "SettingWitch"
+    {
+        "pt"        "Definindo spawn da Witch..."
+    }
+    "SettingBossDisabled"
+    {
+        "pt"        "Desativando bosses..."
+    }
+    // ForceTankCommand
+    "CommandNotAvailable"
+    {
+        "pt"        "Comando não disponível neste mapa."
+    }
+    "TankSpawnStatic"
+    {
+        "pt"        "O spawn do Tank é fixo e não pode ser alterado neste mapa."
+    }
+    "PercentageInvalid"
+    {
+        "pt"        "{default}A porcentagem é {blue}inválida{default}."
+    }
+    "Percentagebanned"
+    {
+        "pt"        "{default}A porcentagem está {blue}banida{default}."
+    }
+    "TankSpawnAdmin"
+    {
+		"#format"   "{1:i},{2:s}" // 1:p_iRequestedPercent 2:clientName
+        "pt"        "{default}Spawn do Tank definido para {olive}{1}%{default} pelo Administrador {blue}{2}{default}."
+    }
+    // ForceWitchCommand
+    "WitchSpawnStatic"
+    {
+        "pt"        "O spawn da Witch é fixo e não pode ser alterado neste mapa."
+    }
+    "WitchSpawnAdmin"
+    {
+		"#format"   "{1:i},{2:s}" // 1:p_iRequestedPercent 2:clientName
+        "pt"        "{default}Spawn da Witch definido para {olive}{1}%{default} pelo Administrador {blue}{2}{default}."
+    }
+}

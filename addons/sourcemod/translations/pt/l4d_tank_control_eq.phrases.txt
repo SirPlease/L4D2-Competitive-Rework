@@ -1,0 +1,46 @@
+"Phrases"
+{
+	"TagRage"
+	{
+		"pt"		"{red}<{default}Fúria do Tank{red}>"
+	}
+	"Refilled"
+	{
+		"pt"		"{olive}Medidor de Fúria {red}recarregado {default}({green}%N{default})"
+	}
+	"RefilledBot"
+	{
+		"pt"		"{olive}Medidor de Fúria {red}recarregado"
+	}
+
+    "TagSelection"
+	{
+		"pt"		"{red}<{default}Seleção de Tank{red}>"
+	}
+    "YouBecomeTank"
+	{
+		"pt"		"{green}Você {default}será o {red}Tank{default}!"
+	}
+   "BecomeTank"
+	{
+		"pt"		"{olive}%N {default}será o {red}Tank!"
+	}
+
+    "TagControl"
+	{
+		"pt"		"{green}[{olive}Controle do Tank{green}]"
+	}
+   "InvalidTarget"
+	{
+		"pt"		"{default}Alvo inválido. Não foi possível dar o Tank"
+	}
+   "NoInfected"
+	{
+		"pt"		"{olive}%N {default}não está no time dos infectados. Não foi possível dar o Tank"
+	}
+
+    "HintText"
+	{
+		"pt"		"Medidor de Fúria recarregado"
+	}
+}

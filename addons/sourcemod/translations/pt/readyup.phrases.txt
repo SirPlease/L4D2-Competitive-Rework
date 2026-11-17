@@ -1,0 +1,108 @@
+"Phrases"
+{
+// The following uses bracket style color tags (see colors.inc)
+	"PanelHide"
+	{
+		"pt"		"{default}[{olive}Readyup{default}] O painel agora está {red}desligado{default}"
+	}
+	
+	"PanelShow"
+	{
+		"pt"		"{default}[{olive}Readyup{default}] O painel agora está {blue}ligado{default}"
+	}
+	
+	"ForceStartAdmin"
+	{
+		"#format"	"{1:N}"
+		"pt"		"{default}[{green}!{default}] O início do {blue}jogo {default}foi {green}forçado {default}pelo {blue}Administrador {default}({olive}{1}{default})"
+	}
+	
+	"VoteInProgress"
+	{
+		"pt"		"{default}[{olive}Readyup{default}] Há {olive}uma votação {green}em andamento{default}."
+	}
+	
+	"VoteDelay"
+	{
+		"#format"	"{1:d}"
+		"pt"		"{default}[{olive}Readyup{default}] Aguarde mais {blue}{1}s {default}para iniciar uma votação."
+	}
+	
+	"Player marked unready"
+	{
+		"#format"	"{1:N}"
+		"pt"		"{default}[{green}!{default}] {green}Contagem Cancelada! {default}({teamcolor}{1} {green}marcou não pronto{default})"
+	}
+	
+	"Player switched team"
+	{
+		"#format"	"{1:N}"
+		"pt"		"{default}[{green}!{default}] {green}Contagem Cancelada! {default}({teamcolor}{1} {olive}trocou de time{default})"
+	}
+	
+	"Player disconnected"
+	{
+		"#format"	"{1:N}"
+		"pt"		"{default}[{green}!{default}] {green}Contagem Cancelada! {default}({teamcolor}{1} {green}desconectou{default})"
+	}
+	
+	"Admin aborted"
+	{
+		"#format"	"{1:N}"
+		"pt"		"{default}[{green}!{default}] {green}Início Forçado Abortado! {default}({olive}{1} {green}cancelou{default})"
+	}
+	
+	
+// The following are not allowed to use any color tag
+	"HintReady"
+	{
+		"pt"		"Você está pronto.\nDigite !unready / Pressione F2 para desmarcar."
+	}
+	
+	"HintUnready"
+	{
+		"pt"		"Você não está pronto.\nDigite !ready / Pressione F1 para ficar pronto."
+	}
+	
+	"LiveCountdownBegin"
+	{
+		"pt"		"Valendo!\nDigite !unready / Pressione F2 para cancelar"
+	}
+	
+	"LiveCountdown"
+	{
+		"#format"	"{1:d}"
+		"pt"		"Começa em: {1}\nDigite !unready / Pressione F2 para cancelar"
+	}
+	
+	"LiveCountdownCancelled"
+	{
+		"pt"		"Contagem Cancelada!"
+	}
+	
+	"RoundIsLive"
+	{
+		"pt"		"A rodada está valendo!"
+	}
+	
+	"InitiateAutoStart"
+	{
+		"pt"		"O jogo começará automaticamente!"
+	}
+	
+	"AutoStartCountdown"
+	{
+		"#format"	"{1:d}"
+		"pt"		"O jogo começa em: {1}"
+	}
+	
+	"AutoStartWaiting"
+	{
+		"pt"		"Aguardando os jogadores carregarem..."
+	}
+	
+	"AutoStartNotEnoughPlayers"
+	{
+		"pt"		"São necessários mais jogadores..."
+	}
+}

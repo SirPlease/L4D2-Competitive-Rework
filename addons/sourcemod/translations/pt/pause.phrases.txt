@@ -1,0 +1,185 @@
+"Phrases"
+{
+	"Tag"
+	{
+		"pt"	"{default}[{green}!{default}]"
+	}
+	"ClientFullyLoaded"
+	{
+		"pt"	"{olive}%N {default}terminou de carregar"
+	}
+	"PauseCommand"
+	{
+		"pt"	"{olive}%N {blue}Pausou{default}."
+	}
+	// PauseDelay_Timer
+	"PauseAction"
+	{
+		"pt"	"{red}PAUSADO"
+	}
+	"PauseDelay"
+	{
+		"pt"	"{blue}Pausando em{default}: {olive}%d"
+	}
+	// ForcePause_Cmd
+	"Crashed"
+	{
+		"pt"	"{default}O {olive}jogo {default}foi {green}pausado à força {default}porque um jogador teve um {blue}crash{default}."
+	}
+	"ForcePause"
+	{
+		"pt"	"{default}Uma {green}pausa forçada {default}foi emitida pelo {blue}Administrador {default}({olive}%N{default})"
+	}
+	// Unpause_Cmd
+	"UnpauseSurvivors"
+	{
+		"pt"	"{olive}%N %s{default}marcou {blue}%s {default}como prontos."
+	}
+	"UnpauseInfected"
+	{
+		"pt"	"{olive}%N %s{default}marcou {red}%s {default}como prontos."
+	}
+	"UnpauseInitiator"
+	{
+		"pt"	"{olive}%N {default}marcou o {green}Iniciador {default}como pronto."
+	}
+	"UnpauseAdminConfirm"
+	{
+		"pt"	"{default}Os {olive}times {default}estão prontos. Aguarde o {blue}Administrador {green}confirmar{default}."
+	}
+	// Unready_Cmd
+	"UnreadySurvivors"
+	{
+		"pt"	"{olive}%N %s{default}marcou {blue}%s {default}como não prontos."
+	}
+	"UnreadyInfected"
+	{
+		"pt"	"{olive}%N %s{default}marcou {red}%s {default}como não prontos."
+	}
+	"UnreadyInitiator"
+	{
+		"pt"	"{olive}%N {default}marcou o {green}Iniciador {default}como não pronto."
+	}
+	// void AsInitiator()
+	"AsInitiator"
+	{
+		"pt"		"{default}como {green}Iniciador "
+	}
+	// ForceUnpause_Cmd
+	"ForceUnpause"
+	{
+		"pt"	"{default}Uma {green}despausa forçada {default}foi emitida pelo {blue}Administrador {default}({olive}%N{default})"
+	}
+	// AddPauseCount
+	"PauseLimit"
+	{
+		"pt"	"Você atingiu o seu limite de pausas."
+	}
+	// AttemptPause
+	"PauseDeferred"
+	{
+		"pt"	"{red}A pausa foi adiada porque há um jogador sendo levantado!"
+	}
+	// Pause
+	"PausePreventSpawn"
+	{
+		"pt"	"{default}O seu {red}Spawn {default}foi impedido por causa da pausa"
+	}
+	// Show_Cmd
+	"PanelShow"
+	{
+		"pt"	"{default}O painel agora está {blue}ligado{default}."
+	}
+	"PanelHide"
+	{
+		"pt"	"{default}O painel agora está {red}desligado{default}."
+	}
+	// UpdatePanel
+	"PanelSlots"
+	{
+		"pt"	"▸ Servidor: %s\n▸ Vagas: %d/%d"
+	}
+	"PanelDate"
+	{
+		"pt"	"▸ %d/%m/%Y - %H:%M"
+	}
+	"PanelTitle"
+	{
+		"pt"	"▸ Status de Prontos"
+	}
+	"RequireAdmin"
+	{
+		"pt"	"->0. Requer Administrador para despausar"
+	}
+	"SurvivorUnPaused"
+	{
+		"pt"	"->1. Sobreviventes: [√]"
+	}
+	"SurvivorPaused"
+	{
+		"pt"	"->1. Sobreviventes: [X]"
+	}
+	"InfectedUnPaused"
+	{
+		"pt"	"->2. Infectados: [√]"
+	}
+	"InfectedPaused"
+	{
+		"pt"	"->2. Infectados: [X]"
+	}
+	"InitiatorUnPaused"
+	{
+		"pt"	"->0. Iniciador: [√]"
+	}
+	"InitiatorPaused"
+	{
+		"pt"	"->0. Iniciador: [X]"
+	}
+	"AutoPauseCrash"
+	{
+		"pt"	"▸ AutoPausa Forçada -> Crash"
+	}
+	"ForcePauseAdmin"
+	{
+		"pt"	"▸ Pausa Forçada -> %s (Admin)"
+	}
+	"InitiatorPause"
+	{
+		"pt"	"▸ Iniciador -> %s (%s)"
+	}
+	"DurationPause"
+	{
+		"pt"	"▸ Duração: %02d:%02d"
+	}
+	// InitiateLiveCountdown
+	"CountdownCancelNotify"
+	{
+		"pt"		"{default}Digite {olive}!unready {default}para cancelar"
+	}
+	"GameisLive"
+	{
+		"pt"		"O jogo está valendo!"
+	}
+	"CountdownReadyDelay"
+	{
+		"pt"		"{blue}Começa em{default}: {olive}%d{default}..."
+	}
+	// CancelFullReady
+	"CountdownCancelled"
+	{
+		"pt"		"{olive}%N {default}cancelou a contagem regressiva!"
+	}
+	// Callvote_Callback
+	"CallvoteNoSpec"
+	{
+		"pt"		"Você não pode iniciar votações como espectador."
+	}
+	"CallvoteNoExploit"
+	{
+		"pt"		"Você acabou de trocar de time, não pode votar por alguns segundos."
+	}
+	"CallvoteCannotTargetAdmin"
+	{
+		"pt"		"Você não pode expulsar Adminstradores."
+	}
+}

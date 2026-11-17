@@ -1,0 +1,46 @@
+"Phrases"
+{
+	"Tag+"
+	{
+		"pt"	"{green}★{default}"
+	}
+	"Tag++"
+	{
+		"pt"    "{green}★★{default}"
+	}
+	"Tag+++"
+	{
+		"pt"	"{green}★★★{default}"
+	}
+	"MeleeSkeeted"
+	{
+        "#format"   "{1:N},{2:N}" // 1:victim 2:attacker
+		"pt"    	"{olive}{1}{default} levou {blue}melee{default}-skeet{default} de {olive}{2}{default}"
+	}
+	"Headshotted"
+	{
+       "#format"	"{1:N},{2:N}" // 1:victim 2:attacker
+		"pt"    	"{olive}{1}{default} levou {blue}headshot{default} de {olive}{2}{default}"
+	}
+	"TeamSkeeted"
+	{
+       "#format"	"{1:N},{2:N},{3:d},{4:d},{5:s},{6:s}" // 1:attacker 2:victim 3:damage 4:shots 5:shots == 1 ? "" : "s" 6:assister_string
+		"pt"    	"{olive}{1}{default} deu teamskeet em {olive}{2}{default} com {blue}{3} de dano{default} em {blue}{4}{default} tiro{5}. Assistido por: {olive}{6}{default}"
+	}
+	"Skeeted"
+	{
+       "#format"	"{1:N},{2:N},{3:d},{4:s}" // 1:attacker 2:victim 3:shots 4:shots == 1 ? "" : "s"
+		"pt"    	"{olive}{1}{default} deu skeet em {olive}{2}{default} em {blue}{3}{default} tiro{4}"
+	}
+	"ShutBoomer"
+	{
+       "#format"	"{1:N},{2:s},{3:.1f}" // 1:g_iBoomerKiller 2:Boomer 3:BoomerKillTime
+		"pt"    	"{olive}{1}{default} derrubou o Boomer de {olive}{2}{default} em {blue}{3}{default}"
+	}
+	"AlarmedCar"
+	{
+		"pt"		"{olive}%N{default} disparou um {olive}Carro com Alarme{default}"
+	}
+}
+
+

@@ -1,0 +1,83 @@
+"Phrases"
+{
+    "Tag"
+    {
+        "pt"    "{default}[{olive}!{default}]"
+    }
+    "Disabled"
+    {
+        "pt"    "{default}O plugin está {red}Desativado{default}"
+    }
+    "NoConsole"
+    {
+        "pt"    "Este comando não pode ser usado pelo console."
+    }
+    "ConfoglNotAvailable"
+    {
+        "pt"    "{default}O Confogl {red}não está disponível{default}."
+    }
+    "CedaGame"
+    {
+        "pt"    "{default}Não é permitido usar este comando em uma {red}partida cedapug{default}"
+    }
+    "Title_Match"
+    {
+        "pt"    "Selecione o modo de partida:"
+    }
+    "Title_Config"
+    {
+        "pt"    "Selecione o tipo %s:"
+    }
+    "ConfigNotFound"
+    {
+        "pt"    "Nenhuma config foi encontrada para este modo."
+    }
+    "NoSpec"
+    {
+        "pt"    "Espectadores não podem iniciar votações."
+    }
+    "MatchLoaded"
+    {
+        "pt"    "O modo de partida já está carregado!"
+    }
+    "NotEnoughPlayers"
+    {
+        "pt"    "{default}A votação não pode ser iniciada. {red}Jogadores insuficientes{default} ({red}%d{default}/{green}%d{default})."
+    }
+    "Title_LoadConfig"
+    {
+        "pt"    "Carregar a config '%s' do confogl?"
+    }
+    "VoteInProgress"
+    {
+        "pt"    "{red}Votação em andamento{default}, aguarde {green}%d{default} segundos."
+    }
+    "VotePass_Loading"
+    {
+        "pt"    "Carregando o modo de partida..."
+    }
+    "MatchNotLoaded"
+    {
+        "pt"    "{red}Nenhum modo de partida{default} carregado."
+    }
+    "PlayersConnecting"
+    {
+        "pt"    "A votação não pode ser iniciada. Há jogadores conectando."
+    }
+    "Title_OffConfogl"
+    {
+        "pt"    "Desligar o Confogl?"
+    }
+    "VotePass_Unloading"
+    {
+        "pt"    "Descarregando o Confogl..."
+    }
+    "Title_ChangeConfogl"
+    {
+        "pt"    "Mudar a config do confogl para '%s'?"
+    }
+    "VotePass_Changed"
+    {
+        "pt"    "Modo de partida alterado..."
+    }
+}

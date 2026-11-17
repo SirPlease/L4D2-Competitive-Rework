@@ -1,0 +1,58 @@
+"Phrases"
+{
+	"TagKills"
+	{
+		"pt"		"{default}[{olive}1v1Stat{default}] {green}Mortes{default}:"
+	}
+	"TagSkeet"
+	{
+		"pt"		"{default}[{olive}1v1Stat{default}] {green}Skeet{default}:"
+	}
+	"TagAcc"
+	{
+		"pt"		"{default}[{olive}1v1Stat{default}] {green}Precisão{default}:"
+	}
+    // 1. SI damage & SI kills
+	"SI_DMG_CI"
+	{
+		"#format"   "{1:d},{2:d},{3:d}" // 1:iDidDamageAll[iClientPlaying] 2:iGotKills[iClientPlaying] 3:iGotCommon[iClientPlaying]
+		"pt"		"{olive}{1}{default} de dano | {olive}{2}{default} mortes | {olive}{3}{default} comuns\n"
+	}
+	"SI_DMG"
+	{
+		"#format"   "{1:d},{2:d}" // 1:iDidDamageAll[iClientPlaying] 2:iGotKills[iClientPlaying]
+		"pt"		"{olive}{1}{default} de dano | {olive}{2}{default} mortes\n"
+	}
+	"SI_CI"
+	{
+		"#format"   "{1:d},{2:d}" // 1:iGotKills[iClientPlaying] 2:iGotCommon[iClientPlaying]
+		"pt"		"{olive}{1}{default} mortes | {olive}{2}{default} comuns\n"
+	}
+	"SI"
+	{
+		"pt"		"{olive}%d{default} mortes\n"
+	}
+    // 2. skeets
+	"SKEET"
+	{
+		"#format"   "{1:d},{2:d},{3:d}" // 1:iHuntSkeets[iClientPlaying] 2:iHuntSkeetsInj[iClientPlaying] 3:iDeadStops[iClientPlaying]
+		"pt"		"{olive}{1}{default} normais | {olive}{2}{default} feridos | {olive}{3}{default} deadstops\n"
+	}
+	//  3. accuracy
+	"ACC_AllShots"
+	{
+		"pt"		"{default}todos os tiros ({blue}%.0f%%{default})"
+	}
+	"ACC_BuckShot"
+	{
+		"pt"		"{default} | buckshot ({blue}%.0f%%{default})"
+	}
+	"ACC_Melee"
+	{
+		"pt"		"{default} | melee ({blue}%.0f%%{default})"
+	}
+	"ACC_NoShotsFired"
+	{
+		"pt"		"Nenhum tiro disparado\n"
+	}
+}

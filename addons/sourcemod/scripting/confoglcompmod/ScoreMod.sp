@@ -332,12 +332,20 @@ static Action SM_Cmd_Health(int client, int args)
 		return Plugin_Handled;
 	}
 
+	if (client && !IsClientInGame(client)) {
+		return Plugin_Handled;
+	}
+
 	int iAliveCount;
 	float fAvgHealth = SM_CalculateAvgHealth(iAliveCount);
 
 	if (SM_bIsSecondRoundStarted) {
-		//PrintToChat(client, "\x01[\x05Confogl\x01] Round 1 Bonus: \x04%d", SM_iFirstScore);
-		CPrintToChat(client, "{blue}[{default}Confogl{blue}]{default} Round 1 Bonus: {olive}%d", SM_iFirstScore);
+		if (client) {
+			//PrintToChat(client, "\x01[\x05Confogl\x01] Round 1 Bonus: \x04%d", SM_iFirstScore);
+			CPrintToChat(client, "{blue}[{default}Confogl{blue}]{default} Round 1 Bonus: {olive}%d", SM_iFirstScore);
+		} else {
+			PrintToServer("[Confogl] Round 1 Bonus: %d", SM_iFirstScore);
+		}
 	}
 
 	if (client) {

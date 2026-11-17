@@ -12,6 +12,7 @@
 int g_iOffs_m_hDroppingPlayer = -1; // CTerrorWeapon: the survivor who threw the item
 int g_iOffs_m_hDropTarget     = -1; // CTerrorWeapon: the survivor the item is headed to
 MemoryPatch g_hIsInCombatPatch;
+ConVar g_hCvarReloadPass;
 
 float g_fIncomingPassAt[MAXPLAYERS + 1];
 
@@ -20,7 +21,7 @@ public Plugin myinfo =
 	name = "[L4D/2] Fix Pill Passing",
 	author = "Alan, A1m`, Forgetest, Sir",
 	description = "Fixes being unable to pass Pills to Survivor considered 'In Combat' + Pills being thrown away.",
-	version = "1.0"
+	version = "1.1"
 };
 
 public void OnPluginStart()
@@ -51,7 +52,31 @@ public void OnPluginStart()
 	delete hDetour;
 	delete hGameData;
 
+	g_hCvarReloadPass = CreateConVar("fix_pill_pass_reload", "1", "Reload while holding pills or adrenaline makes players use the shove path.", _, true, 0.0, true, 1.0);
+
 	HookEvent("round_start", Event_RoundStart, EventHookMode_PostNoCopy);
+}
+
+public Action OnPlayerRunCmd(int client, int &buttons)
+{
+	if (!(buttons & IN_RELOAD) || !g_hCvarReloadPass.BoolValue)
+		return Plugin_Continue;
+
+	if (GetClientTeam(client) != 2 || !IsPlayerAlive(client))
+		return Plugin_Continue;
+
+	int iWeapon = GetEntPropEnt(client, Prop_Send, "m_hActiveWeapon");
+	if (iWeapon == -1)
+		return Plugin_Continue;
+
+	char sClassName[32];
+	GetEntityClassname(iWeapon, sClassName, sizeof(sClassName));
+	if (!StrEqual(sClassName, "weapon_pain_pills") && !StrEqual(sClassName, "weapon_adrenaline"))
+		return Plugin_Continue;
+
+	// Shove.
+	buttons |= IN_ATTACK2;
+	return Plugin_Changed;
 }
 
 public void OnPluginEnd()

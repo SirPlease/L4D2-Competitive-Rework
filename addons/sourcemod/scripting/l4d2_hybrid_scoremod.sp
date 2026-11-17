@@ -54,7 +54,7 @@ public Plugin:myinfo =
 	name = "L4D2 Scoremod+",
 	author = "Visor",
 	description = "The next generation scoring mod",
-	version = "2.2.6",
+	version = "2.2.7",
 	url = "https://github.com/Attano/L4D2-Competitive-Framework"
 };
 
@@ -206,7 +206,7 @@ int Native_GetMaxPillsBonus(Handle:plugin, numParams)
 
 Action:CmdBonus(client, args)
 {
-	if (bRoundOver || !client)
+	if (bRoundOver || !client || !IsClientInGame(client))
 		return Plugin_Handled;
 
 	decl String:sCmdType[64];
@@ -245,8 +245,24 @@ Action:CmdBonus(client, args)
 
 Action:CmdMapInfo(client, args)
 {
+	if (client && !IsClientInGame(client))
+		return Plugin_Handled;
+
 	new Float:fMaxPillsBonus = float(iPillWorth * iTeamSize);
 	new Float:fTotalBonus = fMapBonus + fMaxPillsBonus;
+
+	if (!client)
+	{
+		PrintToServer("[Hybrid Bonus :: %iv%i] Map Info", iTeamSize, iTeamSize);
+		PrintToServer("Distance: %d", iMapDistance);
+		PrintToServer("Total Bonus: %d <100.0%%>", RoundToFloor(fTotalBonus));
+		PrintToServer("Health Bonus: %d <%.1f%%>", RoundToFloor(fMapHealthBonus), CalculateBonusPercent(fMapHealthBonus, fTotalBonus));
+		PrintToServer("Damage Bonus: %d <%.1f%%>", RoundToFloor(fMapDamageBonus), CalculateBonusPercent(fMapDamageBonus, fTotalBonus));
+		PrintToServer("Pills Bonus: %d(max %d) <%.1f%%>", iPillWorth, RoundToFloor(fMaxPillsBonus), CalculateBonusPercent(fMaxPillsBonus, fTotalBonus));
+		PrintToServer("Tiebreaker: %d", iPillWorth);
+		return Plugin_Handled;
+	}
+
 	PrintToChat(client, "\x01[\x04Hybrid Bonus\x01 :: \x03%iv%i\x01] Map Info", iTeamSize, iTeamSize);
 	PrintToChat(client, "\x01Distance: \x05%d\x01", iMapDistance);
 	PrintToChat(client, "\x01Total Bonus: \x05%d\x01 <\x03100.0%%\x01>", RoundToFloor(fTotalBonus));

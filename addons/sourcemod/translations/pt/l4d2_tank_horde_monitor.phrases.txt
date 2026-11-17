@@ -1,0 +1,27 @@
+"Phrases"
+{
+	"Tag"
+	{
+		"pt"		"{default}<{olive}Horda{default}>"
+	}
+	"TankPlay"
+	{
+		"pt"		"{default}A horda foi {blue}pausada{default} porque há um Tank em jogo! Avançar {blue}%0.1f%%{default} iniciará a horda."
+	}
+	"UntilHordeStarts"
+	{
+		"pt"		"{default}Faltam {blue}%0.1f%%{default} para a horda começar..."
+	}
+	"HordeResumed"
+	{
+		"pt"		"{default}A horda foi {blue}retomada{default} com {green}%i%% de força{default}, avançar aumentará a horda."
+	}
+	"HordeStrength"
+	{
+		"pt"		"{default}A horda está com {green}%i%% de força{default}..."
+	}
+	"HordeVeryStrength"
+	{
+		"pt"		"{red}Os sobreviventes avançaram demais{default}, a horda está com {green}100%% de força{default}!"
+	}
+}

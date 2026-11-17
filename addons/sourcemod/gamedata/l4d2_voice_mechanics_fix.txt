@@ -1,0 +1,25 @@
+"Games"
+{
+	"left4dead2"
+	{
+		"Functions"
+		{
+			"CTerrorPlayer::OnVoiceTransmit"
+			{
+				"offset"		"CTerrorPlayer::OnVoiceTransmit"
+				"hooktype"		"entity"
+				"return"		"void"
+				"this"			"entity"
+			}
+		}
+
+		"Offsets"
+		{
+			"CTerrorPlayer::OnVoiceTransmit"
+			{
+				"linux"			"487"
+				"windows"		"486"
+			}
+		}
+	}
+}

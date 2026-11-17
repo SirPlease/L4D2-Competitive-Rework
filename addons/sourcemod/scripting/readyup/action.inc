@@ -19,6 +19,8 @@ void InitiateReadyUp(bool real = true)
 		readyUpMode = l4d_ready_enabled.IntValue;
 		if (!readyUpMode) return;
 		
+		hasInfectedTeam = L4D_HasPlayerControlledZombies();
+		
 		UTIL_WrapperForward(g_hPreInitiateForward);
 		
 		for (int i = 1; i <= MaxClients; i++)
@@ -204,7 +206,10 @@ bool CheckFullReady()
 	}
 	
 	if (readyUpMode == ReadyMode_TeamReady)
-		return survReadyCount && infReadyCount;
+		return survReadyCount && (infReadyCount || !hasInfectedTeam);
+	
+	if (!hasInfectedTeam)
+		return survReadyCount && survReadyCount >= GetTeamHumanCount(L4D2Team_Survivor);
 	
 	int survLimit = survivor_limit.IntValue;
 	int zombLimit = z_max_player_zombies.IntValue;

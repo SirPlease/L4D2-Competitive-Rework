@@ -35,7 +35,7 @@ public Plugin myinfo =
     name = "Pause plugin",
     author = "CanadaRox, Sir, Forgetest, A1m`",
     description = "Adds pause functionality without breaking pauses, also prevents SI from spawning because of the Pause.",
-    version = "6.9.0",
+    version = "6.9.2",
     url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 };
 
@@ -175,6 +175,16 @@ void FindServerNamer()
 // ======================================
 // Forwards
 // ======================================
+public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3], float angles[3], int &weapon, int &subtype, int &cmdnum, int &tickcount, int &seed, int mouse[2])
+{
+    if (isPaused && (buttons & IN_ATTACK) && GetClientTeam(client) == L4D2Team_Infected && IsInfectedGhost(client))
+    {
+        buttons &= ~IN_ATTACK;
+        return Plugin_Changed;
+    }
+    return Plugin_Continue;
+}
+
 public void OnClientPutInServer(int client)
 {
     if (isPaused)
@@ -409,6 +419,9 @@ Action ToggleReady_Cmd(int client, int args)
     if (onlyEnableForce.BoolValue)
         return Plugin_Continue;
 
+    if (!client || !IsClientInGame(client))
+        return Plugin_Handled;
+
     int clientTeam = GetClientTeam(client);
     teamReady[clientTeam] ? Unready_Cmd(client, 0) : Unpause_Cmd(client, 0);
 
@@ -497,7 +510,6 @@ void Pause()
 			
             if (team == L4D2Team_Infected && IsInfectedGhost(client))
             {
-                SetEntProp(client, Prop_Send, "m_hasVisibleThreats", 1);
                 int buttons = GetClientButtons(client);
                 if (buttons & IN_ATTACK)
                 {
@@ -577,6 +589,9 @@ void Unpause(bool real = true)
 
 Action Show_Cmd(int client, int args)
 {
+    if (!client || !IsClientInGame(client))
+        return Plugin_Handled;
+
     if (isPaused)
     {
         hiddenPanel[client] = false;
@@ -588,6 +603,9 @@ Action Show_Cmd(int client, int args)
 
 Action Hide_Cmd(int client, int args)
 {
+    if (!client || !IsClientInGame(client))
+        return Plugin_Handled;
+
     if (isPaused)
     {
         hiddenPanel[client] = true;
@@ -894,8 +912,8 @@ int Native_IsInPause(Handle plugin, int numParams)
 
 stock bool IsPlayer(int client)
 {
-    if (!client) return false;
-	
+    if (!client || !IsClientInGame(client)) return false;
+
     int team = GetClientTeam(client);
     return !SpecTimer[client] && (team == L4D2Team_Survivor || team == L4D2Team_Infected);
 }

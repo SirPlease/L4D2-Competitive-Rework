@@ -1,0 +1,54 @@
+"Games"
+{
+	"left4dead2"
+	{
+		"Functions"
+		{
+			"CBaseEntity::PhysicsSolidMaskForEntity"
+			{
+				"offset"		"CBaseEntity::PhysicsSolidMaskForEntity"
+				"hooktype"		"entity"
+				"return"		"int"
+				"this"			"ignore"
+			}
+
+			"CBaseEntity::TestHitboxes"
+			{
+				"offset"		"CBaseEntity::TestHitboxes"
+				"hooktype"		"entity"
+				"return"		"bool"
+				"this"			"entity"
+				"arguments"
+				{
+					"ray"
+					{
+						"type"	"int"
+					}
+					"mask"
+					{
+						"type"	"int"
+					}
+					"trace"
+					{
+						"type"	"int"
+					}
+				}
+			}
+		}
+
+		"Offsets"
+		{
+			"CBaseEntity::PhysicsSolidMaskForEntity"
+			{
+				"linux"		"178"
+				"windows"	"177"
+			}
+
+			"CBaseEntity::TestHitboxes"
+			{
+				"linux"		"17"
+				"windows"	"16"
+			}
+		}
+	}
+}

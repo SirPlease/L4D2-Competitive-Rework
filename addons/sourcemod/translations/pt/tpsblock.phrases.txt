@@ -1,0 +1,23 @@
+"Phrases"
+{
+	"Tag"
+	{
+		"pt"		"{default}[{green}!{default}]"
+	}
+	"Cvar_Invalid"
+	{
+		"pt"		"{default}O comando {olive}c_thirdpersonshoulder{default} pode estar inválido ou protegido."
+	}
+	"Cvar_Value1"
+	{
+		"pt"		"{default}Para jogar, digite {olive}c_thirdpersonshoulder 0{default} no seu console."
+	}
+	"Cvar_Invalid_Nocolor"
+	{
+		"pt"		"O comando c_thirdpersonshoulder pode estar inválido ou protegido."
+	}
+	"Cvar_Value1_Nocolor"
+	{
+		"pt"		"Para jogar, digite c_thirdpersonshoulder 0 no seu console."
+	}
+}
